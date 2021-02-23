@@ -1,0 +1,53 @@
+
+.dx-alert {
+  max-width: 27.37rem;
+  position: relative;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.dx-alert__closeable {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+}
+
+@function bg_color($colorName) {
+
+  @if $colorName == success {
+    @return #DBF2F0;
+  }
+
+  @if $colorName == info {
+    @return #F3F7FC;
+  }
+
+  @if $colorName == error {
+    @return #FDF4F4;
+  }
+
+  @if $colorName == warning {
+    @return #fef8f2;
+  }
+
+  @return #F3F7FC;
+}
+
+@include theme(dx-alert) using($material) {
+
+  $dx-alert-color: map-deep-get($material, 'colors', 'darken3') !important;
+
+  .dx-alert__content {
+    color: $dx-alert-color;
+  }
+
+  @each $name, $color in map-get($material, 'alerts') {
+
+    &.dx-type__#{$name} {
+      color: $color;
+      background-color: bg_color(#{$name}) !important;
+      border-color: $color !important;
+    }
+  }
+}

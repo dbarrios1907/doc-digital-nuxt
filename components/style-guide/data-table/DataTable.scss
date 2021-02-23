@@ -1,0 +1,143 @@
+@include theme(v-data-table) using ($material) {
+  & tbody tr > td {
+    border: none !important;
+  }
+  
+  & thead tr {
+    & > .sortable .v-icon {
+      //opacity: 1;
+      font-size: rem-calc(24px) !important;
+    }
+
+    & > :last-child{
+      width: rem-calc(130px);
+    }
+  }
+
+  &.table-xl thead > tr {
+    height: rem-calc(58px);
+
+    & > .sortable .v-data-table-header__icon,
+    & > .sortable.active .v-data-table-header__icon {
+      color: #dadada;
+    }
+
+    & > .sortable .v-icon {
+      margin-right: rem-calc(8px);
+    }
+    
+    & > :nth-child(2){
+      width: rem-calc(170px) !important;
+    }
+
+    & > :last-child {
+      width: rem-calc(120px);
+      padding-left: rem-calc(10px) !important;
+    }
+
+    & > th {
+      min-width: rem-calc(160px);
+    }
+    
+    & > th:not(:first-child):not(:last-child) {
+      padding: 0 !important;
+    }
+  }
+
+  &.table-xl tbody > tr {
+    height: rem-calc(82px);
+
+    & > td:not(:first-child) {
+      padding-right: rem-calc(10px);
+      padding-left: rem-calc(10px);
+    }
+
+    & > td .v-icon:first-child{
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    & > td .v-icon:not(:first-child):not(:last-child){
+      margin-right: rem-calc(15px) !important;
+      margin-left: rem-calc(15px) !important;
+    }
+  }
+  
+  &:not(.table-sm) > .v-data-table__wrapper > table > thead > tr > th {
+    padding-left: rem-calc(20px);
+    color: map-deep-get($material, 'colors', 'light');
+    background: map-deep-get($material, 'colors', 'primary');
+    
+    &:first-child {
+      width: rem-calc(60px);
+    }
+
+    /*&.sortable .v-data-table-header__icon,
+    &.sortable.active .v-data-table-header__icon {
+      color: map-deep-get($material, 'colors', 'light');
+    }
+
+    &.sortable:hover,
+    &.sortable.active {
+      color: map-deep-get($material, 'colors', 'light');
+    }*/
+  }
+
+  &.table-sm {
+    & > .v-data-table__wrapper > table {
+      & > tbody tr:nth-child(odd):not(.body-prepend):not(.body-append) {
+          background-color: map-deep-get($material, 'colors', 'secondary');
+      }
+      & > thead > tr {
+        height: rem-calc(40px) !important;
+
+        & > th {
+          border-top: 1px solid map-deep-get($material, 'colors', 'darken1');
+          border-bottom: 1px solid map-deep-get($material, 'colors', 'darken4');
+          color: map-deep-get($material, 'colors', 'darken3');
+          padding: rem-calc(12px) rem-calc(13px);
+          
+          & :not(:last-child){
+            min-width: rem-calc(160px);
+          }
+          
+          & :nth-child(1) .v-icon {
+            margin-left: 0;
+          }
+          
+          & .v-icon {
+            color: map-deep-get($material, 'colors', 'darken3') !important;
+            margin-left: rem-calc(12px);
+          }
+        }
+      }
+
+      & > tbody > tr > td {
+        padding: rem-calc(12px) rem-calc(13px);
+
+        & .v-icon {
+          color: map-deep-get($material, 'colors', 'darken3') !important;
+        }
+      }
+    }
+  }
+
+  & > .v-data-table__wrapper > table > tbody > tr > td {
+    padding-left: rem-calc(20px);
+
+    & > .v-icon {
+      color: map-deep-get($material, 'colors', 'darken3');
+    }
+  }
+
+  &:not(.icon-sort-left) th .v-icon {
+    float: right;
+  }
+
+  &.icon-sort-left th .v-icon {
+    float: left;
+  }
+  .v-data-table-header .v-icon {
+    color: map-deep-get($material, 'colors', 'light');
+  }
+}

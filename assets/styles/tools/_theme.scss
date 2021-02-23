@@ -1,0 +1,40 @@
+@mixin theme ($component) {
+  .v-application .theme--light.#{$component},
+  .theme--light .#{$component},
+  .theme--light.#{$component} {
+    @content($material-light);
+  }
+  .v-application .theme--dark.#{$component},
+  .theme--dark .#{$component},
+  .theme--dark.#{$component} {
+    @content($material-dark);
+  }
+}
+
+//@mixin themeGlobal ($component) {
+//  .theme--light .#{$component},  .theme--light.#{$component} {
+//    @content($material-light);
+//  }
+//  .theme--dark .#{$component},  .theme--dark.#{$component} {
+//    @content($material-dark);
+//  }
+//}
+
+@mixin themeDark ($component) {
+  .v-application .theme--dark.#{$component} {
+    @content($material-dark);
+  }
+}
+
+@mixin themeLight ($component) {
+  .v-application .theme--light.#{$component} {
+    @content($material-light);
+  }
+}
+
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}

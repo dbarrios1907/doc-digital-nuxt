@@ -1,0 +1,11 @@
+@include theme(dx-pendingdocs) using ($material) {
+    $bg-color: map-deep-get($material, 'v_tabs', 'tabs-bar-background-color');
+
+    .main-container{
+        width: 755px;
+        height: 120px;
+        background-color: #E5F0FA !important
+    }
+    
+  }
+  

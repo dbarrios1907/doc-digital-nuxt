@@ -1,0 +1,20 @@
+layouts/AuthLayout.vue
+layouts/ContentLayout.vue
+layouts/components
+layouts/mixing
+layouts/stories
+
+# Exclude storybook stories from been included in nuxt build
+**/stories
+**/*.stories.js
+**/story-components
+
+# Exclude components plugins export for storybook
+components/index.js
+components/**/index.js
+
+**/*.test.*
+
+components
+
+pages/ignore

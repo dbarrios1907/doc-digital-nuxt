@@ -1,0 +1,35 @@
+.v-dialog {
+  //max-height: 100% !important;
+  overflow: hidden;
+  .v-card {
+    border-radius: 0 !important;
+
+    .v-card__title {
+      line-height: 29px;
+      padding: 18px 23px 15px 26px !important;
+
+      .v-btn--icon {
+        width: rem-calc(18px);
+        height:rem-calc(18px);
+        border: 0;
+        padding: 0;
+      }
+    }
+
+    .v-card__text {
+      padding: 40px !important;
+
+      .v-input__control > .v-input__slot {
+        min-height: 48px !important;    
+      }
+    }
+
+    .v-card__text .pr-ext {
+      padding-right: 100px !important;
+    }
+
+    .v-card__actions {
+      padding:0 30px 30px;
+    }
+  }
+}

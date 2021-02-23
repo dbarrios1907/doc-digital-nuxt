@@ -1,0 +1,12 @@
+//@import '/node_modules/vuetify/src/styles/'
+
+@import './dark/colors';
+@import './light/colors';
+
+@import './dark/dark';
+@import './light/light';
+
+//@include theme(dark) using ($material) {
+//
+//}
+

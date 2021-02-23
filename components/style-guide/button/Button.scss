@@ -1,0 +1,185 @@
+.v-btn {
+  transition: background #{$primary-transition}, color #{$primary-transition};
+}
+
+@include theme(v-btn) using ($material) {
+  &[dx-button] {
+    padding: rem-calc(12px) rem-calc(20px);
+    font-weight: 500;
+    height: auto;
+    min-width: auto;
+    letter-spacing: 0;
+    border: thin solid currentColor;
+
+    &.v-btn--text {
+      border: none;
+    }
+
+    &.v-size--default {
+      font-size: 1rem;
+      .v-btn__content {
+        line-height: rem-calc(24px);
+
+        .v-icon--left, .v-icon--right {
+          font-size: rem-calc(24px);
+        }
+
+        .v-icon--left {
+          margin-left: 0;
+          margin-right: rem-calc(5px);
+        }
+
+        .v-icon--right {
+          margin-right: 0;
+          margin-left: rem-calc(5px);
+        }
+
+        i[chevron] {
+          font-size: rem-calc(35px) !important;
+          line-height: rem-calc(20px);
+
+          &.v-icon--left {
+            margin-left: 0;
+            margin-right: rem-calc(11px);
+          }
+
+          &.v-icon--right {
+            margin-right: 0;
+            margin-left: rem-calc(11px);
+          }
+        }
+      }
+    }
+
+    &.v-size--large {
+      padding: rem-calc(13px) rem-calc(25px);
+      .v-btn__content {
+        line-height: rem-calc(28px);
+        font-size: rem-calc(20px);
+        letter-spacing: 0;
+
+        i[chevron] {
+          font-size: rem-calc(38px) !important;
+          line-height: rem-calc(22px);
+
+          &.v-icon--left {
+            margin-left: 0;
+            margin-right: rem-calc(16px);
+          }
+
+          &.v-icon--right {
+            margin-right: 0;
+            margin-left: rem-calc(16px);
+          }
+        }
+      }
+    }
+
+    &.v-size--small {
+      font-size: rem-calc(16px);
+      padding: rem-calc(8px) rem-calc(15px);
+      .v-btn__content {
+        line-height: rem-calc(22px);
+      }
+    }
+
+    &.v-btn--fab {
+      height: 56px;
+    }
+
+    @each $name, $color in map-get(map-get($material, 'buttons'), 'darken-variants') {
+      @if $name {
+        &.#{$name}:hover {
+          background: darken($color, 10%) !important;
+        }
+
+        &.#{$name}:active {
+          background: darken($color, 20%) !important;
+        }
+        &.#{$name}:visited {
+          background: darken($color, 10%) !important;
+        }
+        &.#{$name}:focus {
+          outline: 1px dashed #000;
+        }
+        &.#{$name}:focus:before {
+          background: transparent;
+        }
+
+        &.v-btn--outlined.#{$name}--text:active {
+          color: darken($color, 20%) !important;
+        }
+        &.v-btn--outlined.#{$name}--text:hover:before {
+          color: darken($color, 10%) !important;
+        }
+        &.v-btn--outlined.#{$name}--text:focus {
+          outline: 1px dashed #000;
+        }
+        &.v-btn--outlined.#{$name}--text:focus:before {
+          background: transparent;
+        }
+
+        &.v-btn--text.#{$name}--text:active {
+          color: darken($color, 20%) !important;
+        }
+        &.v-btn--text.#{$name}--text:hover:before {
+          color: darken($color, 10%) !important;
+        }
+        &.v-btn--text.#{$name}--text:focus {
+          outline: 1px dashed #000;
+        }
+
+        &.v-btn--disabled {
+        }
+      }
+    }
+
+    @each $name, $color in map-get(map-get($material, 'buttons'), 'other-variants') {
+      @if $name {
+        &.#{$name} {
+          color: #fff !important;
+        }
+
+        &.#{$name}:hover {
+          background: lighten($color, 10%) !important;
+        }
+
+        &.#{$name}:active {
+          background: lighten($color, 20%) !important;
+        }
+        &.#{$name}:visited {
+          background: lighten($color, 10%) !important;
+        }
+        &.#{$name}:focus {
+          outline: 1px dashed #000;
+        }
+        &.#{$name}:focus:before {
+          background: transparent;
+        }
+
+        &.v-btn--outlined.#{$name}--text:active {
+          color: lighten($color, 20%) !important;
+        }
+        &.v-btn--outlined.#{$name}--text:hover:before {
+          color: lighten($color, 10%) !important;
+        }
+        &.v-btn--outlined.#{$name}--text:focus {
+          outline: 1px dashed #000;
+        }
+        &.v-btn--outlined.#{$name}--text:focus:before {
+          background: transparent;
+        }
+
+        &.v-btn--text.#{$name}--text:active {
+          color: lighten($color, 20%) !important;
+        }
+        &.v-btn--text.#{$name}--text:hover:before {
+          color: darken($color, 10%) !important;
+        }
+        &.v-btn--text.#{$name}--text:focus {
+          outline: 1px dashed #000;
+        }
+      }
+    }
+  }
+}

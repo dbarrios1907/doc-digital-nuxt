@@ -1,0 +1,166 @@
+// Buttons
+$btn-border-radius: 0px;
+
+$font-size-root: 16px;
+$body-font-family: "Roboto", sans-serif;
+$heading-font-family: "Roboto Slab", serif;
+
+$btn-focus-opacity: 0;
+$btn-font-weight: 600;
+$btn-hover-opacity: 0;
+$btn-text-transform: capitalize;
+
+$alert-outline: 2px solid currentColor !default;
+
+$tooltip-background-color: rgba(map-get($light-colors, 'dark'), 0.9);
+
+$expansion-panel-border-radius: none !default;
+$expansion-panel-header-min-height: rem-calc(80px);
+$expansion-panel-active-header-min-height: rem-calc(80px);
+$expansion-panel-content-padding: 24px 16px !default;
+$expansion-panel-header-icon-font-size: 40px !default;
+
+$stepper-alt-labels-header-divider: 50px -68px 0;
+$stepper-step-step-height: rem-calc(48px);
+$stepper-step-step-width: rem-calc(48px);
+$stepper-step-step-icon-font-size: 2rem;
+$stepper-step-step-font-size: 2rem;
+$stepper-step-error-icon-font-size: 2rem;
+$stepper-elevation: 0;
+$stepper-header-elevation: 0;
+
+$switch-thumb-top: calc(50% - 9px) !default;
+$switch-thumb-dense-height: 18px !default;
+$switch-thumb-dense-width: 18px !default;
+$switch-track-dense-height: 12px !default;
+$switch-track-dense-inset-height: 24px !default;
+$switch-track-dense-inset-width: 40px !default;
+$switch-track-dense-top: calc(50% - 12px) !default;
+$switch-track-dense-width: 32px !default;
+
+$tabs-bar-background-color: 'cards';
+//$tabs-bar-height: 48px !default;
+//$tabs-icons-and-text-bar-height: 72px !default;
+//$tabs-icons-and-text-first-tab-margin-bottom: 6px !default;
+//$tabs-item-align-with-title-margin: 42px !default;
+
+$tabs-item-focus-opacity: 1 !default;
+$tabs-item-hover-opacity: 1 !default;
+
+// ripple effect animation - set none to disable
+$ripple-animation-transition-in : transform .1s linear, opacity .1s linear;
+$ripple-animation-transition-out :opacity .1s linear;
+$ripple-animation-visible-opacity : .15;
+
+$date-picker-event-border-radius: 0 !default;
+$text-field-border-radius: 0 !default;
+$text-field-filled-border-radius: 0 !default;
+    //$primary-transition: 0.3s map-get($transition, 'swing') !default;
+
+$breadcrumbs-item-font-size: 16px;
+
+//$tooltip-border-radius: $border-radius-root;
+//$tooltip-font-size: 14px !default;
+//$tooltip-transition-timing-function: map-get($transition, 'linear-out-slow-in') !default;
+//$tooltip-transition-enter-duration: 150ms !default;
+//$tooltip-transition-leave-duration: 75ms !default;
+//$tooltip-padding: 5px 16px !default;
+
+$headings: (
+    'h1': (
+        'size': 3.063rem,
+        'line-height': 3.813rem,
+        'weight': 400,
+        'letter-spacing': 0,
+        'font-family': $heading-font-family,
+        'text-transform': false
+    ),
+    'h2': (
+        'size': 2.438rem,
+        'line-height': 3.063rem,
+        'weight': 500,
+        'letter-spacing': 0,
+        'font-family': $body-font-family,
+        'text-transform': false
+    ),
+    'h3': (
+        'size': 1.938rem,
+        'line-height': 2.438rem,
+        'weight': 500,
+        'letter-spacing': 0,
+        'font-family': $body-font-family,
+        'text-transform': false
+    ),
+    'h4': (
+        'size': 1.563rem,
+        'line-height': 1.938rem,
+        'weight': 500,
+        'letter-spacing': 0,
+        'font-family': $body-font-family,
+        'text-transform': false
+    ),
+    'h5': (
+      'size': 1.438rem,
+      'line-height': 1.438rem,
+      'weight': 500,
+      'letter-spacing': 0,
+      'font-family': $body-font-family,
+      'text-transform': false
+    ),
+    'h6': (
+      'size': 1.125rem,
+      'line-height': 1.438rem,
+      'weight': 500,
+      'letter-spacing': 0,
+      'font-family': $body-font-family,
+      'text-transform': false
+    ),
+    'body-1': (
+      'size': 1rem,
+      'line-height': 1.5rem,
+      'weight': 400,
+      'letter-spacing': 0,
+      'font-family': $body-font-family,
+      'text-transform': false
+    ),
+    'subtitle-1': (
+      'size': 1rem,
+      'line-height': 1.5rem,
+      'weight': 400,
+      'letter-spacing': 0,
+      'font-family': $body-font-family,
+      'text-transform': false
+    ),
+    'subtitle-2': (
+      'size': 0.875rem,
+      'line-height': 1.125rem,
+      'weight': 700,
+      'letter-spacing': 0,
+      'font-family': $body-font-family,
+      'text-transform': false
+    ),
+    'caption': (
+      'size': 0.875rem,
+      'line-height': 1.125rem,
+      'weight': 400,
+      'letter-spacing': 0,
+      'font-family': $body-font-family,
+      'text-transform': false
+    ),
+    'overline': (
+      'size': 0.875rem,
+      'line-height': 1.125rem,
+      'weight': 400,
+      'letter-spacing': 0,
+      'font-family': $body-font-family,
+      'text-transform': uppercase
+    ),
+);
+
+//$btn-border-radius: $border-radius-root;
+
+$dialog-border-radius: 0 !default;
+
+$data-table-regular-header-font-size: rem-calc(16px) !default;
+$data-table-regular-row-font-size: rem-calc(16px) !default;
+$text-field-filled-full-width-outlined-slot-min-height: rem-calc(48px) !default;

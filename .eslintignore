@@ -1,0 +1,8 @@
+**/*.svg.vue
+**/*.scss
+**/*.sass
+**/*.css
+src/assets
+public
+dist
+**/ToastService.js

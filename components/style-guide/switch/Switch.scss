@@ -1,0 +1,11 @@
+@include theme(v-input--switch) using ($material) {
+  &.v-input--switch--inset.v-input--is-dirty .v-input--switch__thumb {
+    transform: translate(16px, 0) !important;
+    color: map-deep-get($material, 'colors', 'light') !important;
+    caret-color: map-deep-get($material, 'colors', 'light') !important;
+  }
+
+  &.v-input--switch--inset .v-input--switch__track {
+    opacity: 1;
+  }
+}

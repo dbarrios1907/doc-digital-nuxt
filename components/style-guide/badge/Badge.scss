@@ -1,0 +1,93 @@
+@include theme(v-chip) using($material) {
+  $light-color: map-deep-get($material, 'v_chip', 'light');
+  $dark-color: map-deep-get($material, 'v_chip', 'dark');
+  $primary-color: map-deep-get($material, 'v_chip', 'primary');
+  &.badge-link {
+    text-decoration: underline;
+  }
+  &.v-chip--label {
+      border-radius: 0px !important;
+      padding: 1px 8px !important;
+  }
+  &.v-size--default {
+    font-size: 20px !important;
+    line-height: 30px !important;
+    font-weight: 400px !important;
+  }
+  &.v-size--small{
+    height: 26px !important;
+    padding: 1px 8px !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    font-weight: 400px !important;
+  }
+  &.v-size--x-small{
+    height: 20px !important;
+    font-size: 14px !important;
+    line-height: 18px !important;
+    padding: 1px 8px !important;
+  }
+  &.secondary{
+    background-color: $dark-color !important;
+    color: $light-color !important;
+  }
+  &.tertiary{
+    border-color: $primary-color !important;
+    color: $primary-color !important;
+  }
+
+  &.notification{
+    color: $light-color !important;
+    background-color : $primary-color !important;
+    height: 58px !important;
+    padding: 14px 25px !important;
+    font-weight: 700 !important;
+    font-size: 20px !important;
+    line-height: 30px !important;
+  }
+
+  &.notification.v-size--small{
+    height: 48.22px !important;
+    padding: 12px 20px !important;    
+    font-size: 16px !important;
+    line-height: 24px !important;
+  }
+
+  &.notification.v-size--x-small{
+    height: 40px !important;
+    padding: 8px 15px !important;    
+    font-size: 16px !important;
+    line-height: 24px !important;
+  }
+
+  div.badge-text{
+    margin-right: 10px;
+  }
+
+  div.badge-number{
+    padding: 1px;
+    float: right;
+    border-radius: 50%;
+    background-color: $light-color !important;
+    color : $primary-color !important;
+    text-align: center;
+  }
+
+  &.notification div.badge-number{
+    font-size: 16px;
+    height: 32px;
+    width: 32px;
+  }
+  &.notification.v-size--small div.badge-number{
+    font-size: 14px;
+    line-height: 24px;
+    height: 24px;
+    width: 24px;
+  }
+  &.notification.v-size--x-small div.badge-number{
+    font-size: 10px;
+    line-height: 16px;
+    height: 16px;
+    width: 16px;
+  }
+}

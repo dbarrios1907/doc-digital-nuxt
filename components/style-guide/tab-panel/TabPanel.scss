@@ -1,0 +1,92 @@
+@include theme(v-tabs) using ($material) {
+  $bg-color: map-deep-get($material, 'v_tabs', 'tabs-bar-background-color');
+  $tx-color: map-deep-get($material, 'v_tabs', 'light');
+  $tx-dissable-color: map-deep-get($material, 'v_tabs', 'tabs-bar-text-dissable-color');
+  .v-tab{
+    font-size: rem-calc(16px);
+    line-height: rem-calc(24px);
+    text-transform: none !important;
+  }
+
+  .v-tab:not(.v-tab--active){
+    color: $tx-dissable-color !important;
+  }
+
+
+  .v-tab:not(.v-tab--active),
+  .v-tab:not(.v-tab--active) > .v-icon,
+  .v-tab:not(.v-tab--active) > .v-btn,
+  .v-tab--disabled {
+    color:  map-get($material, 'tabs');
+  }
+  .v-slide-group__content{
+    height: 54px;
+    padding: 2px 0;
+  }
+  .v-tabs-slider-wrapper{display: none;}
+
+  .v-tab:not(.v-tab--active) .tab-title{
+    text-decoration: underline;
+  }
+
+  .v-tab span{
+    margin-right: 12px;
+  }
+
+  .v-tab--active div.tab-number{
+    background-color: $tx-color !important;
+    color : $bg-color !important;
+  }
+
+  .v-tab:not(.v-tab--active) div.tab-number{
+    background-color: $bg-color !important;
+    color :  $tx-color !important;
+  }
+
+  .v-tab div.tab-number{
+    padding: 1px;
+    border-radius: 50%;
+    height: 24px;
+    width: 24px;
+    float: right;
+    font-size: 14px;
+  }
+  //.v-tab {
+  //  states($material)
+  //}
+}
+div.v-item-group.v-tabs-items{
+  margin-top: 1px !important;
+}
+@include theme(tab-primary) using ($material) {
+  $bg-color: map-deep-get($material, 'v_tabs', 'tabs-bar-background-color');
+  $tx-color: map-deep-get($material, 'v_tabs', 'light');
+  $tx-dissable-color: map-deep-get($material, 'v_tabs', 'tabs-bar-text-dissable-color');
+
+  .v-tab--active {
+    background-color: $bg-color;
+    color :  $tx-color;
+  } 
+}
+@include theme(tab-default) using ($material) {
+  $bg-color: map-get($material, 'v_tabs', 'light');
+  $tx-color: map-deep-get($material, 'v_tabs', 'primary');
+  $tx-dissable-color: map-deep-get($material, 'v_tabs', 'tabs-bar-text-dissable-color');
+
+  .v-tab--active {
+    background-color: $bg-color;
+    color :  $tx-color;
+    border-bottom: 7px solid;
+    .tab-header-content{
+      margin-top: 7px;
+    } 
+  } 
+  .tab-header-content {
+    font-weight: 400 !important;
+  } 
+
+  
+  .v-tab:not(.v-tab--active){
+    font-weight: 400px !important;
+  }
+}
