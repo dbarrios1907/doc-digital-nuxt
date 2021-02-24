@@ -6,8 +6,17 @@ export default {
   argTypes: {},
 }
 
+const labelCol = {
+  template: `
+    <v-col cols="auto" style="min-width: 140px; max-width: 140px" class="flex font-20 line-height-22"><slot /></v-col>
+  `,
+}
+
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
+  components: {
+    labelCol,
+  },
   data: () => ({
     dialog: false,
     dialog1: false,
@@ -17,6 +26,7 @@ const Template = (args, { argTypes }) => ({
     items: ['Administrador', 'otro'],
     items1: ['Subragante 1', 'Subragante 2'],
     items2: ['Miguel', 'Juan'],
+    labelClass: 'text-body-1 font-20',
   }),
   methods: {
     removeItem(item) {
@@ -54,7 +64,7 @@ const Template = (args, { argTypes }) => ({
           <v-card-text class="font-roboto weight-400 line-height-30 font-title darken3--text">
               Has cerrado tu sesión.
           </v-card-text>
-          
+
           <v-card-actions>
             <v-spacer></v-spacer>
             <dx-button color="primary" outlined v-bind="$props" class="text-none">
@@ -74,7 +84,7 @@ const Template = (args, { argTypes }) => ({
             <h5 class="font-title weight-700 darken3--text font-roboto">
               Su sesión ha expirado
             </h5>
-            
+
             <v-spacer></v-spacer>
             <v-btn
                 color="darken3"
@@ -97,7 +107,7 @@ const Template = (args, { argTypes }) => ({
               </v-col>
             </v-row>
           </v-card-text>
-          
+
           <v-card-actions>
             <v-spacer></v-spacer>
             <dx-button color="primary" outlined v-bind="$props" class="text-none">
@@ -117,7 +127,7 @@ const Template = (args, { argTypes }) => ({
             <h5 class="font-title weight-700 darken3--text font-roboto">
               Nuevo usuario
             </h5>
-            
+
             <v-spacer></v-spacer>
             <v-btn
                 icon
@@ -132,9 +142,9 @@ const Template = (args, { argTypes }) => ({
             <perfect-scrollbar :style="{ height: '100%' }">
               <div class="px-3">
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">RUT*</v-col>
-                  <v-col cols=10>
-                    <v-text-field
+                  <labelCol>RUT*</labelCol>
+                  <v-col>
+                    <dx-text-field
                       class="d-inline-block"
                       hide-details
                       ref="name"
@@ -143,8 +153,8 @@ const Template = (args, { argTypes }) => ({
                       outlined
                       placeholder="99.999.999"
                       style="width: 108px"
-                    /> - 
-                    <v-text-field
+                    /> -
+                    <dx-text-field
                       class="d-inline-block"
                       hide-details
                       ref="name"
@@ -158,8 +168,8 @@ const Template = (args, { argTypes }) => ({
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">Nombre(s)*</v-col>
-                  <v-col cols=10>
+                  <labelCol>Nombre(s)*</labelCol>
+                  <v-col>
                     <v-text-field
                       hide-details
                       ref="name"
@@ -172,8 +182,8 @@ const Template = (args, { argTypes }) => ({
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">Apellido(s)*</v-col>
-                  <v-col cols=10>
+                  <labelCol>Apellido(s)*</labelCol>
+                  <v-col>
                     <v-text-field
                       hide-details
                       ref="name"
@@ -186,8 +196,8 @@ const Template = (args, { argTypes }) => ({
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">Correo*</v-col>
-                  <v-col cols=10>
+                  <labelCol>Correo*</labelCol>
+                  <v-col>
                     <v-text-field
                       hide-details
                       ref="name"
@@ -200,8 +210,8 @@ const Template = (args, { argTypes }) => ({
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">Cargo*</v-col>
-                  <v-col cols=10>
+                  <labelCol>Cargo*</labelCol>
+                  <v-col>
                     <v-text-field
                       hide-details
                       ref="name"
@@ -214,8 +224,8 @@ const Template = (args, { argTypes }) => ({
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">Permisos Adicionales</v-col>
-                  <v-col cols=10>
+                  <labelCol>Permisos Adicionales</labelCol>
+                  <v-col>
                     <dx-select
                         :ripple="false"
                         v-bind="props"
@@ -242,8 +252,8 @@ const Template = (args, { argTypes }) => ({
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">Subrogante</v-col>
-                  <v-col cols=10>
+                  <labelCol>Subrogante</labelCol>
+                  <v-col>
                     <dx-select
                         :items="items1"
                         label="Selecciona subrogante"
@@ -259,8 +269,8 @@ const Template = (args, { argTypes }) => ({
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=3 class="flex">Activar subrogancia</v-col>
-                  <v-col cols=9>
+                  <v-col cols="auto" class="flex font-20">Activar subrogancia</v-col>
+                  <v-col>
                     <doc-switch
                       class="d-inline-block"
                       style="width: 40px"
@@ -268,15 +278,15 @@ const Template = (args, { argTypes }) => ({
                           inset
                           :ripple="false"
                           dense
-                      > 
+                      >
                       </doc-switch>
                       <v-icon color="warning">mdi-help-circle</v-icon>
                   </v-col>
                 </v-row>
 
                 <v-row class="align-center">
-                  <v-col cols=2 class="flex">Seguidor</v-col>
-                  <v-col cols=10>
+                  <labelCol>Seguidor</labelCol>
+                  <v-col>
                     <dx-select
                         :items="items2"
                         label="Selecciona seguidor"
@@ -297,7 +307,7 @@ const Template = (args, { argTypes }) => ({
           <v-card-actions>
             <v-spacer></v-spacer>
             <div class="pr-2">
-              <dx-button color="primary" outlined v-bind="$props" class="text-none">
+              <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2">
                 <span class="text-underline"> Cancelar </span>
               </dx-button>
 
@@ -308,7 +318,7 @@ const Template = (args, { argTypes }) => ({
           </v-card-actions>
         </v-card>
       </v-dialog>
-    
+
     </v-row>
   `,
 })
