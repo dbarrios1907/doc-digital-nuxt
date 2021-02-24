@@ -5,8 +5,8 @@
     border-radius: 0 !important;
 
     .v-card__title {
-      line-height: 29px;
-      padding: 18px 23px 15px 26px !important;
+      line-height: rem-calc(29px);
+      padding: rem-calc(18px) rem-calc(23px) rem-calc(15px) rem-calc(26px) !important;
 
       .v-btn--icon {
         width: rem-calc(18px);
@@ -17,19 +17,20 @@
     }
 
     .v-card__text {
-      padding: 40px !important;
+      margin-top: rem-calc(1px);
+      padding: rem-calc(40px) !important;
 
       .v-input__control > .v-input__slot {
-        min-height: 48px !important;    
+        min-height: rem-calc(48px) !important;
       }
     }
 
     .v-card__text .pr-ext {
-      padding-right: 100px !important;
+      padding-right: rem-calc(100px) !important;
     }
 
     .v-card__actions {
-      padding:0 30px 30px;
+      padding:0 rem-calc(30px) rem-calc(30px);
     }
   }
 }

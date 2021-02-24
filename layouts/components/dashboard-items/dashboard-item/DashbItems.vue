@@ -5,16 +5,16 @@
       <div class="py-2 px-0 break-word">
         <div class="font-xlarge weight-500 primary--text">{{ titleheader }}</div>
       </div>
-      <div v-if="!hidecontent" class="py-2 px-1 mt-3 pr-4 col-12">
+      <div v-if="!hidecontent" class="py-2 pl-0 mt-3 pr-4 col-12">
         <div v-if="messaje === ''" class="px-1 text-subtitle-2 mt-5" />
-        <div v-else class="px-1 text-subtitle-2 red white--text text-caption text-center font-16 weight-normal line-height-24 rounded-xl">
+        <div v-else class="px-1 error white--text text-center font-16 weight-400 line-height-24 rounded-xl pending-messaje">
           {{ messaje }}
         </div>
       </div>
       <div class="px-0">
-        <dx-button color="regular" text class="pl-0 my-2">
-          <dx-icon left> mdi-arrow-right </dx-icon>
-          <span class="text-underline line-height-24" :class="actionColor"> Ir al detalle </span>
+        <dx-button color="regular" text class="pl-2 my-2">
+          <ArrowForward :class="'arrow'" />
+          <span class="text-underline line-height-24 weight-400" :class="actionColor"> Ir al detalle </span>
         </dx-button>
       </div>
     </div>
@@ -45,7 +45,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .break-word {
   word-break: break-word !important;
 }
@@ -57,5 +57,11 @@ export default {
   font-weight: normal !important;
   line-height: 24px !important;
   max-width: 81%;
+}
+.arrow {
+  margin-right: 7.5px !important;
+}
+.pending-messaje {
+  max-width: 240px;
 }
 </style>
