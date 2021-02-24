@@ -2,7 +2,7 @@
   <v-navigation-drawer ref="navbar" :color="_color" width="100%" permanent v-bind="$attrs" v-on="$listeners">
     <perfect-scrollbar :style="{ height: scrollHeight }">
       <slot :slot-scope="{}" name="top-section">
-        <NavListItem class="px-5">
+        <NavListItem class="mt-8 px-5">
           <v-list-item-icon>
             <v-icon large class="light--text mr-1"> mdi-account </v-icon>
           </v-list-item-icon>
@@ -10,12 +10,12 @@
           <v-list-item-title>Trinidad Swinburn Correa</v-list-item-title>
         </NavListItem>
 
-        <v-divider />
+        <DxEntitySelectionItem />
 
         <div class="py-4" style="display: flex; justify-content: center">
-          <dx-button large color="primary" outlined v-bind="$props" class="light">
-            <span class="text-underline font-large"> Nuevo Documento </span>
-            <dx-icon right large> mdi-chevron-down </dx-icon>
+          <dx-button style="background-color: white" large color="primary" text v-bind="$props">
+            <span class="underline-text">Nuevo Documento</span>
+            <dx-icon right chevron regular> mdi-chevron-down </dx-icon>
           </dx-button>
         </div>
       </slot>
@@ -32,10 +32,12 @@
 import NavListItem from './components/NavListItem.vue'
 import SidebarItem from './components/SidebarItem.vue'
 import _get from '@/shared/utils/get'
+import DxEntitySelectionItem from '~/layouts/components/navigation/components/EntitySelectionItem'
 
 export default {
   name: 'DxNavigation',
   components: {
+    DxEntitySelectionItem,
     NavListItem,
     SidebarItem,
   },

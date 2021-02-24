@@ -34,6 +34,11 @@ export default {
       margin-right: 12px;
     }
 
+    .v-list-group__header__append-icon .v-icon {
+      font-size: 35px;
+      -webkit-text-stroke: 1px $bg-color;
+    }
+
     &.v-list-group--active {
       position: relative;
       &::before {

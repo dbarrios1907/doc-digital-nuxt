@@ -42,6 +42,7 @@ export default {
 
     &.v-list-item--active {
       color: $color;
+      font-weight: 700;
     }
 
     .v-icon {
@@ -55,6 +56,12 @@ export default {
       background: darken($bg-color, 10%);
       transition: background 0.2s linear;
     }
+
+    &:focus,
+    &:active {
+      font-weight: bold;
+    }
+
     &:hover::before {
       opacity: $hover-opacity;
     }
