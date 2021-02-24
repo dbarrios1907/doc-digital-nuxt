@@ -5,7 +5,7 @@ export default {
   argTypes: {},
 }
 
-export const Demo = () => ({
+export const Default = () => ({
   components: {
     Dashboard,
   },
@@ -14,10 +14,8 @@ export const Demo = () => ({
   }),
   //html
   template: `
-    <div>
-      <v-container> 
+    <div class="px-5">
         <Dashboard />
-      </v-container>
     </div>
   `,
 })

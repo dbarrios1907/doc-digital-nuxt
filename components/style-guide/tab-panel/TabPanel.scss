@@ -6,6 +6,7 @@
     font-size: rem-calc(16px);
     line-height: rem-calc(24px);
     text-transform: none !important;
+    height: 48px !important;
   }
 
   .v-tab:not(.v-tab--active){
@@ -49,7 +50,8 @@
     height: 24px;
     width: 24px;
     float: right;
-    font-size: 14px;
+    font-size: 14px;    
+    padding-left: 3px;
   }
   //.v-tab {
   //  states($material)
