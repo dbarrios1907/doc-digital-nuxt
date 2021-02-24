@@ -23,6 +23,7 @@
     "js-cookie": "^2.2.1",
     "nuxt": "^2.14.6",
     "nuxt-webfontloader": "^1.1.0",
+    "v-tooltip": "^2.1.2",
     "vue2-perfect-scrollbar": "^1.5.0"
   },
   "devDependencies": {
