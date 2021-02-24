@@ -2,3 +2,5 @@ node_modules
 dist
 .storybook
 netlify.toml
+# exclude storybook build
+storybook-static
