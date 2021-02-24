@@ -97,7 +97,7 @@
           color: map-deep-get($material, 'colors', 'darken3');
           padding: rem-calc(12px) rem-calc(13px);
           
-          & :not(:last-child){
+          &:not(:last-child){
             min-width: rem-calc(160px);
           }
           
@@ -139,5 +139,11 @@
   }
   .v-data-table-header .v-icon {
     color: map-deep-get($material, 'colors', 'light');
+
+    &.focus::after {
+      opacity: 0.12;
+    }
   }
+
+
 }

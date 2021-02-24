@@ -14,7 +14,7 @@ addDecorator(() => ({
   template: `
     <v-app style="overflow: auto">
       <div class="dx-notification-container"/>
-      <v-container fluid class="px-0 py-0 mx-0">
+      <v-container fluid class="px-0 mx-0">
         <story/>
       </v-container>
     </v-app>

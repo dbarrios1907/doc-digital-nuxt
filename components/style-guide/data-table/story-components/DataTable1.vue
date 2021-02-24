@@ -14,18 +14,15 @@
     >
       <template v-for="h in headers" v-slot:[`header.${h.value}`]="{ header }" class="column">
         {{ h.text }}
-        <v-icon :class="[{ iconsearch: h.search }]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
-        <v-icon class="float-right" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable">mdi-filter</v-icon>
+        <v-icon :class="[{ iconsearch: h.search },{'focus': actived === h.value}]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
+        <v-icon :class="['float-right', {'focus': actived === h.value}]" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable">mdi-filter</v-icon>
       </template>
-      <template slot="body.prepend">
+      <template slot="body.prepend" v-if="searchname || searchrut || filtered">
         <tr class="body-prepend">
-          <td colspan="2" v-if="searchname">
-            <v-text-field type="text" hide-details solo flat outlined v-model="filterValue" label="Nombre" />
-          </td>
-          <td v-if="searchrut">
-            <v-text-field type="text" hide-details solo flat outlined v-model="filterRut" label="Rut" />
-          </td>
-          <td colspan="2" v-if="filtered">
+          <td />
+          <td> <v-text-field type="text" @focus="actived = 'name'" hide-details solo flat outlined v-model="filterValue" label="Nombre" v-if="searchname" /> </td>
+          <td> <v-text-field type="text" @focus="actived = 'rut'" hide-details solo flat outlined v-model="filterRut" label="Rut" v-if="searchrut" /> </td>
+          <td>
             <dx-select
               :ripple="false"
               v-model="permiso"
@@ -38,6 +35,9 @@
               hide-details
               outlined
               :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+              v-if="filtered"
+              @click="actived = 'access'"
+              @blur="actived = null"
             >
               <template v-slot:selection="{ item, index }">
                 <Badge type="tertiary" label outlined class="ma-0">
@@ -47,16 +47,15 @@
               </template>
             </dx-select>
           </td>
+          <td />
         </tr>
       </template>
 
-      <template v-slot:top>
+      <!--<template v-slot:top>
         <dx-tabs class="mt-5" :items="items" hide-on-leave tabtype="default">
-          <!--<dx-tab href="#tab-1"> Activos </dx-tab>
-          <dx-tab href="#tab-2"> Inactivos </dx-tab>-->
         </dx-tabs>
       </template>
-
+      -->
       <template v-slot:[`item.access`]="{ item: { access } }">
         <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
           {{ v }}
@@ -86,6 +85,7 @@ export default {
         { tab: 'Activos', number: 0 },
         { tab: 'Inactivos', number: 0 },
       ],
+      actived: null,
       searchname: false,
       searchrut: false,
       filtered: false,
