@@ -1,5 +1,5 @@
 <template>
-  <v-checkbox dx-checkbox :v-model="selected" :ripple="ripple" :label="label" :value="value" checkbox-disabled-opacity></v-checkbox>
+  <v-checkbox dx-checkbox :v-model="selected" :ripple="ripple" :label="label" :value="value" checkbox-disabled-opacity />
 </template>
 
 <script>
@@ -9,7 +9,7 @@ export default {
   props: {
     selected: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     label: String,
     //value: String,
@@ -22,8 +22,12 @@ export default {
 </script>
 <style lang="scss">
 @include theme(v-input--checkbox) using($material) {
+  margin-top: 0;
+  .v-input__slot {
+    margin-bottom: 0;
+  }
   .v-label {
-    line-height: rem-calc(24px) !important;
+    line-height: rem-calc(18px) !important;
     font-weight: 400 !important;
     padding-top: 2px !important;
   }
