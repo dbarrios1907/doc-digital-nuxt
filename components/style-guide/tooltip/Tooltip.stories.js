@@ -10,43 +10,63 @@ const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   template: `
     <div>
-      <v-tooltip left>
-        <template v-slot:activator="{ on, attrs }">
-          <Button
-              color="primary"
-              v-bind="attrs"
-              v-on="on"
-          >
-            <span class="text-underline">Left</span>
-          </Button>
-        </template>
-        <span>Left tooltip</span>
-      </v-tooltip>
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <Button
-              color="secondary"
-              v-bind="attrs"
-              v-on="on"
-          >
-            Bottom
-          </Button>
-        </template>
-        <span>Bottom tooltip</span>
-      </v-tooltip>
+      <dx-button
+        absolute
+        top='10'
+        left='10'
+          v-tooltip="{
+              content: 'My large tooltip text',
+          }"
+          color="primary"
+          v-bind="attrs"
+          v-on="on"
+      >
+        <span class="text-underline">Bottom</span>
+      </dx-button>
 
-      <v-tooltip right>
-        <template v-slot:activator="{ on, attrs }">
-          <Button
-              color="dark"
-              v-bind="attrs"
-              v-on="on"
-          >
-            Right
-          </Button>
-        </template>
-        <span>Right tooltip</span>
-      </v-tooltip>
+      <dx-button
+        absolute
+        top='10'
+        right='10'
+        v-tooltip="{
+              content: 'My large tooltip text',
+              manual: true
+          }"
+        color="primary"
+        v-bind="attrs"
+        v-on="on"
+      >
+        <span class="text-underline">Bottom</span>
+      </dx-button>
+
+      <dx-button
+        absolute
+        bottom='10'
+        right='10'
+        v-tooltip="{
+              content: 'My large tooltip text',
+              manual: true
+          }"
+        color="primary"
+        v-bind="attrs"
+        v-on="on"
+      >
+        <span class="text-underline">Top</span>
+      </dx-button>
+      <dx-button
+        absolute
+        bottom='10'
+        left='10'
+        v-tooltip="{
+              content: 'My large tooltip text',
+              manual: true
+          }"
+        color="primary"
+        v-bind="attrs"
+        v-on="on"
+      >
+        <span class="text-underline">Top </span>
+      </dx-button>
     </div>
   `,
 })
