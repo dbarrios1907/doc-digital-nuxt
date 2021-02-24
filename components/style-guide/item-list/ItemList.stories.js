@@ -12,7 +12,7 @@ const wrapper = {
   template: `
     <v-row>
       <v-col cols="12" sm="6" lg="5">
-        <v-card>
+        <v-card class='ml-15' outlined tile style='box-shadow: 0 1px 15px rgba(0, 0, 0, 0.2);'>
           <slot></slot>
         </v-card>
       </v-col>
@@ -63,34 +63,31 @@ const Template = (args, { argTypes }) => ({
   data: () => listData,
   template: `
     <wrapper>
-    <v-list three-line flat >
+    <v-list three-line flat outline>
       <v-list-item-group
           :ripple="false"
           v-model="selected"
       >
         <template v-for="(item, index) in items">
-          <v-list-item class="py-2" :key="item.title" :ripple="false">
+          <v-list-item class="py-4 pl-10 pr-8" :key="item.title" :ripple="false">
             <template v-slot:default="{ active }">
               <v-list-item-content>
                 <v-list-item-title class="font-title weight-700 pb-3" v-text="item.title"></v-list-item-title>
 
                 <v-list-item-subtitle
-                    class="text--primary"
+                    class="text--primary font-16 line-height-18"
                     v-text="item.headline"
                 ></v-list-item-subtitle>
 
-                <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
+                <v-list-item-subtitle class="font-16 line-height-18 weight-700" v-text="item.subtitle"></v-list-item-subtitle>
               </v-list-item-content>
 
-              <v-list-item-action>
-                <v-list-item-action-text v-text="item.action"></v-list-item-action-text>
 
-                <v-icon
-                    color="primary"
-                >
-                  mdi-trash-can-outline
-                </v-icon>
-              </v-list-item-action>
+              <dx-icon style='font-size: 30px'
+                  color="primary"
+              >
+                mdi-delete-outline
+              </dx-icon>
             </template>
           </v-list-item>
 
@@ -102,7 +99,7 @@ const Template = (args, { argTypes }) => ({
       </v-list-item-group>
     </v-list>
     </wrapper>
-    
+
   `,
 })
 
@@ -115,34 +112,34 @@ const ListVariantTpl = (args, { argTypes }) => ({
   template: `
     <wrapper>
       <v-list two-line flat class="py-4 px-4">
-        <div class="font-title weight-700 ml-4 pt-3">Lista 1 de visación</div>
-        
+        <div class="font-title weight-700 ml-4 pt-4 pl-2">Lista 1 de visación</div>
+
         <v-list-item-group
+          class='pl-1'
           :ripple="false"
           v-model="selected"
       >
         <template v-for="(item, index) in items">
-          <v-list-item class="py-2" :key="item.title" :ripple="false">
+          <v-list-item class="py-1" :key="item.title" :ripple="false">
             <template v-slot:default="{ active }">
               <v-list-item-content>
 
-                <div class="text--primary pb-1"
+                <div class="text--primary line-height-22"
                     v-text="item.headline"
                 ></div>
 
-                <div class="weight-700" v-text="item.subtitle"></div>
+                <div class="weight-700 line-height-22" v-text="item.subtitle"></div>
               </v-list-item-content>
 
-              <v-list-item-action>
-                <v-icon
+
+                <v-icon class="mr-2"  style="font-size: 30px"
                     color="primary"
                 >
-                  mdi-trash-can-outline
+                  mdi-delete-outline
                 </v-icon>
-              </v-list-item-action>
             </template>
           </v-list-item>
-          
+
         </template>
       </v-list-item-group>
     </v-list>
