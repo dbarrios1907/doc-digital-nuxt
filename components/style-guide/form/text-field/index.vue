@@ -1,0 +1,31 @@
+<template>
+  <v-text-field solo flat outlined v-bind="$attrs" v-on="$listeners">
+    <!-- Pass on all named slots -->
+    <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
+
+    <!-- Pass on all scoped slots -->
+    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope" /></template>
+  </v-text-field>
+</template>
+
+<script>
+export default {
+  name: 'DxTextField',
+  inheritAttrs: false,
+}
+</script>
+
+<style lang="scss">
+@include theme(v-input) using ($material) {
+  $font-color: map-get($material, 'font-color');
+
+  .v-input__control {
+    min-height: 48px;
+  }
+
+  //input,
+  //textarea {
+  //  color: $font-color;
+  //}
+}
+</style>

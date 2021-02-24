@@ -157,10 +157,9 @@ $headings: (
     ),
 );
 
-//$btn-border-radius: $border-radius-root;
-
 $dialog-border-radius: 0 !default;
 
 $data-table-regular-header-font-size: rem-calc(16px) !default;
 $data-table-regular-row-font-size: rem-calc(16px) !default;
 $text-field-filled-full-width-outlined-slot-min-height: rem-calc(48px) !default;
+$text-field-outlined-fieldset-border: 1px solid currentColor !default;

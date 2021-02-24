@@ -1,7 +1,5 @@
-import Vue from 'vue'
-
 export default {
-  title: 'Style Guide/Form/Select',
+  title: 'Style Guide/Form/TextField',
   argTypes: {
     color: { control: { type: 'select', options: ['primary', 'success', 'warning', 'error'] } },
     size: { control: { type: 'select', options: ['small', 'medium', 'large'] } },
@@ -38,22 +36,17 @@ const Template = (args, { argTypes }) => ({
   template: `
     <div>
       <wrapper>
-        <dx-select
-            :items="items"
-            label="Selección Simple"
-            @get-selected="get_selected"
-        >
-        </dx-select>
-      </wrapper>
-
-      <wrapper>
-        <dx-select
-          :items="items"
-          label="Multi Selección"
-          multiple
-          @get-selected="get_selected"
-        >
-        </dx-select>
+        <dx-text-field
+          ref="name"
+          solo
+          flat
+          outlined
+          :rules="[() => !!name || 'This field is required']"
+          :error-messages="errorMessages"
+          label="Full Name"
+          placeholder="John Doe"
+          required
+        />
       </wrapper>
     </div>
   `,

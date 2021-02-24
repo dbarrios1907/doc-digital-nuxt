@@ -1,14 +1,14 @@
 <template>
   <div :items="items" class="dx-filtermenu">
-    <Badge type="tertiary" label outlined small link class="dx-filemenu ml-0 my-1" v-for="sel in selected" :key="sel"> {{ sel }} </Badge>
+    <Badge v-for="sel in selected" :key="sel" type="tertiary" label outlined small link class="dx-filemenu ml-0 my-1"> {{ sel }} </Badge>
 
     <dx-button color="darken3" outlined @click="toogleOptions">
       <div class="text-underline float-left">Filtro</div>
       <dx-icon right regular class="text-right float-right"> mdi-filter </dx-icon>
     </dx-button>
-    <div v-show="toggled" @focusout="focusout" class="list-items-content mt-2" ref="menulist">
+    <div v-show="toggled" ref="menulist" class="list-items-content mt-2" @focusout="focusout">
       <div v-for="item in items" :key="item">
-        <v-checkbox v-model="selected" :label="item" :value="item" :ripple="false" @change="emitSelected"></v-checkbox>
+        <v-checkbox v-model="selected" :label="item" :value="item" :ripple="false" @change="emitSelected" />
       </div>
     </div>
   </div>
@@ -27,6 +27,11 @@ export default {
       selected: [],
     }
   },
+  computed: {
+    isTootgled() {
+      return this.toggled
+    },
+  },
   methods: {
     toogleOptions() {
       this.toggled = !this.toggled
@@ -37,11 +42,6 @@ export default {
     focusout(e) {},
     emitSelected() {
       this.$emit('get-selected', this.selected)
-    },
-  },
-  computed: {
-    isTootgled() {
-      return this.toggled
     },
   },
 }

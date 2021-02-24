@@ -27,4 +27,4 @@ export { default as DataTable } from '../../components/style-guide/data-table/Da
 export { default as Checkbox } from '../../components/style-guide/form/checkbox/Checkbox'
 export { default as Radio } from '../../components/style-guide/form/radio/Radio'
 export { default as FilterMenu } from '../../components/style-guide/filter-menu/FilterMenu'
-export { default as DatePicker } from '../../components/style-guide/date-picker'
+export { default as DatePicker } from '../../components/style-guide/form/date-picker'

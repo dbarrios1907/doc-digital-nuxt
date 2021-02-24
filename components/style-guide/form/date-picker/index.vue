@@ -1,20 +1,77 @@
 <template>
-  <v-data-table v-bind="$attrs" v-on="$listeners">
-    <!-- Pass on all named slots -->
-    <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
-    <!-- Pass on all scoped slots -->
-    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope" /></template>
-  </v-data-table>
+  <v-menu v-model="showPicker" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
+    <template v-slot:activator="{ on, attrs }">
+      <dx-text-field
+        v-model="dateFormatted"
+        hide-details
+        outlined
+        append-icon="mdi-calendar-month-outline"
+        v-bind="attrs"
+        @blur="date = parseDate(dateFormatted)"
+        v-on="on"
+      />
+    </template>
+    <v-date-picker v-model="date" v-bind="$attrs" v-on="$listeners">
+      <!-- Pass on all named slots -->
+      <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
+      <!-- Pass on all scoped slots -->
+      <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope" /></template>
+    </v-date-picker>
+  </v-menu>
 </template>
 
 <script>
 export default {
   name: 'DxDatePicker',
   inheritAttrs: true,
+  props: {
+    value: {
+      type: String,
+      default: () => null,
+    },
+  },
+  data: vm => ({
+    date: vm.parseDate(vm.value) || new Date().toISOString(),
+    dateFormatted: vm.formatDate(vm.parseDate(vm.value)) || vm.formatDate(new Date().toISOString().substr(0, 10)),
+    showPicker: false,
+  }),
+
+  computed: {
+    computedDateFormatted() {
+      return this.formatDate(this.date)
+    },
+  },
+
+  watch: {
+    date() {
+      this.dateFormatted = this.formatDate(this.date)
+    },
+  },
+
+  methods: {
+    formatHeader(date) {
+      return date
+    },
+    formatDate(date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+    parseDate(date) {
+      if (!date) return null
+
+      const [day, month, year] = date.split('/')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    },
+  },
 }
 </script>
 
 <style lang="scss">
+.v-application .v-menu__content .v-picker {
+  border: none !important;
+}
 @include theme(v-picker) using($material) {
   $font-color: map-get($material, 'font-color');
   $font-color-white: map-deep-get($material, 'colors', 'light');

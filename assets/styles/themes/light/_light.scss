@@ -1,5 +1,13 @@
 $material-light: (
   'font-color': map-get($light-colors, 'darken3'),
+  'text': (
+    //'theme': map-get($shades, 'white'),
+    'primary': map-get($light-colors, 'darken3'),
+    'secondary': map-get($light-colors, 'darken3'),
+    //'disabled': rgba(map-get($shades, 'black'), 0.38),
+    'link': map-get($light-colors, 'primary'),
+    'link-hover': darken(map-get($light-colors, 'primary'), 10%)
+  ),
   'outline': 1px dashed #000,
   'buttons': (
     //'disabled': rgba(map-get($shades, 'black'), 0.26),
@@ -12,14 +20,14 @@ $material-light: (
       'success': map-get($light-colors, 'success'),
       'error': map-get($light-colors, 'error'),
       'warning': map-get($light-colors, 'warning'),
-      'neutral': map-get($light-colors, 'neutral'),  
+      'neutral': map-get($light-colors, 'neutral'),
     ),
     'other-variants': (
       'dark': map-get($light-colors, 'dark'),
-      'regular': map-get($light-colors, 'darken3'),    
+      'regular': map-get($light-colors, 'darken3'),
       'light': map-get($light-colors, 'light'),
     )
-  ),  
+  ),
   'v_chip': (
     'dark': map-get($light-colors, 'dark'),
     'light': map-get($light-colors, 'light'),
@@ -68,7 +76,7 @@ $material-light: (
     'darken2': map-get($light-colors, 'darken2'),
   ),
   'primary': map-get($light-colors, 'primary'),
-  'light': map-get($light-colors, 'light'),  
+  'light': map-get($light-colors, 'light'),
   'v_filtermenu': (
     'dark': map-get($light-colors, 'dark'),
     'light': map-get($light-colors, 'light'),
@@ -105,14 +113,6 @@ $material-light: (
       //  'color': map-get($shades, 'white')
       //),
       //'dividers': rgba(map-get($shades, 'black'), 0.12),
-      //'text': (
-      //  'theme': map-get($shades, 'white'),
-      //  'primary': rgba(map-get($shades, 'black'), 0.87),
-      //  'secondary': rgba(map-get($shades, 'black'), 0.6),
-      //  'disabled': rgba(map-get($shades, 'black'), 0.38),
-      //  'link': map-get($blue, 'darken-2'),
-      //  'link-hover': map-get($grey, 'darken-3')
-      //),
       //'icons': (
       //  'active': rgba(map-get($shades, 'black'), 0.54),
       //  'inactive': rgba(map-get($shades, 'black'), 0.38)
