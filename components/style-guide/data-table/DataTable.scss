@@ -82,6 +82,9 @@
 
   &.table-sm {
     & > .v-data-table__wrapper > table {
+      & > tbody tr.body-prepend:hover{
+        background-color: transparent;
+      }
       & > tbody tr:nth-child(odd):not(.body-prepend):not(.body-append) {
           background-color: map-deep-get($material, 'colors', 'secondary');
       }
@@ -192,6 +195,9 @@
       & > th {
         padding: 0 !important;
         height: auto;
+        &.sortable{
+          padding-right: rem-calc(20px) !important;
+        }
       }
     }
 

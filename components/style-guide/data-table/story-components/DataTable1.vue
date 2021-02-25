@@ -65,7 +65,7 @@
       <template v-slot:[`item.actions`] >
         <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-square-edit-outline </v-icon>
         <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-eye </v-icon>
-        <v-icon dense> mdi-delete-outline </v-icon>
+        <v-icon dense> mdi-trash-can-outline </v-icon>
       </template>
 
       <template v-slot:footer>
