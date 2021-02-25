@@ -28,6 +28,11 @@ const Template = (args, { argTypes }) => ({
     items2: ['Miguel', 'Juan'],
     labelClass: 'text-body-1 font-20',
   }),
+  computed: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
+    },
+  },
   methods: {
     removeItem(item) {
       this.value = this.value.filter(function (val) {
@@ -52,6 +57,7 @@ const Template = (args, { argTypes }) => ({
           overlay-color="#001C41"
           v-model="dialog"
           max-width="600px"
+          :content-class="ismobil"
           >
         <v-card>
           <v-card-title>
@@ -78,7 +84,8 @@ const Template = (args, { argTypes }) => ({
           overlay-opacity="0.55"
           overlay-color="#001C41"
           v-model="dialog1"
-          max-width="600px">
+          max-width="600px"
+          :content-class="ismobil">
         <v-card>
           <v-card-title>
             <h5 class="font-title weight-700 darken3--text font-roboto">
@@ -97,7 +104,7 @@ const Template = (args, { argTypes }) => ({
 
           <v-card-text>
             <v-row>
-              <v-col cols=1>
+              <v-col cols=1 :class="ismobil ? 'px-0' : ''">
                 <v-icon color="primary">mdi-clock-time-five-outline</v-icon>
               </v-col>
               <v-col cols=11 class="px-0 pt-2 pl-1 pr-ext">
@@ -121,7 +128,8 @@ const Template = (args, { argTypes }) => ({
           overlay-opacity="0.55"
           overlay-color="#001C41"
           v-model="dialog2"
-          max-width="700px">
+          max-width="700px"
+          :content-class="ismobil">
         <v-card>
           <v-card-title>
             <h5 class="font-title weight-700 darken3--text font-roboto">
@@ -138,7 +146,7 @@ const Template = (args, { argTypes }) => ({
           </v-card-title>
           <v-divider></v-divider>
 
-          <v-card-text style="height: 470px">
+          <v-card-text class="formext">
             <perfect-scrollbar :style="{ height: '100%' }">
               <div class="px-3">
                 <v-row class="align-center">

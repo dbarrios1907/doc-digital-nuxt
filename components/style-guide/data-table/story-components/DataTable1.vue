@@ -1,55 +1,32 @@
 <template>
   <div>
     <DataTable
-      :headers="headers"
+      :headers="computedHeaders"
       :items="valuess"
       :page.sync="page"
       :items-per-page="itemsPerPage"
-      class="table-sm"
+      :class="['table-sm', {'ismobile': ismobil}]"
+      :mobile-breakpoint="0"
       show-select
       dense
       item-key="name"
-      hide-default-footer
       @page-count="pageCount = $event"
+      hide-default-footer
     >
-      <template v-for="h in headers" v-slot:[`header.${h.value}`]="{ header }" class="column">
+      <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
         {{ h.text }}
-        <v-icon
-          v-if="h.search"
-          :key="h.value"
-          :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
-          @click="activeSearch(header, $event)"
-        >
-          mdi-magnify
-        </v-icon>
-        <v-icon v-if="h.filterable" :key="h.value" :class="['float-right', { focus: actived === h.value }]" @click="openFilter(header, $event)">
-          mdi-filter
-        </v-icon>
+        <v-icon :class="[{ iconsearch: h.search },{'focus': actived === h.value}]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
+        <v-icon :class="['float-right', {'focus': actived === h.value}]" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable">mdi-filter</v-icon>
       </template>
-      <template v-if="searchname || searchrut || filtered" slot="body.prepend">
+      <template slot="body.prepend" v-if="searchname || searchrut || filtered">
         <tr class="body-prepend">
           <td />
-          <td>
-            <v-text-field
-              type="text"
-              v-model="filterValue"
-              hide-details
-              solo
-              flat
-              v-if="searchname"
-              outlined
-              label="Nombre"
-              @focus="actived = 'name'"
-            />
-          </td>
-          <td>
-            <v-text-field type="text" v-model="filterRut" hide-details solo flat v-if="searchrut" outlined label="Rut" @focus="actived = 'rut'" />
-          </td>
-          <td>
+          <td> <v-text-field type="text" @focus="actived = 'name'" hide-details solo flat outlined v-model="filterValue" label="Nombre" v-if="searchname" /> </td>
+          <td v-if="!ismobil"> <v-text-field type="text" @focus="actived = 'rut'" hide-details solo flat outlined v-model="filterRut" label="Rut" v-if="searchrut" /> </td>
+          <td v-if="!ismobil" class="filter">
             <dx-select
-              v-model="permiso"
-              v-if="filtered"
               :ripple="false"
+              v-model="permiso"
               :items="permisosValues"
               chips
               label="Filtra por permisos"
@@ -59,10 +36,11 @@
               hide-details
               outlined
               :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+              v-if="filtered"
               @click="actived = 'access'"
               @blur="actived = null"
             >
-              <template v-slot:selection="{ item }">
+              <template v-slot:selection="{ item, index }">
                 <Badge type="tertiary" label outlined class="ma-0">
                   <div class="darken3--text font-16 line-height-22 weight-400">{{ item }}</div>
                   <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
@@ -74,20 +52,19 @@
         </tr>
       </template>
 
-      <!--<template v-slot:top>
-        <dx-tabs class="mt-5" :items="items" hide-on-leave tabtype="default">
-        </dx-tabs>
+      <template v-slot:[`item.name`]="{ item: { name } }">
+         <span class="breaktext">{{ name }}</span>
       </template>
-      -->
+
       <template v-slot:[`item.access`]="{ item: { access } }">
         <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
           {{ v }}
         </v-chip>
       </template>
 
-      <template v-slot:[`item.actions`]>
-        <v-icon dense class="mr-4"> mdi-square-edit-outline </v-icon>
-        <v-icon dense class="mr-4"> mdi-eye </v-icon>
+      <template v-slot:[`item.actions`] >
+        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-square-edit-outline </v-icon>
+        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-eye </v-icon>
         <v-icon dense> mdi-delete-outline </v-icon>
       </template>
 
@@ -174,29 +151,7 @@ export default {
       ],
     }
   },
-
-  computed: {
-    headers() {
-      return [
-        {
-          text: 'Nombre',
-          align: 'start',
-          sortable: true,
-          value: 'name',
-          filter: this.nameFilter,
-          search: true,
-        },
-        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
-        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
-        { text: 'Acciones', value: 'actions', sortable: false },
-      ]
-    },
-  },
   methods: {
-    onResize() {
-      if (window.innerWidth < 769) this.isMobile = true
-      else this.isMobile = false
-    },
     openFilter(header, event) {
       event.stopPropagation()
       this.filtered = !this.filtered
@@ -232,6 +187,29 @@ export default {
       }, this.permiso)
 
       return flag
+    },
+  },
+  computed: {
+    ismobil (){
+      return this.$vuetify.breakpoint.xs
+    },
+    computedHeaders () {
+      return this.headers.filter(h => this.$vuetify.breakpoint.xs ? (h.value == "name" || h.value == "actions"): h.value)
+    },
+    headers() {
+      return [
+        {
+          text: 'Nombre',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+          filter: this.nameFilter,
+          search: true,
+        },
+        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
+        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Acciones', value: 'actions', sortable: false },
+      ]
     },
   },
 }

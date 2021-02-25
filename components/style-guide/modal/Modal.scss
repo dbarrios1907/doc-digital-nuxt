@@ -1,6 +1,31 @@
 .v-dialog {
   //max-height: 100% !important;
   overflow: hidden;
+
+  &.ismobile {
+    height: 100%;
+    margin: rem-calc(40px) rem-calc(10px);
+
+    & > .v-card .v-card__text {
+      margin-top: 0;
+      padding: 1rem !important;
+
+      &.formext {
+        height: rem-calc(360px);
+      }
+
+      & .pr-ext {
+        padding-right: 0 !important;
+      }
+
+      & .row {
+        & > .col {
+          max-width: 100%;
+          min-width: 100%;
+        }
+      }
+    }
+  }
   .v-card {
     border-radius: 0 !important;
 
@@ -17,8 +42,12 @@
     }
 
     .v-card__text {
-      margin-top: rem-calc(1px);
+      margin-top: 0;
       padding: rem-calc(40px) !important;
+
+      &.formext {
+        height: rem-calc(470px);
+      }
 
       .v-input__control > .v-input__slot {
         min-height: rem-calc(48px) !important;
