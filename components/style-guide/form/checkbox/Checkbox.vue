@@ -1,5 +1,5 @@
 <template>
-  <v-checkbox dx-checkbox :v-model="selected" :ripple="ripple" :label="label" :value="value" checkbox-disabled-opacity />
+  <v-checkbox dx-checkbox :ripple="ripple" :label="label" checkbox-disabled-opacity />
 </template>
 
 <script>
@@ -12,7 +12,6 @@ export default {
       default: () => [],
     },
     label: String,
-    //value: String,
     ripple: {
       type: Boolean,
       default: false,
