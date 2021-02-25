@@ -10,6 +10,10 @@
     min-width: auto;
     letter-spacing: 0;
     border: thin solid currentColor;
+    text-transform: none;
+    .v-btn__content::first-letter {
+      text-transform: capitalize;
+    }
 
     &.v-btn--text {
       border: none;

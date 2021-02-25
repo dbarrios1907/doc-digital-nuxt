@@ -97,6 +97,10 @@
   text-decoration: underline !important; /* stylelint-disable-line */
 }
 
+.text-capitalize {
+  text-transform: capitalize !important; /* stylelint-disable-line */
+}
+
 .font-20 {
   font-size: rem-calc(20px) !important;
 }

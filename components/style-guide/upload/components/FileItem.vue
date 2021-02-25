@@ -4,11 +4,11 @@
       {{ file[descriptionProp].split('.').pop() }}
     </div>
 
-    <div class="b-item__body flex-fill">
+    <div class="d-flex-inline flex-fill text-truncate dx-item__body" :title="file[descriptionProp]">
       {{ file[descriptionProp] }}
     </div>
 
-    <div class="dx-item__bottom">
+    <div class="d-flex dx-item__bottom">
       <dx-icon right color="primary" medium> mdi-download </dx-icon>
       <dx-icon right color="primary" medium> mdi-trash-can-outline </dx-icon>
     </div>
@@ -71,9 +71,9 @@ export default {
 
 <style lang="scss">
 .dx-list__item {
+  flex-shrink: 0;
   .dx-item__body {
     color: black;
-    flex: 1 1 auto;
   }
 
   .dx-item__start {

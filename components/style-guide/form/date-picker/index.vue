@@ -1,8 +1,9 @@
 <template>
-  <v-menu v-model="showPicker" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
+  <v-menu v-model="showPicker" :close-on-content-click="false" transition="slide-y-transition" offset-y min-width="auto">
     <template v-slot:activator="{ on, attrs }">
       <dx-text-field
         v-model="dateFormatted"
+        :style="style"
         hide-details
         outlined
         append-icon="mdi-calendar-month-outline"
@@ -11,7 +12,7 @@
         v-on="on"
       />
     </template>
-    <v-date-picker v-model="date" v-bind="$attrs" v-on="$listeners">
+    <v-date-picker v-model="date" v-bind="$attrs" :header-date-format="formatHeader" v-on="$listeners">
       <!-- Pass on all named slots -->
       <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
       <!-- Pass on all scoped slots -->
@@ -21,6 +22,8 @@
 </template>
 
 <script>
+import createNativeLocaleFormatter from 'vuetify/src/components/VDatePicker/util/createNativeLocaleFormatter'
+
 export default {
   name: 'DxDatePicker',
   inheritAttrs: true,
@@ -31,6 +34,7 @@ export default {
     },
   },
   data: vm => ({
+    style: { width: 292 + 'px' },
     date: vm.parseDate(vm.value) || new Date().toISOString(),
     dateFormatted: vm.formatDate(vm.parseDate(vm.value)) || vm.formatDate(new Date().toISOString().substr(0, 10)),
     showPicker: false,
@@ -50,7 +54,11 @@ export default {
 
   methods: {
     formatHeader(date) {
-      return date
+      return createNativeLocaleFormatter(this.$vuetify.lang.current, {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })(date).replace(' de ', ' ')
     },
     formatDate(date) {
       if (!date) return null

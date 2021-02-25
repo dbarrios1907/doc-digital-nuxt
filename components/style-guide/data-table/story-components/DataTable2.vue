@@ -6,7 +6,7 @@
       :items="valuess"
       :page.sync="page"
       :items-per-page="itemsPerPage"
-      :class="['table-xl', { 'icon-sort-left': isleft }, {'ismobile': ismobil}]"
+      :class="['table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
       :mobile-breakpoint="0"
       hide-default-footer
       show-select
@@ -24,9 +24,9 @@
       </template>
 
       <template v-slot:[`item.actions`]>
-        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-square-edit-outline </v-icon>
-        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-eye </v-icon>
-        <v-icon dense> mdi-delete </v-icon>
+        <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon>
+        <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+        <v-icon dense> mdi-delete-outline </v-icon>
       </template>
     </DataTable>
   </div>
@@ -72,11 +72,11 @@ export default {
     }
   },
   computed: {
-    ismobil (){
+    ismobil() {
       return this.$vuetify.breakpoint.xs
     },
-    computedHeaders () {
-      return this.headers.filter(h => this.$vuetify.breakpoint.xs ? (h.value == "tema" || h.value == "actions"): h.value)
+    computedHeaders() {
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'tema' || h.value == 'actions' : h.value))
     },
     headers() {
       return [

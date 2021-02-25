@@ -1,10 +1,7 @@
-import Vue from 'vue'
-
 export default {
   title: 'Style Guide/Form/Select',
   argTypes: {
-    color: { control: { type: 'select', options: ['primary', 'success', 'warning', 'error'] } },
-    size: { control: { type: 'select', options: ['small', 'medium', 'large'] } },
+    closableItems: { control: { type: 'boolean' } },
   },
 }
 
@@ -40,6 +37,7 @@ const Template = (args, { argTypes }) => ({
       <wrapper>
         <dx-select
             :items="items"
+            v-bind="$props"
             label="Selección Simple"
             @get-selected="get_selected"
         >
@@ -50,6 +48,7 @@ const Template = (args, { argTypes }) => ({
         <dx-select
           :items="items"
           label="Multi Selección"
+          v-bind="$props"
           multiple
           @get-selected="get_selected"
         >
@@ -61,5 +60,5 @@ const Template = (args, { argTypes }) => ({
 
 export const Default = Template.bind({})
 Default.args = {
-  color: 'primary',
+  closableItems: true,
 }
