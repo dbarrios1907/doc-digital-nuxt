@@ -13,34 +13,41 @@
       width: rem-calc(120px);
     }
   }
-
-  &.table-xl thead > tr {
-    height: rem-calc(58px);
-
-    & > .sortable .v-data-table-header__icon,
-    & > .sortable.active .v-data-table-header__icon {
-      color: #dadada;
+  
+  &.table-xl {
+    &:not(.ismobile) thead > tr {
+      & > :last-child {
+        padding-left: rem-calc(10px) !important;
+      }      
     }
 
-    & > .sortable .v-icon {
-      margin-right: rem-calc(8px);
-    }
-    
-    & > :nth-child(2){
-      width: rem-calc(170px) !important;
-    }
+    & thead > tr {
+      height: rem-calc(58px);
 
-    & > :last-child {
-      width: rem-calc(120px);
-      padding-left: rem-calc(10px) !important;
-    }
+      & > .sortable .v-data-table-header__icon,
+      & > .sortable.active .v-data-table-header__icon {
+        color: #dadada;
+      }
 
-    & > th {
-      min-width: rem-calc(160px);
-    }
-    
-    & > th:not(:first-child):not(:last-child) {
-      padding: 0 !important;
+      & > .sortable .v-icon {
+        margin-right: rem-calc(8px);
+      }
+      
+      & > :nth-child(2){
+        width: rem-calc(170px) !important;
+      }
+
+      & > :last-child {
+        width: rem-calc(120px);
+      }
+
+      & > th {
+        min-width: rem-calc(160px);
+      }
+      
+      & > th:not(:first-child):not(:last-child) {
+        padding: 0 !important;
+      }
     }
   }
 
@@ -71,16 +78,6 @@
     &:first-child {
       width: rem-calc(60px);
     }
-
-    /*&.sortable .v-data-table-header__icon,
-    &.sortable.active .v-data-table-header__icon {
-      color: map-deep-get($material, 'colors', 'light');
-    }
-
-    &.sortable:hover,
-    &.sortable.active {
-      color: map-deep-get($material, 'colors', 'light');
-    }*/
   }
 
   &.table-sm {
@@ -164,21 +161,46 @@
   }
 
   &.ismobile {
-    
-    & tbody tr > td,
-    & thead tr > th {
-      padding: 0 !important;
+    /*& thead tr {
+      height: auto;
+    }*/
+    & tbody tr { 
+      & > :first-child {
+        padding: 0 rem-calc(10px) !important;  
+      }
+
+      & > td {
+        padding: 0 !important;
+        height: auto;
+
+        & > a,
+        & > span {
+          vertical-align: middle;  
+        }
+
+        & > .v-input {
+          margin:rem-calc(5px) 0 ;
+        }
+      }
+    }
+
+    & thead tr {
+      & > :first-child {
+        padding: 0 rem-calc(10px) !important;  
+      }
+
+      & > th {
+        padding: 0 !important;
+        height: auto;
+      }
     }
 
     .breaktext{
-      max-width: 140px;
+      max-width: rem-calc(140px);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       display: inline-block;
     }
   }
-
-
-
 }
