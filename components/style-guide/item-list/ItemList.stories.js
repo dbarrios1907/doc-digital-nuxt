@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { themes } from '~/shared/theme/color-palette'
 
 export default {
   title: 'Style Guide/ItemList',
@@ -9,10 +10,13 @@ export default {
 }
 
 const wrapper = {
+  data: () => ({
+    borderColor: themes.light.primary,
+  }),
   template: `
     <v-row>
       <v-col cols="12" sm="6" lg="5">
-        <v-card class='ml-15' outlined tile style='box-shadow: 0 1px 15px rgba(0, 0, 0, 0.2);'>
+        <v-card class='ml-15' outlined tile style='box-shadow: 0 1px 15px rgba(0, 0, 0, 0.2);' :style="{borderColor}">
           <slot></slot>
         </v-card>
       </v-col>

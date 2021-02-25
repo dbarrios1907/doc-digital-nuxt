@@ -1,9 +1,8 @@
 <template>
   <v-select
+    v-model="value"
     :ripple="false"
     v-bind="$attrs"
-    v-on="$listeners"
-    v-model="value"
     :items="items"
     chips
     :label="label"
@@ -13,13 +12,14 @@
     flat
     :multiple="multiple"
     :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-    :closableIems="closableIems"
+    :closable-iems="closableItems"
+    v-on="$listeners"
     @change="emitSelected"
   >
-    <template v-slot:selection="{ item }" v-if="multiple">
+    <template v-if="multiple" v-slot:selection="{ item }">
       <Badge type="tertiary" label outlined class="mx-1 my-1">
         <div class="darken3--text font-16 line-height-22 weight-400">{{ item }}</div>
-        <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)" v-if="closableIems"> mdi-close </dx-icon>
+        <dx-icon v-if="closableItems" left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
       </Badge>
     </template>
   </v-select>
@@ -31,7 +31,7 @@ export default {
   name: 'DxSelect',
   inheritAttrs: false,
   props: {
-    closableIems: {
+    closableItems: {
       type: Boolean,
       default: false,
     },

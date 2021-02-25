@@ -24,7 +24,7 @@
       <template v-slot:[`item.actions`]>
         <v-icon dense class="mr-2"> mdi-square-edit-outline </v-icon>
         <v-icon dense class="mr-2"> mdi-eye </v-icon>
-        <v-icon dense> mdi-delete </v-icon>
+        <v-icon dense> mdi-delete-outline </v-icon>
       </template>
     </DataTable>
   </div>

@@ -25,6 +25,7 @@ export default {
   $color: map-deep-get($material, 'colors', 'light');
   $active-opacity: map-deep-get($material, 'navigation', 'states', 'active');
   $hover-opacity: map-deep-get($material, 'navigation', 'states', 'hover');
+  $focus-background: #062a4e;
   padding: 0 16px 0 24px;
 
   &[dx-list-item] {
@@ -32,38 +33,46 @@ export default {
       color: $color !important;
     }
 
-    .v-list-item__icon:first-child {
-      margin-right: 12px;
-    }
-
     &.dx-item-nested {
       padding-left: 44px;
-    }
-
-    &.v-list-item--active {
-      color: $color;
-      font-weight: 700;
     }
 
     .v-icon {
       color: $color;
     }
-    &.v-list-item--link:before {
-      background-color: darken($bg-color, 20%);
+
+    .v-list-item__icon:first-child {
+      margin-right: 12px;
     }
 
-    &:active {
-      background: darken($bg-color, 10%);
-      transition: background 0.2s linear;
-    }
+    &.v-list-item--link {
+      .v-list-item__title {
+        text-decoration: underline;
+      }
 
-    &:focus,
-    &:active {
-      font-weight: bold;
-    }
+      &.v-list-item--active {
+        color: $color;
+        font-weight: 700;
+      }
 
-    &:hover::before {
-      opacity: $hover-opacity;
+      &:before {
+        background-color: darken($bg-color, 20%);
+      }
+
+      &:focus,
+      &:active {
+        font-weight: bold;
+        background: $focus-background;
+      }
+
+      &:hover::before {
+        opacity: $hover-opacity;
+      }
+
+      &:active {
+        background: darken($bg-color, 10%);
+        transition: background 0.2s linear;
+      }
     }
   }
 }

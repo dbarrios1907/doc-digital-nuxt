@@ -30,6 +30,10 @@ export default {
       }
     }
 
+    .v-list-item__title {
+      text-decoration: underline;
+    }
+
     .v-list-item__icon:first-child {
       margin-right: 12px;
     }

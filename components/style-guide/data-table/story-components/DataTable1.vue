@@ -9,23 +9,47 @@
       show-select
       dense
       item-key="name"
-      @page-count="pageCount = $event"
       hide-default-footer
+      @page-count="pageCount = $event"
     >
       <template v-for="h in headers" v-slot:[`header.${h.value}`]="{ header }" class="column">
         {{ h.text }}
-        <v-icon :class="[{ iconsearch: h.search },{'focus': actived === h.value}]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
-        <v-icon :class="['float-right', {'focus': actived === h.value}]" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable">mdi-filter</v-icon>
+        <v-icon
+          v-if="h.search"
+          :key="h.value"
+          :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
+          @click="activeSearch(header, $event)"
+        >
+          mdi-magnify
+        </v-icon>
+        <v-icon v-if="h.filterable" :key="h.value" :class="['float-right', { focus: actived === h.value }]" @click="openFilter(header, $event)">
+          mdi-filter
+        </v-icon>
       </template>
-      <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+      <template v-if="searchname || searchrut || filtered" slot="body.prepend">
         <tr class="body-prepend">
           <td />
-          <td> <v-text-field type="text" @focus="actived = 'name'" hide-details solo flat outlined v-model="filterValue" label="Nombre" v-if="searchname" /> </td>
-          <td> <v-text-field type="text" @focus="actived = 'rut'" hide-details solo flat outlined v-model="filterRut" label="Rut" v-if="searchrut" /> </td>
+          <td>
+            <v-text-field
+              type="text"
+              v-model="filterValue"
+              hide-details
+              solo
+              flat
+              v-if="searchname"
+              outlined
+              label="Nombre"
+              @focus="actived = 'name'"
+            />
+          </td>
+          <td>
+            <v-text-field type="text" v-model="filterRut" hide-details solo flat v-if="searchrut" outlined label="Rut" @focus="actived = 'rut'" />
+          </td>
           <td>
             <dx-select
-              :ripple="false"
               v-model="permiso"
+              v-if="filtered"
+              :ripple="false"
               :items="permisosValues"
               chips
               label="Filtra por permisos"
@@ -35,11 +59,10 @@
               hide-details
               outlined
               :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-              v-if="filtered"
               @click="actived = 'access'"
               @blur="actived = null"
             >
-              <template v-slot:selection="{ item, index }">
+              <template v-slot:selection="{ item }">
                 <Badge type="tertiary" label outlined class="ma-0">
                   <div class="darken3--text font-16 line-height-22 weight-400">{{ item }}</div>
                   <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
@@ -65,7 +88,7 @@
       <template v-slot:[`item.actions`]>
         <v-icon dense class="mr-4"> mdi-square-edit-outline </v-icon>
         <v-icon dense class="mr-4"> mdi-eye </v-icon>
-        <v-icon dense> mdi-delete </v-icon>
+        <v-icon dense> mdi-delete-outline </v-icon>
       </template>
 
       <template v-slot:footer>
@@ -151,6 +174,24 @@ export default {
       ],
     }
   },
+
+  computed: {
+    headers() {
+      return [
+        {
+          text: 'Nombre',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+          filter: this.nameFilter,
+          search: true,
+        },
+        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
+        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Acciones', value: 'actions', sortable: false },
+      ]
+    },
+  },
   methods: {
     onResize() {
       if (window.innerWidth < 769) this.isMobile = true
@@ -191,24 +232,6 @@ export default {
       }, this.permiso)
 
       return flag
-    },
-  },
-
-  computed: {
-    headers() {
-      return [
-        {
-          text: 'Nombre',
-          align: 'start',
-          sortable: true,
-          value: 'name',
-          filter: this.nameFilter,
-          search: true,
-        },
-        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
-        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
-        { text: 'Acciones', value: 'actions', sortable: false },
-      ]
     },
   },
 }
