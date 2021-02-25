@@ -2,18 +2,19 @@
   <div>
     <DataTable
       color="primary"
-      :headers="headers"
+      :headers="computedHeaders"
       :items="valuess"
       :page.sync="page"
       :items-per-page="itemsPerPage"
+      :class="['table-xl', { 'icon-sort-left': isleft }, {'ismobile': ismobil}]"
+      :mobile-breakpoint="0"
       hide-default-footer
-      :class="['table-xl', { 'icon-sort-left': isleft }]"
       show-select
       item-key="tema"
       @page-count="pageCount = $event"
     >
       <template v-slot:[`item.tema`]="{ item: { tema, href } }" class="column">
-        <a :href="href">{{ tema }}</a>
+        <a class="breaktext" :href="href">{{ tema }}</a>
       </template>
 
       <template v-slot:[`item.access`]="{ item: { access } }">
@@ -23,8 +24,8 @@
       </template>
 
       <template v-slot:[`item.actions`]>
-        <v-icon dense class="mr-4"> mdi-square-edit-outline </v-icon>
-        <v-icon dense class="mr-4"> mdi-eye </v-icon>
+        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-square-edit-outline </v-icon>
+        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-eye </v-icon>
         <v-icon dense> mdi-delete </v-icon>
       </template>
     </DataTable>
@@ -71,6 +72,12 @@ export default {
     }
   },
   computed: {
+    ismobil (){
+      return this.$vuetify.breakpoint.xs
+    },
+    computedHeaders () {
+      return this.headers.filter(h => this.$vuetify.breakpoint.xs ? (h.value == "tema" || h.value == "actions"): h.value)
+    },
     headers() {
       return [
         {
