@@ -41,8 +41,7 @@ const Template = (args, { argTypes }) => ({
           solo
           flat
           outlined
-          :rules="[() => !!name || 'This field is required']"
-          :error-messages="errorMessages"
+          :rules="[() => 'This field is required']"
           label="Full Name"
           placeholder="John Doe"
           required
