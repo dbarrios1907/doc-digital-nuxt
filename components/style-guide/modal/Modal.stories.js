@@ -236,7 +236,7 @@ const Template = (args, { argTypes }) => ({
                   <v-col>
                     <dx-select
                         :ripple="false"
-                        v-bind="props"
+                        v-bind="$props"
                         v-model="value"
                         :items="items"
                         chips

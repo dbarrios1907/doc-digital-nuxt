@@ -2,7 +2,7 @@ import Vue from 'vue'
 import * as _Vuetify from 'vuetify/lib'
 
 import es from 'vuetify/lib/locale/es'
-import { Button, Badge, Alert, Icon } from './style-guide.components'
+import { Button, Badge, Alert, Icon } from '@/components'
 import { themes } from '~/shared/theme/color-palette'
 import '@mdi/font/css/materialdesignicons.min.css'
 

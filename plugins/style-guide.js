@@ -1,5 +1,5 @@
 import { pluginFactory } from '~/shared/utils/plugins'
-import * as _styleGuideComponents from './style-guide.components'
+import * as _styleGuideComponents from '~/components'
 
 const components = Object.keys(_styleGuideComponents).reduce((acc, key) => {
   const name = _styleGuideComponents[key].name

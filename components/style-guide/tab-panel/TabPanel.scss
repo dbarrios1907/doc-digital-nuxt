@@ -45,13 +45,11 @@
   }
 
   .v-tab div.tab-number{
-    padding: 1px;
     border-radius: 50%;
     height: 24px;
     width: 24px;
     float: right;
-    font-size: 14px;    
-    padding-left: 3px;
+    font-size: 14px;
   }
   //.v-tab {
   //  states($material)
@@ -68,7 +66,7 @@ div.v-item-group.v-tabs-items{
   .v-tab--active {
     background-color: $bg-color;
     color :  $tx-color;
-  } 
+  }
 }
 @include theme(tab-default) using ($material) {
   $bg-color: map-get($material, 'v_tabs', 'light');
@@ -81,13 +79,13 @@ div.v-item-group.v-tabs-items{
     border-bottom: 7px solid;
     .tab-header-content{
       margin-top: 7px;
-    } 
-  } 
+    }
+  }
   .tab-header-content {
     font-weight: 400 !important;
-  } 
+  }
 
-  
+
   .v-tab:not(.v-tab--active){
     font-weight: 400px !important;
   }
