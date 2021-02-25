@@ -24,12 +24,10 @@ export default {
   css: ['~/assets/styles/main.scss'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ['~/plugins/tooltip.client.js'],
+  plugins: ['~/plugins/tooltip.client.js', '~/plugins/style-guide.js'],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
-  components: {
-    dirs: ['~/components', '~/components/style-guide'],
-  },
+  components: false,
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [

@@ -11,7 +11,6 @@ const Template = (args, { argTypes }) => ({
 
     <v-col lg="4">
       <dx-date-picker
-          v-model="date"
           no-title
           color="primary"
       />

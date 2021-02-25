@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { addDecorator } from '@storybook/vue'
 import vuetify from './plugins/vuetify'
 // import '@/plugins/vee-validate'
-import styleGuidePlugin from './plugins/style-guide'
+import styleGuidePlugin from '../plugins/style-guide'
 import VTooltip from '@/plugins/tooltip.client'
 Vue.use(styleGuidePlugin)
 import '@/assets/styles/main.scss'
@@ -13,7 +13,7 @@ Vue.use(PerfectScrollbar)
 addDecorator(() => ({
   vuetify,
   template: `
-    <v-app style="overflow: auto">
+    <v-app>
       <div class="dx-notification-container"/>
       <v-container fluid class="px-0 mx-0">
         <story/>
