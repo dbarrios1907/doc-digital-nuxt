@@ -20,7 +20,7 @@ const Template = (args, { argTypes }) => ({
         {
           text: 'Enviados Pendientes',
           disabled: true,
-          href: 'breadcrumbs_link_2',
+          href: '',
         },
       ],
     }
