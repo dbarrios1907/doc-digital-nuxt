@@ -5,13 +5,14 @@
       :items="valuess"
       :page.sync="page"
       :items-per-page="itemsPerPage"
-      :class="['table-sm', {'ismobile': ismobil}]"
+      :class="['table-check', 'table-sm', {'ismobile': ismobil}]"
       :mobile-breakpoint="0"
       show-select
       dense
       item-key="name"
       @page-count="pageCount = $event"
       hide-default-footer
+      calculate-widths
     >
       <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
         {{ h.text }}

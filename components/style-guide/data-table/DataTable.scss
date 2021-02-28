@@ -5,15 +5,21 @@
   
   & thead tr {
     & > .sortable .v-icon {
-      //opacity: 1;
       font-size: rem-calc(24px) !important;
     }
 
     & > :last-child{
+      min-width: rem-calc(120px);
       width: rem-calc(120px);
     }
   }
   
+  &.table-check thead > tr {
+    & > th:first-child {
+      width: 45px !important;
+    }
+  }
+
   &.table-xl {
     &:not(.ismobile) thead > tr {
       & > :last-child {
@@ -33,14 +39,6 @@
         margin-right: rem-calc(8px);
       }
       
-      & > :nth-child(2){
-        width: rem-calc(170px) !important;
-      }
-
-      & > :last-child {
-        width: rem-calc(120px);
-      }
-
       & > th {
         min-width: rem-calc(160px);
       }
@@ -81,6 +79,9 @@
   }
 
   &.table-sm {
+    &:not(.ismobile) table {
+      table-layout: fixed;
+    }
     & > .v-data-table__wrapper > table {
       & > tbody tr.body-prepend:hover{
         background-color: transparent;
@@ -92,28 +93,23 @@
         height: rem-calc(40px) !important;
 
         & > th {
-          border-top: 1px solid map-deep-get($material, 'colors', 'darken1');
-          border-bottom: 1px solid map-deep-get($material, 'colors', 'darken4');
+          border-top: rem-calc(1px) solid map-deep-get($material, 'colors', 'darken1');
+          border-bottom: rem-calc(1px) solid map-deep-get($material, 'colors', 'darken4');
           color: map-deep-get($material, 'colors', 'darken3');
           padding: rem-calc(12px) rem-calc(10px);
           
           & > .v-data-table__checkbox {
-            right: 0;
+            float: left;
           }
 
           &:not(:last-child){
             min-width: rem-calc(160px);
           }
           
-          &:nth-child(2),
-          &:nth-child(4) {
-            width: 35%;
-          }
-          
           & :nth-child(1) .v-icon {
             margin-left: 0;
           }
-          
+
           & .v-icon {
             color: map-deep-get($material, 'colors', 'darken3') !important;
             margin-left: rem-calc(12px);
