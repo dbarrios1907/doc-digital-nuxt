@@ -14,6 +14,8 @@
     :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
     :closable-iems="closableItems"
     v-on="$listeners"
+    :rules="rules"
+    :required="required"
     @change="emitSelected"
   >
     <template v-if="multiple" v-slot:selection="{ item }">
@@ -37,7 +39,12 @@ export default {
     },
     label: String,
     items: Array,
+    rules: Array,
     multiple: {
+      type: Boolean,
+      default: false,
+    },
+    required: {
       type: Boolean,
       default: false,
     },
