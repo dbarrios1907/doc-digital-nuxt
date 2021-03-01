@@ -1,34 +1,31 @@
+<template>
+  <div>
+    <dx-breadcrumbs :items="breadcrumbs" />
+  </div>
+</template>
+
+<script>
 export default {
-  title: 'Style Guide/Breadcrumbs',
-  argTypes: {},
-}
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
   data() {
     return {
-      items: [
+      breadcrumbs: [
         {
           text: 'Administración',
           disabled: false,
           href: 'breadcrumbs_dashboard',
         },
         {
-          text: 'Documentos',
+          text: 'Usuarios',
           disabled: false,
           href: 'breadcrumbs_link_1',
         },
         {
-          text: 'Enviados Pendientes',
+          text: 'Nuevo Usuario',
           disabled: true,
           href: '',
         },
       ],
     }
   },
-  template: `
-    <dx-breadcrumbs :items="items" />
-  `,
-})
-
-export const Default = Template.bind({})
-Default.args = {}
+}
+</script>

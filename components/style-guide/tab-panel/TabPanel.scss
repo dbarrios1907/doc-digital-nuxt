@@ -51,12 +51,15 @@
     float: right;
     font-size: 14px;
   }
-  //.v-tab {
-  //  states($material)
-  //}
 }
-div.v-item-group.v-tabs-items{
+.tab-primary .v-item-group.v-tabs-items{
   margin-top: 1px !important;
+}
+.v-slide-group:not(.v-slide-group--has-affixes) > .v-slide-group__prev{
+  display: none !important;
+}
+.tab-header-content {
+  min-width: 136px !important;
 }
 @include theme(tab-primary) using ($material) {
   $bg-color: map-deep-get($material, 'v_tabs', 'tabs-bar-background-color');
@@ -76,13 +79,14 @@ div.v-item-group.v-tabs-items{
   .v-tab--active {
     background-color: $bg-color;
     color :  $tx-color;
-    border-bottom: 7px solid;
+    border-bottom: 4px solid;
     .tab-header-content{
-      margin-top: 7px;
+      margin-top: 4px;
     }
   }
   .tab-header-content {
     font-weight: 400 !important;
+    min-width: 146px;
   }
 
 

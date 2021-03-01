@@ -11,9 +11,8 @@ const Template = (args, { argTypes }) => ({
     return {
       tab: null,
       items: [
-        { tab: 'Resueltos', number: 0},
-        { tab: 'Pendientes', number: 2 },
-        { tab: 'Borradores', number: 3 },
+        { tab: 'Activos', number: 0},
+        { tab: 'Inactivos', number: 2 },
       ],
     }
   },

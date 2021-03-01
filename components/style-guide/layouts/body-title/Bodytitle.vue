@@ -9,14 +9,12 @@
 </template>
 
 <script>
-import { isBrowser } from '~/shared/utils/env'
-
 export default {
   name: 'DxBodytitle',
   inheritAttrs: false,
   computed: {
     isMovileScreen() {
-      return isBrowser ? window.innerWidth < 600 : false
+      return this.$vuetify.breakpoint.xs
     },
   },
 }

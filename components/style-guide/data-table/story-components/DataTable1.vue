@@ -5,52 +5,29 @@
       :items="valuess"
       :page.sync="page"
       :items-per-page="itemsPerPage"
-      :class="['table-sm', { ismobile: ismobil }]"
+      :class="['table-check', 'table-sm', {'ismobile': ismobil}]"
       :mobile-breakpoint="0"
       show-select
       dense
       item-key="name"
-      hide-default-footer
       @page-count="pageCount = $event"
+      hide-default-footer
+      calculate-widths
     >
       <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
         {{ h.text }}
-        <v-icon
-          v-if="h.search"
-          :key="h.value"
-          :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
-          @click="activeSearch(header, $event)"
-        >
-          mdi-magnify
-        </v-icon>
-        <v-icon v-if="h.filterable" :key="h.value" :class="['float-right', { focus: actived === h.value }]" @click="openFilter(header, $event)">
-          mdi-filter
-        </v-icon>
+        <v-icon :class="[{ iconsearch: h.search },{'focus': actived === h.value}]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
+        <v-icon :class="['float-right', {'focus': actived === h.value}]" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable">mdi-filter</v-icon>
       </template>
-      <template v-if="searchname || searchrut || filtered" slot="body.prepend">
+      <template slot="body.prepend" v-if="searchname || searchrut || filtered">
         <tr class="body-prepend">
           <td />
-          <td>
-            <v-text-field
-              type="text"
-              v-model="filterValue"
-              hide-details
-              solo
-              flat
-              v-if="searchname"
-              outlined
-              label="Nombre"
-              @focus="actived = 'name'"
-            />
-          </td>
-          <td v-if="!ismobil">
-            <v-text-field type="text" v-model="filterRut" hide-details solo flat v-if="searchrut" outlined label="Rut" @focus="actived = 'rut'" />
-          </td>
+          <td> <v-text-field type="text" @focus="actived = 'name'" hide-details solo flat outlined v-model="filterValue" label="Nombre" v-if="searchname" /> </td>
+          <td v-if="!ismobil"> <v-text-field type="text" @focus="actived = 'rut'" hide-details solo flat outlined v-model="filterRut" label="Rut" v-if="searchrut" /> </td>
           <td v-if="!ismobil" class="filter">
             <dx-select
-              v-model="permiso"
-              v-if="filtered"
               :ripple="false"
+              v-model="permiso"
               :items="permisosValues"
               chips
               label="Filtra por permisos"
@@ -60,6 +37,7 @@
               hide-details
               outlined
               :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+              v-if="filtered"
               @click="actived = 'access'"
               @blur="actived = null"
             >
@@ -76,7 +54,7 @@
       </template>
 
       <template v-slot:[`item.name`]="{ item: { name } }">
-        <span class="breaktext">{{ name }}</span>
+         <span class="breaktext">{{ name }}</span>
       </template>
 
       <template v-slot:[`item.access`]="{ item: { access } }">
@@ -85,9 +63,9 @@
         </v-chip>
       </template>
 
-      <template v-slot:[`item.actions`]>
-        <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon>
-        <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+      <template v-slot:[`item.actions`] >
+        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-square-edit-outline </v-icon>
+        <v-icon dense :class="[{'mr-4': !ismobil}]"> mdi-eye </v-icon>
         <v-icon dense> mdi-delete-outline </v-icon>
       </template>
 
@@ -174,29 +152,6 @@ export default {
       ],
     }
   },
-  computed: {
-    ismobil() {
-      return this.$vuetify.breakpoint.xs
-    },
-    computedHeaders() {
-      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'actions' : h.value))
-    },
-    headers() {
-      return [
-        {
-          text: 'Nombre',
-          align: 'start',
-          sortable: true,
-          value: 'name',
-          filter: this.nameFilter,
-          search: true,
-        },
-        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
-        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
-        { text: 'Acciones', value: 'actions', sortable: false },
-      ]
-    },
-  },
   methods: {
     openFilter(header, event) {
       event.stopPropagation()
@@ -233,6 +188,29 @@ export default {
       }, this.permiso)
 
       return flag
+    },
+  },
+  computed: {
+    ismobil (){
+      return this.$vuetify.breakpoint.xs
+    },
+    computedHeaders () {
+      return this.headers.filter(h => this.$vuetify.breakpoint.xs ? (h.value == "name" || h.value == "actions"): h.value)
+    },
+    headers() {
+      return [
+        {
+          text: 'Nombre',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+          filter: this.nameFilter,
+          search: true,
+        },
+        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
+        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Acciones', value: 'actions', sortable: false },
+      ]
     },
   },
 }

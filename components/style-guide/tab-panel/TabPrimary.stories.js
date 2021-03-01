@@ -13,7 +13,7 @@ const Template = (args, { argTypes }) => ({
       items: [
         { tab: 'Resueltos', number: 1},
         { tab: 'Pendientes', number: 2 },
-        { tab: 'Borradores', number: 3 },
+        // { tab: 'Borradores', number: 3 },
       ],
     }
   },
