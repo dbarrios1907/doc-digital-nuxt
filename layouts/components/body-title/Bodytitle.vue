@@ -14,7 +14,7 @@ export default {
   inheritAttrs: false,
   computed: {
     isMovileScreen() {
-      return window.innerWidth < 600
+      return this.$vuetify.breakpoint.xs
     },
   },
 }

@@ -1,0 +1,12 @@
+@include theme(v-breadcrumbs) using($material) {
+    $darken3:map-deep-get($material, 'v_breadcrumbs', 'darken3');
+    $darken2:map-deep-get($material, 'v_breadcrumbs', 'darken2');
+
+    &.v-breadcrumbs li:nth-child(even) {
+        padding: 0 4px !important;
+        color: $darken2 !important;
+    }
+    &.v-breadcrumbs a:not(.darken2--text) {
+        text-decoration: underline !important;
+    }
+}
