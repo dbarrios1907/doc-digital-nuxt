@@ -1,5 +1,5 @@
 <template>
-  <v-footer class="dark" padless>
+  <v-footer class="dark" v-bind="$attrs" style="z-index: 200" v-on="$listeners">
     <v-col class="text-left py-0 px-0" cols="4">
       <div class="title">
         <span class="font-roboto weight-400 font-small line-height-29" :style="{ color: dcolor }"> Versión 2.1.11 </span>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'Footer',
+  name: 'DxFooter',
   inheritAttrs: false,
   props: {
     color: String,

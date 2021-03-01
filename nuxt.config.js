@@ -17,17 +17,17 @@ export default {
   },
 
   styleResources: {
-    scss: ['~/assets/styles/vuetify-overrides.scss'],
+    // scss: ['~/assets/styles/vuetify-overrides.scss'],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: ['~/assets/styles/main.scss'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ['~/plugins/tooltip.client.js', '~/plugins/style-guide.js'],
+  plugins: ['~/plugins/tooltip.client.js', '~/plugins/perfect-scrollbar.js', '~/plugins/style-guide.js', '~/plugins/scroll-lock.js'],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
-  components: false,
+  components: ['~components/doc-digital'],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
@@ -66,6 +66,23 @@ export default {
       if (isDev) {
         config.mode = 'development'
       }
+      // Inject vuetify css variables before sass loader
+      // hack to solve integration isues with vuetify
+
+      const injectSassOptions = (arrMod, appendOptions) => {
+        arrMod.oneOf.map(v => {
+          const found = v.use.find(l => l.loader.includes('/sass-loader/'))
+          if (found) Object.assign(found.options, appendOptions)
+        })
+      }
+
+      config.module.rules.forEach(v => {
+        if (v.test.test('.scss')) {
+          injectSassOptions(v, { additionalData: `@import '~/assets/styles/vuetify-overrides.scss'; ` })
+        } else if (v.test.test('.sass')) {
+          injectSassOptions(v, { additionalData: `@import '~/assets/styles/vuetify-overrides.scss'` })
+        }
+      })
     },
     transpile: ['vuetify'],
   },

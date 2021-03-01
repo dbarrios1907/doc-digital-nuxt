@@ -2,7 +2,7 @@
   & tbody tr > td {
     border: none !important;
   }
-  
+
   & thead tr {
     & > .sortable .v-icon {
       //opacity: 1;
@@ -13,12 +13,16 @@
       width: rem-calc(120px);
     }
   }
-  
+
+  .body-prepend {
+
+  }
+
   &.table-xl {
     &:not(.ismobile) thead > tr {
       & > :last-child {
         padding-left: rem-calc(10px) !important;
-      }      
+      }
     }
 
     & thead > tr {
@@ -32,7 +36,7 @@
       & > .sortable .v-icon {
         margin-right: rem-calc(8px);
       }
-      
+
       & > :nth-child(2){
         width: rem-calc(170px) !important;
       }
@@ -44,7 +48,7 @@
       & > th {
         min-width: rem-calc(160px);
       }
-      
+
       & > th:not(:first-child):not(:last-child) {
         padding: 0 !important;
       }
@@ -69,12 +73,12 @@
       margin-left: rem-calc(15px) !important;
     }
   }
-  
+
   &:not(.table-sm) > .v-data-table__wrapper > table > thead > tr > th {
     padding-left: rem-calc(20px);
     color: map-deep-get($material, 'colors', 'light');
     background: map-deep-get($material, 'colors', 'primary');
-    
+
     &:first-child {
       width: rem-calc(60px);
     }
@@ -93,7 +97,7 @@
           border-bottom: 1px solid map-deep-get($material, 'colors', 'darken4');
           color: map-deep-get($material, 'colors', 'darken3');
           padding: rem-calc(12px) rem-calc(10px);
-          
+
           & > .v-data-table__checkbox {
             right: 0;
           }
@@ -101,16 +105,16 @@
           &:not(:last-child){
             min-width: rem-calc(160px);
           }
-          
+
           &:nth-child(2),
           &:nth-child(4) {
             width: 35%;
           }
-          
+
           & :nth-child(1) .v-icon {
             margin-left: 0;
           }
-          
+
           & .v-icon {
             color: map-deep-get($material, 'colors', 'darken3') !important;
             margin-left: rem-calc(12px);
@@ -124,7 +128,7 @@
         & > .v-data-table__checkbox {
           right: 0;
         }
-        
+
         & .v-icon {
           color: map-deep-get($material, 'colors', 'darken3') !important;
         }
@@ -164,9 +168,9 @@
     /*& thead tr {
       height: auto;
     }*/
-    & tbody tr { 
+    & tbody tr {
       & > :first-child {
-        padding: 0 rem-calc(10px) !important;  
+        padding: 0 rem-calc(10px) !important;
       }
 
       & > td {
@@ -175,7 +179,7 @@
 
         & > a,
         & > span {
-          vertical-align: middle;  
+          vertical-align: middle;
         }
 
         & > .v-input {
@@ -186,7 +190,7 @@
 
     & thead tr {
       & > :first-child {
-        padding: 0 rem-calc(10px) !important;  
+        padding: 0 rem-calc(10px) !important;
       }
 
       & > th {

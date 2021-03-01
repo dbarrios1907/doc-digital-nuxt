@@ -1,6 +1,5 @@
 export { default as HeaderLogo } from './components/HeaderLogo/HeaderLogo.svg'
 export { default as BrandWatermark } from './components/BrandWatermark/BrandWatermark.svg'
-export { default as ErrorPage } from './components/Error/ErrorPage.svg'
 export { default as BackgroundChange } from './components/FormatPage/BackgroundChange.svg'
 export { default as MinusText } from './components/FormatPage/MinusText.svg'
 export { default as PlusText } from './components/FormatPage/PlusText.svg'

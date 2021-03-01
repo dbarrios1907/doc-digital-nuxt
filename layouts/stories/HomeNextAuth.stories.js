@@ -1,7 +1,5 @@
-import { storyPath } from './_settings'
-
 export default {
-  title: storyPath,
+  title: 'Pages',
   argTypes: {},
 }
 
@@ -10,15 +8,15 @@ const Template = (args, { argTypes }) => ({
   data() {
     return {
       items: [
-        /*{ 
+        /*{
             name: 'Visar',
             count: 22
           },
-          { 
+          {
             name: 'Firmar',
             count: 4
           },
-          { 
+          {
             name: 'Recibir',
             count: 8
           }*/
@@ -65,7 +63,7 @@ const Template = (args, { argTypes }) => ({
                         <template v-slot:footer>
                             DESPACHADOR
                         </template>
-                    </doc-upload-card> 
+                    </doc-upload-card>
                 </div>
             </div>
         </template>
