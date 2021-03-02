@@ -2,6 +2,8 @@
   $bg-color: map-deep-get($material, 'v_tabs', 'tabs-bar-background-color');
   $tx-color: map-deep-get($material, 'v_tabs', 'light');
   $tx-dissable-color: map-deep-get($material, 'v_tabs', 'tabs-bar-text-dissable-color');
+  $primary : map-deep-get($material, 'colors', 'primary');
+  $light : map-deep-get($material, 'colors', 'light');
   .v-tab{
     font-size: rem-calc(16px);
     line-height: rem-calc(24px);
@@ -50,6 +52,58 @@
     width: 24px;
     float: right;
     font-size: 14px;
+  }
+
+  .v-window__container{
+    transition: none !important;
+  }
+
+  &.tab-outlined{
+    .v-tabs-items{
+      min-height: 50px !important;
+      border-right: 1px solid  $primary  !important;
+      border-left: 1px solid  $primary  !important;
+      border-bottom: 1px solid  $primary !important;
+      padding: 20px !important;
+    }
+    .v-tabs-bar__content{
+      height: 40px !important;
+      border-bottom: 1px solid  $primary !important;
+    }
+    & > .v-tabs{
+      height: 40px !important;
+      color: $primary !important;
+      text-decoration: underline !important;
+    }
+    .v-tab{
+      height: 40px !important;
+      border-top: 1px solid  $primary  !important;
+      border-left: 1px solid  $primary  !important;
+      border-bottom: 1px solid $light !important;
+    }
+    .v-tab:last-child{
+      border-right: 1px solid  $primary  !important;
+    }
+    .tab-icon{
+      width: 16px;
+      height: 16px;
+      float: left;
+      margin-right: 17px;
+    }
+    .tab-icon > i, 
+    .v-tab:not(.v-tab--active){
+      color: $primary !important;
+    }
+    .v-tab.v-tab--active{
+      height: 43px !important;
+      border-bottom: 6px solid #FFFFFF !important;
+    }
+    .v-tab.v-tab--active .tab-header-content{
+      margin-top: 1px !important;
+    }
+    .tab-header-content{
+      margin-top: -1px !important;
+    }
   }
 }
 .tab-primary .v-item-group.v-tabs-items{
