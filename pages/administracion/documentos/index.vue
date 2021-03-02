@@ -73,7 +73,6 @@
   </div>
 </template>
 <script>
-import { constantRoutes } from '../../routes'
 export default {
   name: 'Documentos',
   data() {
@@ -95,7 +94,6 @@ export default {
         },
       ],
       drawer: true,
-      items: constantRoutes,
       right: null,
       open: [1, 2],
       tree: null,

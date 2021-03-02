@@ -1,14 +1,13 @@
 // Buttons
-$btn-border-radius: 0px;
-
+$btn-border-radius: 0px !default;
 $font-size-root: 16px;
+$btn-focus-opacity: 0 !default;
+$btn-font-weight: 600;
+$btn-hover-opacity: 0 !default;
+$btn-text-transform: capitalize;
+// typography
 $body-font-family: "Roboto", sans-serif;
 $heading-font-family: "Roboto Slab", serif;
-
-$btn-focus-opacity: 0;
-$btn-font-weight: 600;
-$btn-hover-opacity: 0;
-$btn-text-transform: capitalize;
 
 $alert-outline: 2px solid currentColor !default;
 
@@ -56,16 +55,9 @@ $ripple-animation-visible-opacity : .15;
 $date-picker-event-border-radius: 0 !default;
 $text-field-border-radius: 0 !default;
 $text-field-filled-border-radius: 0 !default;
-    //$primary-transition: 0.3s map-get($transition, 'swing') !default;
+//$primary-transition: 0.3s map-get($transition, 'swing') !default;
 
 $breadcrumbs-item-font-size: 16px;
-
-//$tooltip-border-radius: $border-radius-root;
-//$tooltip-font-size: 14px !default;
-//$tooltip-transition-timing-function: map-get($transition, 'linear-out-slow-in') !default;
-//$tooltip-transition-enter-duration: 150ms !default;
-//$tooltip-transition-leave-duration: 75ms !default;
-//$tooltip-padding: 5px 16px !default;
 
 $headings: (
     'h1': (

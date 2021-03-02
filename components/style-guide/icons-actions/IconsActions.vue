@@ -7,12 +7,14 @@
 </template>
 
 <script>
+import { isBrowser } from '~/shared/utils/env'
+
 export default {
   name: 'DxIconsActions',
   inheritAttrs: false,
   data() {
     return {
-      count: parseFloat(document.documentElement.style.getPropertyValue('font-size')) || 16,
+      count: isBrowser ? parseFloat(document.documentElement.style.getPropertyValue('font-size')) : 16,
     }
   },
   methods: {
@@ -31,7 +33,9 @@ export default {
       this[name]()
     },
     setfont() {
-      document.documentElement.style.setProperty('font-size', this.count + 'px')
+      if (isBrowser) {
+        document.documentElement.style.setProperty('font-size', this.count + 'px')
+      }
     },
   },
 }

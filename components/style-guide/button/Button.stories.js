@@ -20,7 +20,7 @@ const Template = (args, { argTypes }) => ({
           </dx-button>
           <dx-button color="primary" v-bind="$props">
             <logo-clave-unica-icon color="light"  pr="5" />
-            <span class="underline-text">{{label}}</span> 
+            <span class="underline-text">{{label}}</span>
           </dx-button>
           <dx-button color="primary" outlined v-bind="$props">
             <logo-clave-unica-icon color="primary"  pr="5" />
@@ -51,7 +51,7 @@ const Template = (args, { argTypes }) => ({
           </dx-button>
         </v-col>
       </v-row>
-      
+
       <h3>Secondary</h3>
       <v-row>
         <v-col>
@@ -89,7 +89,7 @@ const Template = (args, { argTypes }) => ({
           <dx-button color="neutral"  disabled v-bind="$props"> <span class="underline-text">{{label}}</span></dx-button>
         </v-col>
       </v-row>
-      
+
       <h3>Success</h3>
       <v-row>
         <v-col>
@@ -117,7 +117,7 @@ const Template = (args, { argTypes }) => ({
           </dx-button>
         </v-col>
       </v-row>
-      
+
       <h3>Error</h3>
       <v-row>
         <v-col>
@@ -145,7 +145,7 @@ const Template = (args, { argTypes }) => ({
           </dx-button>
         </v-col>
       </v-row>
-      
+
       <h3 class="m-3">Warning</h3>
       <v-row>
         <v-col>
@@ -198,6 +198,18 @@ const Template = (args, { argTypes }) => ({
             <dx-icon right regular>
               mdi-chevron-down
             </dx-icon>
+          </dx-button>
+
+
+        </v-col>
+      </v-row>
+
+      <h3 class="my-8">Header Button Light Text</h3>
+      <v-row>
+        <v-col class="dark" cols='3' sm='6'>
+          <dx-button color="light" text v-bind="$props">
+            <dx-icon left>mdi-help-circle</dx-icon>
+            <span class="pl-1 text-underline">Ayuda</span>
           </dx-button>
         </v-col>
       </v-row>

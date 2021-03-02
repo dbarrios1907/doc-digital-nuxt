@@ -2,7 +2,7 @@ import Vue from 'vue'
 import * as _Vuetify from 'vuetify/lib'
 
 import es from 'vuetify/lib/locale/es'
-import { Button, Badge, Alert, Icon } from '@/components'
+// import { Button, Badge, Alert, Icon } from '~/components/style-guide'
 import { themes } from '~/shared/theme/color-palette'
 import '@mdi/font/css/materialdesignicons.min.css'
 
@@ -17,12 +17,12 @@ const VComponents = Object.keys(_Vuetify).reduce((acc, key) => {
   return acc
 }, {})
 
-const styleGuideComponents = {
-  Button,
-  Badge,
-  Icon,
-  Alert,
-}
+// const styleGuideComponents = {
+//   Button,
+//   Badge,
+//   Icon,
+//   Alert,
+// }
 
 Vue.use(Vuetify, {
   components: {
@@ -31,7 +31,7 @@ Vue.use(Vuetify, {
     VSlideXReverseTransition: _Vuetify.VSlideXReverseTransition,
     VSlideYTransition: _Vuetify.VSlideYTransition,
     VFadeTransition: _Vuetify.VFadeTransition,
-    ...styleGuideComponents,
+    // ...styleGuideComponents,
   },
 })
 

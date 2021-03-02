@@ -1,5 +1,4 @@
-import Navigation from '../components/navigation/index'
-import { storyPath } from './_settings'
+import Navigation from './index'
 
 export const constantRoutes = [
   {
@@ -105,7 +104,7 @@ export const constantRoutes = [
 ]
 
 export default {
-  title: storyPath,
+  title: 'Style Guide/Layouts',
   argTypes: {},
 }
 
@@ -121,10 +120,10 @@ const Template = (args, { argTypes }) => ({
   },
   template: `
     <div style='width: 325px; height: 800px;'>
-        <Navigation :routes="routes"/>
+        <Navigation :routes="routes" />
     </div>
   `,
 })
 
-export const NavigationSample = Template.bind({})
-NavigationSample.args = {}
+export const NavigationMenu = Template.bind({})
+NavigationMenu.args = {}

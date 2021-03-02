@@ -24,16 +24,16 @@ export default {
   //   VFadeTransition: _Vuetify.VFadeTransition,
   // },
   theme: {
-    options: {
-      customProperties: true,
-    },
+    // options: {
+    //   customProperties: true,
+    // },
     themes,
   },
   lang: {
     locales: { es },
     current: 'es',
   },
-  icons: {
-    iconfont: 'mdi',
-  },
+  // icons: {
+  //   iconfont: 'mdi',
+  // },
 }

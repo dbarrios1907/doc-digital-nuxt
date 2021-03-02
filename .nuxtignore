@@ -17,4 +17,4 @@ components/**/index.js
 
 components
 
-pages/ignore
+pages/__ignore__

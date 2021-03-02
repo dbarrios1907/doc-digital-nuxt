@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import './Alert.scss'
-
 export default {
   name: 'DxAlert',
   inheritAttrs: false,
@@ -57,3 +55,54 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.dx-alert {
+  max-width: 27.37rem;
+  position: relative;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.dx-alert__closeable {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+}
+
+@function bg_color($colorName) {
+  @if $colorName == success {
+    @return #dbf2f0;
+  }
+
+  @if $colorName == info {
+    @return #f3f7fc;
+  }
+
+  @if $colorName == error {
+    @return #fdf4f4;
+  }
+
+  @if $colorName == warning {
+    @return #fef8f2;
+  }
+
+  @return #f3f7fc;
+}
+
+@include theme(dx-alert) using($material) {
+  $dx-alert-color: map-deep-get($material, 'colors', 'darken3') !important;
+
+  .dx-alert__content {
+    color: $dx-alert-color;
+  }
+
+  @each $name, $color in map-get($material, 'alerts') {
+    &.dx-type__#{$name} {
+      color: $color;
+      background-color: bg_color(#{$name}) !important;
+      border-color: $color !important;
+    }
+  }
+}
+</style>

@@ -24,7 +24,7 @@
 import path from 'path'
 import NavListGroup from './NavListGroup'
 import NavListItem from './NavListItem'
-import { isExternal } from '@/shared/utils/router'
+import { isExternal } from '~/shared/utils/router'
 
 export default {
   name: 'DxSidebarItem',

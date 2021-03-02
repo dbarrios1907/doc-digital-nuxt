@@ -1,7 +1,5 @@
-import { storyPath } from './_settings'
-
 export default {
-  title: storyPath,
+  title: 'Style Guide/Layouts',
   argTypes: {},
 }
 
@@ -12,5 +10,5 @@ const Template = (args, { argTypes }) => ({
   `,
 })
 
-export const Error = Template.bind({})
-Error.args = {}
+export const ErrorPage = Template.bind({})
+ErrorPage.args = {}

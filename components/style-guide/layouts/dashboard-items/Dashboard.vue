@@ -25,12 +25,17 @@
 </template>
 
 <script>
+import { isBrowser } from '~/shared/utils/env'
+
 export default {
   name: 'DxDashboard',
   inheritAttrs: false,
   computed: {
     colclass() {
-      return window.innerWidth < 960 ? 'col-md-6' : 'col-md-4'
+      if (isBrowser) {
+        return window.innerWidth < 960 ? 'col-md-6' : 'col-md-4'
+      }
+      return 'col-md-6'
     },
   },
 }

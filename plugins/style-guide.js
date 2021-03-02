@@ -1,5 +1,6 @@
 import { pluginFactory } from '~/shared/utils/plugins'
-import * as _styleGuideComponents from '~/components'
+import * as _styleGuideComponents from '~/components/style-guide'
+import Vue from 'vue'
 
 const components = Object.keys(_styleGuideComponents).reduce((acc, key) => {
   const name = _styleGuideComponents[key].name
@@ -10,5 +11,7 @@ const components = Object.keys(_styleGuideComponents).reduce((acc, key) => {
 const StyleGuidePlugin = /*#__PURE__*/ pluginFactory({
   components,
 })
+
+Vue.use(StyleGuidePlugin)
 
 export default StyleGuidePlugin

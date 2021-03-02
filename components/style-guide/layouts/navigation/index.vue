@@ -1,6 +1,6 @@
 <template>
-  <v-navigation-drawer ref="navbar" :color="_color" width="100%" permanent v-bind="$attrs" v-on="$listeners">
-    <perfect-scrollbar :style="{ height: scrollHeight }">
+  <v-navigation-drawer ref="navbar" dx-navigation :color="_color" :width="width" height="100%" v-bind="$attrs" v-on="$listeners">
+    <dx-scrollbar>
       <slot :slot-scope="{}" name="top-section">
         <NavListItem class="mt-8 px-5">
           <v-list-item-icon>
@@ -24,15 +24,15 @@
           <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
         </v-list>
       </slot>
-    </perfect-scrollbar>
+    </dx-scrollbar>
   </v-navigation-drawer>
 </template>
 
 <script>
 import NavListItem from './components/NavListItem.vue'
 import SidebarItem from './components/SidebarItem.vue'
-import _get from '@/shared/utils/get'
-import DxEntitySelectionItem from '~/layouts/components/navigation/components/EntitySelectionItem'
+import _get from '~/shared/utils/get'
+import DxEntitySelectionItem from '~/components/style-guide/layouts/navigation/components/EntitySelectionItem'
 
 export default {
   name: 'DxNavigation',
@@ -47,6 +47,11 @@ export default {
       type: Array,
       default: () => [],
     },
+
+    width: {
+      type: String,
+      default: () => '325px',
+    },
   },
   data: () => ({
     scrollHeight: '100%',
@@ -59,17 +64,28 @@ export default {
   },
   watch: {
     '$refs.navbar.scrollHeight'() {
-      this.scrollHeight = this.$refs.navbar.scrollHeight + 'px'
+      console.log(this.$refs.navbar)
+      this.scrollHeight = this.$refs.navbar.$el.scrollHeight + 'px'
     },
   },
   mounted() {
-    this.scrollHeight = this.$refs.navbar.scrollHeight + 'px'
+    console.log(this.$refs.navbar)
+    this.scrollHeight = this.$refs.navbar.$el.scrollHeight + 'px'
+  },
+  methods: {
+    onScroll(e) {
+      console.log(e)
+      e.preventDefault()
+    },
   },
 }
 </script>
 
 <style lang="scss">
-.v-navigation-drawer__content {
-  overflow: hidden;
+[dx-navigation] {
+  max-height: 100% !important;
 }
+//.v-navigation-drawer__content {
+//  overflow: hidden;
+//}
 </style>

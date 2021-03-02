@@ -25,7 +25,7 @@
 <script>
 import MainLayout from './MainLayout'
 import ContentLayout from './ContentLayout'
-import Navigation from './components/navigation'
+import Navigation from '../components/style-guide/layouts/navigation'
 
 export default {
   name: 'DxAuthLayout',
