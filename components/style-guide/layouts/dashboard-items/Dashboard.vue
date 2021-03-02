@@ -9,11 +9,10 @@
       <v-divider />
     </div>
     <v-row class="mt-3">
-      <div :class="colclass">
+      <div :class="colclass" class="relative with-v-divider">
         <dx-dashbitem class="primary--text dashb-item ml-0" textheader="9.999" titleheader="Documentos enviados" messaje="" />
       </div>
-      <v-divider inset vertical class="d-none mr-5 d-sm-flex d-md-flex d-lg-flex d-xl-flex mx-0 px-0 m" />
-      <div :class="colclass">
+      <div :class="colclass" class="relative with-v-divider">
         <dx-dashbitem
           class="primary--text dashb-item m-auto"
           textheader="9.999"
@@ -21,7 +20,6 @@
           messaje="15 pendientes de recibir"
         />
       </div>
-      <v-divider inset vertical class="d-none mr-5 d-md-flex d-lg-flex d-xl-flex mx-0 px-0" />
       <div :class="colclass">
         <dx-dashbitem class="primary--text dashb-item ml-0" textheader="9.999" titleheader="Documentos pendientes" messaje="" />
       </div>
@@ -37,15 +35,15 @@ export default {
   inheritAttrs: false,
   computed: {
     colclass() {
-      if (isBrowser) {
-        return window.innerWidth < 960 ? 'col-md-6' : 'col-md-4'
-      }
-      return 'col-md-6'
+      return 'col-sm-12 col-md-6 col-lg-4'
     },
   },
 }
 </script>
 <style lang="scss">
+.relative {
+  position: relative;
+}
 .col-md-4 {
   max-width: 32% !important;
   min-width: 296px;
@@ -58,5 +56,17 @@ export default {
   // min-width: 300px !important;
   max-width: 300px;
   margin: 0 auto;
+  position: relative;
 }
+.with-v-divider:after {
+  content: '';
+  top: -10px;
+  right: 20px;
+  position: absolute;
+  height: calc(100% - 10px);
+  margin: 20px 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+
 </style>
