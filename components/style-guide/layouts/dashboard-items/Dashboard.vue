@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <div :class="colclass">
-        <dx-dashbitem hidecontent="true" class="pl-3 primary--text dashb-item" textheader="9.999" titleheader="Usuarios activos" messaje="" />
+        <dx-dashbitem hidecontent="true" class="primary--text dashb-item ml-0" textheader="9.999" titleheader="Usuarios activos" messaje="" />
       </div>
     </v-row>
     <div class="mt-5 px-5 d-none d-sm-flex d-xs-none">
@@ -10,15 +10,20 @@
     </div>
     <v-row class="mt-3">
       <div :class="colclass">
-        <dx-dashbitem class="pl-3 primary--text dashb-item" textheader="9.999" titleheader="Documentos enviados" messaje="" />
+        <dx-dashbitem class="primary--text dashb-item ml-0" textheader="9.999" titleheader="Documentos enviados" messaje="" />
       </div>
-      <v-divider inset vertical class="d-none d-sm-flex d-md-flex d-lg-flex d-xl-flex mx-0 px-0 m" />
+      <v-divider inset vertical class="d-none mr-5 d-sm-flex d-md-flex d-lg-flex d-xl-flex mx-0 px-0 m" />
       <div :class="colclass">
-        <dx-dashbitem class="primary--text dashb-item" textheader="9.999" titleheader="Documentos recibidos" messaje="15 pendientes de recibir" />
+        <dx-dashbitem
+          class="primary--text dashb-item m-auto"
+          textheader="9.999"
+          titleheader="Documentos recibidos"
+          messaje="15 pendientes de recibir"
+        />
       </div>
-      <v-divider inset vertical class="d-none d-md-flex d-lg-flex d-xl-flex mx-0 px-0" />
+      <v-divider inset vertical class="d-none mr-5 d-md-flex d-lg-flex d-xl-flex mx-0 px-0" />
       <div :class="colclass">
-        <dx-dashbitem class="primary--text dashb-item" textheader="9.999" titleheader="Documentos pendientes" messaje="" />
+        <dx-dashbitem class="primary--text dashb-item ml-0" textheader="9.999" titleheader="Documentos pendientes" messaje="" />
       </div>
     </v-row>
   </div>
@@ -52,6 +57,6 @@ export default {
 .dashb-item {
   // min-width: 300px !important;
   max-width: 300px;
-  margin: 0px auto;
+  margin: 0 auto;
 }
 </style>
