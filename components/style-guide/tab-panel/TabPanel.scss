@@ -2,6 +2,9 @@
   $bg-color: map-deep-get($material, 'v_tabs', 'tabs-bar-background-color');
   $tx-color: map-deep-get($material, 'v_tabs', 'light');
   $tx-dissable-color: map-deep-get($material, 'v_tabs', 'tabs-bar-text-dissable-color');
+  & > .v-tabs-bar--is-mobile .tab-header-content {
+    min-width: auto !important;
+  }
   .v-tab{
     font-size: rem-calc(16px);
     line-height: rem-calc(24px);
