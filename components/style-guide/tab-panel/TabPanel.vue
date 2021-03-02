@@ -1,10 +1,15 @@
 <template>
-  <div :items="items" :class="['v-tabs', { 'tab-default': defaultTab }, { 'tab-primary': !defaultTab }]">
+  <div :items="items" :class="['v-tabs', 'tab-' + tabtype]">
     <v-tabs v-model="tab">
       <v-tab v-for="item in items" :key="item.tab" :ripple="false" v-bind="$attrs" v-on="$listeners">
         <div class="tab-header-content">
+          <div class="tab-icon" v-if="item.icon">
+            <dx-icon>
+              {{ item.icon }}
+            </dx-icon>
+          </div>
           <span class="tab-title">{{ item.tab }}</span>
-          <div class="tab-number" v-if="item.number > 0 && !defaultTab">{{ item.number }}</div>
+          <div class="tab-number" v-if="item.number > 0 && tabtype == 'primary'">{{ item.number }}</div>
         </div>
       </v-tab>
     </v-tabs>
@@ -20,27 +25,16 @@ export default {
   name: 'DxTabs',
   inheritAttrs: true,
   props: {
-    tabtype: String,
     items: Array,
-    defaultTab: {
-      type: Boolean,
-      default: false,
+    tabtype: {
+      type: String,
+      default: 'default',
     },
   },
   data() {
     return {
       tab: null,
     }
-  },
-  methods: {
-    tabTypeClass(tabtype) {
-      switch (tabtype) {
-        case 'default':
-          return 'tab-default'
-        case 'primary':
-          return 'tab-primary'
-      }
-    },
   },
 }
 </script>
