@@ -30,7 +30,7 @@
           <v-icon small> mdi-filter </v-icon>
         </dx-button>
       </v-col>
-      <v-col sm="6" class="text-right">
+      <v-col sm="6" class="d-flex justify-end align-center">
         <a href="#" class="text-underline weight-700 font-title"> + Agregar Usuario</a>
       </v-col>
     </v-row>

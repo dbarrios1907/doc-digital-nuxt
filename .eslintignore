@@ -6,3 +6,4 @@ src/assets
 public
 dist
 **/ToastService.js
+.env*
