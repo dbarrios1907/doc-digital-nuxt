@@ -45,7 +45,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxt/auth-next',
+    // '@nuxt/auth-next',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     'nuxt-webfontloader',
@@ -97,24 +97,24 @@ export default {
     },
   },
 
-  auth: {
-    strategies: {
-      oauth2mock: {
-        scheme: 'oauth2',
-        endpoints: {
-          authorization: '/oauth2mockLogin',
-          token: '/oauth2mockserver/token',
-          userInfo: '/oauth2mockserver/userinfo',
-        },
-        responseType: 'code',
-        grantType: 'authorization_code',
-        clientId: 'test-client',
-      },
-    },
-  },
+  // auth: {
+  //   strategies: {
+  //     oauth2mock: {
+  //       scheme: 'oauth2',
+  //       endpoints: {
+  //         authorization: '/oauth2mockLogin',
+  //         token: '/oauth2mockserver/token',
+  //         userInfo: '/oauth2mockserver/userinfo',
+  //       },
+  //       responseType: 'code',
+  //       grantType: 'authorization_code',
+  //       clientId: 'test-client',
+  //     },
+  //   },
+  // },
 
   router: {
-    middleware: ['auth'],
+    // middleware: ['auth'],
     extendRoutes(routes, resolve) {
       routes.push({
         name: 'login',
