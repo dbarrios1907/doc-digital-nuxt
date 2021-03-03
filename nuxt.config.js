@@ -3,6 +3,9 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
+  server: {
+    port: 4000,
+  },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -42,6 +45,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxt/auth-next',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     'nuxt-webfontloader',
@@ -90,6 +94,39 @@ export default {
   webfontloader: {
     google: {
       families: ['Roboto+Slab:400', 'Roboto:400,500,700', 'Nunito:300'],
+    },
+  },
+
+  auth: {
+    strategies: {
+      oauth2mock: {
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: '/oauth2mockLogin',
+          token: '/oauth2mockserver/token',
+          userInfo: '/oauth2mockserver/userinfo',
+        },
+        responseType: 'code',
+        grantType: 'authorization_code',
+        clientId: 'test-client',
+      },
+    },
+  },
+
+  router: {
+    middleware: ['auth'],
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'login',
+        path: '/login',
+        component: resolve(__dirname, 'components/doc-digital/login/index.vue'),
+      })
+
+      routes.push({
+        name: 'login-callback',
+        path: '/callback',
+        component: resolve(__dirname, 'components/doc-digital/login-callback/index.vue'),
+      })
     },
   },
 }

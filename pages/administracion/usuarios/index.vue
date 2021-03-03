@@ -106,6 +106,9 @@
 <script>
 export default {
   name: 'Usuarios',
+  fetch() {
+    console.log('FETCH ON USERS')
+  },
   data() {
     return {
       tabs: 'tab-1',
