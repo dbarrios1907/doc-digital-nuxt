@@ -1,9 +1,14 @@
 @include theme(v-data-table) using ($material) {
   & tbody tr > td {
     border: none !important;
+    font-size: rem-calc(16px);
   }
   
   & thead tr {
+    & > th {
+      font-size: rem-calc(16px);
+    }
+
     & > .sortable .v-icon {
       font-size: rem-calc(24px) !important;
     }

@@ -1,18 +1,18 @@
 <template>
-  <v-row :class="[{'px-9': !ismobil}]">
+  <v-row>
       <perfect-scrollbar :style="{ height: '100%', width: '100%' }">
-        <v-col cols="12" class="mt-6 d-none d-md-flex d-lg-flex d-xl-flex">
+        <v-col cols="12" class="mt-3 mb-7 d-none d-md-flex d-lg-flex d-xl-flex">
           <dx-bodytitle >
             <template v-slot:title>
-              <div class="weight-700 text-md-h4 line-height-31">Estás en el Módulo de Envío y Recepción</div>
+              <div class="weight-700 font-25 line-height-31">Estás en el Módulo de Envío y Recepción</div>
             </template>
             <template v-slot:subtitle>
-              <div class="weight-400 mt-2 font-regular line-height-24">Pequeño resumen descriptivo de la funcionalidad de éste módulo.</div>
+              <div class="weight-400 mt-3 font-regular line-height-24">Pequeño resumen descriptivo de la funcionalidad de éste módulo.</div>
             </template>
           </dx-bodytitle>
         </v-col>  
-        <v-col cols=12 :class="[{'px-9': !ismobil}]">
-            <div class="my-11 weight-400">
+        <v-col cols=12 :class="['mb-10', {'px-9': !ismobil}]">
+            <div class="my-9 weight-400">
               <span class="mr-2">Mostrando hasta</span>
               <v-select
                   class="d-inline-flex min-content"
@@ -28,7 +28,7 @@
                 ></v-select>
               <span class="ml-3">resultados.</span>
             </div>
-            <dx-tabs :items="tabs">
+            <dx-tabs :items="tabs" tabtype="primary">
               <template v-slot:tab-item>
                 <v-tab-item v-for="item in items" :key="item.tab">
                   <DataTable
@@ -58,7 +58,7 @@
                     </template>
 
                     <template v-slot:footer>
-                      <div class="pt-2 v-data-footer">
+                      <div class="py-7 v-data-footer">
                         <dx-pagination v-model="page" :length="pageCount" />
                       </div>
                     </template>
@@ -189,3 +189,14 @@ export default {
   
 }
 </script>
+<style lang="scss" scoped>
+  @include theme(v-select) using ($material) {
+      width: rem-calc(104px) !important;
+      height: rem-calc(48px) !important;
+  }
+
+  @include theme(v-data-footer) using ($material) {
+      border-top: none !important;
+  }
+
+</style>

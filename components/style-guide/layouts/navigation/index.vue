@@ -14,7 +14,7 @@
 
         <div class="py-4" style="display: flex; justify-content: center">
           <dx-button style="background-color: white" large color="primary" text v-bind="$props">
-            <span class="underline-text">Nuevo Documento</span>
+            <span class="underline-text"><a href="/documentos/nuevo-documento">Nuevo Documento</a></span>
             <dx-icon right chevron regular> mdi-chevron-down </dx-icon>
           </dx-button>
         </div>

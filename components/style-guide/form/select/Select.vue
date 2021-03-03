@@ -19,10 +19,10 @@
     @change="emitSelected"
   >
     <template v-if="multiple" v-slot:selection="{ item }">
-      <Badge type="tertiary" label outlined class="mx-1 my-1">
+      <dx-badge type="tertiary" label outlined class="mx-1 my-1">
         <div class="darken3--text font-16 line-height-22 weight-400">{{ item }}</div>
         <dx-icon v-if="closableItems" left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
-      </Badge>
+      </dx-badge>
     </template>
   </v-select>
 </template>
