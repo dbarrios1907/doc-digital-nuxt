@@ -1,9 +1,9 @@
 <template>
-  <div class="fill-height">
+  <div class="fill-height usuarios" style="min-height: 780px">
     <dx-breadcrumbs :items="breadcrums" />
-    <dx-bodytitle>
+    <dx-bodytitle class="mt-11">
       <template v-slot:title>
-        <div class="weight-700 text-md-h4 mt-3 line-height-31">Usuarios</div>
+        <div class="weight-700 text-md-h4 line-height-31">Usuarios</div>
       </template>
     </dx-bodytitle>
     <div class="mt-10 weight-400">
@@ -20,6 +20,7 @@
         v-bind="$props"
         ripple="false"
         single-line
+        :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
       />
       <span class="ml-3">resultados de un total de <b>17 usuarios</b></span>
     </div>
@@ -31,84 +32,252 @@
         </dx-button>
       </v-col>
       <v-col sm="6" class="d-flex justify-end align-center">
-        <a href="#" class="text-underline weight-700 font-title"> + Agregar Usuario</a>
+        <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
       </v-col>
     </v-row>
-    <v-tabs v-model="tabs" class="mt-5">
-      <v-tab href="#tab-1"> Activos </v-tab>
-      <v-tab href="#tab-2"> Inactivos </v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="tabs">
-      <v-tab-item value="tab-1">
-        <DataTable
-          color="primary"
-          :headers="headers"
-          :items="values"
-          :page.sync="page"
-          :items-per-page="itemsPerPage"
-          hide-default-footer
-          class="elevation-1"
-          show-select
-          @page-count="pageCount = $event"
-        >
-          <template v-slot:[`item.data-table-select`]="{ isSelected, select }">
-            <v-simple-checkbox color="primary" :value="isSelected" @input="select($event)" />
-          </template>
-          <template v-slot:[`item.access`]="{ item: { access } }">
-            <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
-              {{ v }}
-            </v-chip>
-          </template>
-          <template v-slot:[`item.actions`]>
-            <v-icon dense class="mr-2"> mdi-square-edit-outline </v-icon>
-            <v-icon dense class="mr-2"> mdi-eye </v-icon>
-            <v-icon dense> mdi-delete-outline </v-icon>
-          </template>
-        </DataTable>
-        <div class="pt-2 mr-6">
-          <dx-pagination v-model="page" :length="pageCount" class="float-right" />
-        </div>
-      </v-tab-item>
-      <v-tab-item value="tab-2">
-        <DataTable
-          color="primary"
-          :headers="headers"
-          :items="values"
-          :page.sync="page"
-          :items-per-page="itemsPerPage"
-          hide-default-footer
-          class="elevation-1"
-          show-select
-          @page-count="pageCount = $event"
-        >
-          <template v-slot:[`item.data-table-select`]="{ isSelected, select }">
-            <v-simple-checkbox color="primary" :value="isSelected" @input="select($event)" />
-          </template>
-          <template v-slot:[`item.access`]="{ item: { access } }">
-            <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
-              {{ v }}
-            </v-chip>
-          </template>
-          <template v-slot:[`item.actions`]>
-            <v-icon dense class="mr-2"> mdi-square-edit-outline </v-icon>
-            <v-icon dense class="mr-2"> mdi-eye </v-icon>
-            <v-icon dense> mdi-delete-outline </v-icon>
-          </template>
-        </DataTable>
-        <div class="pt-2 mr-6">
-          <dx-pagination v-model="page" :length="pageCount" class="float-right" />
-        </div>
-      </v-tab-item>
-    </v-tabs-items>
+    <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7">
+      <template v-slot:tab-item>
+        <v-tab-item>
+          <DataTable
+            :headers="computedHeaders"
+            :items="valuess"
+            :page.sync="page"
+            :items-per-page="itemsPerPage"
+            :class="['table-check', 'table-sm', { ismobile: ismobil }]"
+            :mobile-breakpoint="0"
+            show-select
+            dense
+            item-key="name"
+            @page-count="pageCount = $event"
+            hide-default-footer
+            calculate-widths
+          >
+            <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
+              {{ h.text }}
+              <v-icon
+                :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
+                :key="h.value"
+                @click="activeSearch(header, $event)"
+                v-if="h.search"
+                >mdi-magnify</v-icon
+              >
+              <v-icon :class="['float-right', { focus: actived === h.value }]" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable"
+                >mdi-filter</v-icon
+              >
+            </template>
+            <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+              <tr class="body-prepend">
+                <td />
+                <td>
+                  <v-text-field
+                    type="text"
+                    @focus="actived = 'name'"
+                    hide-details
+                    solo
+                    flat
+                    outlined
+                    v-model="filterValue"
+                    label="Nombre"
+                    v-if="searchname"
+                  />
+                </td>
+                <td v-if="!ismobil">
+                  <v-text-field
+                    type="text"
+                    @focus="actived = 'rut'"
+                    hide-details
+                    solo
+                    flat
+                    outlined
+                    v-model="filterRut"
+                    label="Rut"
+                    v-if="searchrut"
+                  />
+                </td>
+                <td v-if="!ismobil" class="filter">
+                  <dx-select
+                    :ripple="false"
+                    v-model="permiso"
+                    :items="permisosValues"
+                    chips
+                    label="Filtra por permisos"
+                    persistent-hint
+                    multiple
+                    flat
+                    hide-details
+                    outlined
+                    :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+                    v-if="filtered"
+                    @click="actived = 'access'"
+                    @blur="actived = null"
+                  >
+                    <template v-slot:selection="{ item, index }">
+                      <Badge type="tertiary" label outlined class="ma-0">
+                        <div class="darken3--text font-16 line-height-22 weight-400">{{ item }}</div>
+                        <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
+                      </Badge>
+                    </template>
+                  </dx-select>
+                </td>
+                <td />
+              </tr>
+            </template>
+
+            <template v-slot:[`item.name`]="{ item: { name } }">
+              <span class="breaktext">{{ name }}</span>
+            </template>
+
+            <template v-slot:[`item.access`]="{ item: { access } }">
+              <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
+                {{ v }}
+              </v-chip>
+            </template>
+
+            <template v-slot:[`item.userid`]="{ item: { userid } }">
+              <nuxt-link :to="'/administracion/usuarios/editar/' + userid"
+                ><v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
+              >
+              <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+              <v-icon dense> mdi-delete-outline </v-icon>
+            </template>
+
+            <template v-slot:footer>
+              <div class="pt-2 v-data-footer">
+                <dx-pagination v-model="page" :length="pageCount" />
+              </div>
+            </template>
+          </DataTable>
+        </v-tab-item>
+        <v-tab-item>
+          <DataTable
+            :headers="computedHeaders"
+            :items="valuess"
+            :page.sync="page"
+            :items-per-page="itemsPerPage"
+            :class="['table-check', 'table-sm', { ismobile: ismobil }]"
+            :mobile-breakpoint="0"
+            show-select
+            dense
+            item-key="name"
+            @page-count="pageCount = $event"
+            hide-default-footer
+            calculate-widths
+          >
+            <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
+              {{ h.text }}
+              <v-icon
+                :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
+                :key="h.value"
+                @click="activeSearch(header, $event)"
+                v-if="h.search"
+                >mdi-magnify</v-icon
+              >
+              <v-icon :class="['float-right', { focus: actived === h.value }]" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable"
+                >mdi-filter</v-icon
+              >
+            </template>
+            <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+              <tr class="body-prepend">
+                <td />
+                <td>
+                  <v-text-field
+                    type="text"
+                    @focus="actived = 'name'"
+                    hide-details
+                    solo
+                    flat
+                    outlined
+                    v-model="filterValue"
+                    label="Nombre"
+                    v-if="searchname"
+                  />
+                </td>
+                <td v-if="!ismobil">
+                  <v-text-field
+                    type="text"
+                    @focus="actived = 'rut'"
+                    hide-details
+                    solo
+                    flat
+                    outlined
+                    v-model="filterRut"
+                    label="Rut"
+                    v-if="searchrut"
+                  />
+                </td>
+                <td v-if="!ismobil" class="filter">
+                  <dx-select
+                    :ripple="false"
+                    v-model="permiso"
+                    :items="permisosValues"
+                    chips
+                    label="Filtra por permisos"
+                    persistent-hint
+                    multiple
+                    flat
+                    hide-details
+                    outlined
+                    :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+                    v-if="filtered"
+                    @click="actived = 'access'"
+                    @blur="actived = null"
+                  >
+                    <template v-slot:selection="{ item, index }">
+                      <Badge type="tertiary" label outlined class="ma-0">
+                        <div class="darken3--text font-16 line-height-22 weight-400">{{ item }}</div>
+                        <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
+                      </Badge>
+                    </template>
+                  </dx-select>
+                </td>
+                <td />
+              </tr>
+            </template>
+
+            <template v-slot:[`item.name`]="{ item: { name } }">
+              <span class="breaktext">{{ name }}</span>
+            </template>
+
+            <template v-slot:[`item.access`]="{ item: { access } }">
+              <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
+                {{ v }}
+              </v-chip>
+            </template>
+
+            <template v-slot:[`item.userid`]="{ item: { userid } }">
+              <nuxt-link :to="'/administracion/usuarios/editar/' + userid"
+                ><v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
+              >
+              <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+              <v-icon dense> mdi-delete-outline </v-icon>
+            </template>
+
+            <template v-slot:footer>
+              <div class="pt-2 v-data-footer">
+                <dx-pagination v-model="page" :length="pageCount" />
+              </div>
+            </template>
+          </DataTable>
+        </v-tab-item>
+      </template>
+    </dx-tabs>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Usuarios',
+  fetch() {
+    console.log('FETCH ON USERS')
+  },
+  methods: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs
+    },
+  },
   data() {
     return {
-      tabs: 'tab-1',
+      tabs: [{ tab: 'Activos' }, { tab: 'Inactivos' }],
       options: ['10', '20', '30'],
       breadcrums: [
         {
@@ -127,64 +296,160 @@ export default {
       open: [1, 2],
       tree: null,
       caseSensitive: false,
+      actived: null,
+      searchname: false,
+      searchrut: false,
+      filtered: false,
+      filterValue: '',
+      filterRut: '',
+      isleft: true,
       page: 1,
       pageCount: 3,
-      itemsPerPage: 10,
-      headers: [
+      itemsPerPage: 5,
+      permiso: [],
+      permisosValues: ['Administrador', 'Jefe de servicio', 'Operador', 'Oficina de partes'],
+      valuess: [
+        {
+          userid: 1,
+          name: 'Nombre Nombre Apellido Apellido',
+          rut: '23.266.206-8',
+          access: ['Administrador', 'Jefe de servicio'],
+        },
+        {
+          userid: 2,
+          name: 'Nombre2 Nombre Apellido Apellido',
+          rut: '21.266.206-8',
+          access: ['Administrador'],
+        },
+        {
+          userid: 3,
+          name: 'Nombre3 Nombre Apellido Apellido',
+          rut: '21.256.206-8',
+          access: ['Jefe de servicio'],
+        },
+        {
+          userid: 4,
+          name: 'Nombre4 Nombre Apellido Apellido',
+          rut: '20.266.206-8',
+          access: ['Operador'],
+        },
+        {
+          userid: 5,
+          name: 'Nombre5 Nombre Apellido Apellido',
+          rut: '20.200.206-8',
+          access: ['Jefe de servicio'],
+        },
+        {
+          userid: 6,
+          name: 'Nombre6 Nombre Apellido Apellido',
+          rut: '24.266.206-8',
+          access: ['Oficina de partes'],
+        },
+        {
+          userid: 7,
+          name: 'Nombre7 Nombre Apellido Apellido',
+          rut: '25.266.206-8',
+          access: ['Administrador'],
+        },
+        {
+          userid: 8,
+          name: 'Nombre8 Nombre Apellido Apellido',
+          rut: '25.366.206-8',
+          access: ['Operador'],
+        },
+        {
+          userid: 9,
+          name: 'Nombre9 Nombre Apellido Apellido',
+          rut: '26.266.206-8',
+          access: ['Operador'],
+        },
+        {
+          userid: 10,
+          name: 'Nombre10 Nombre Apellido Apellido',
+          rut: '27.266.206-8',
+          access: ['Oficina de partes'],
+        },
+      ],
+    }
+  },
+  methods: {
+    openFilter(header, event) {
+      event.stopPropagation()
+      this.filtered = !this.filtered
+    },
+    nameFilter(value) {
+      if (!this.filterValue) {
+        return true
+      }
+      return value.toLowerCase().includes(this.filterValue.toLowerCase())
+    },
+    nameFilter1(value) {
+      if (!this.filterRut) {
+        return true
+      }
+      return value.includes(this.filterRut)
+    },
+    activeSearch(header, value) {
+      event.stopPropagation()
+      if (header.value == 'name') this.searchname = !this.searchname
+      if (header.value == 'rut') this.searchrut = !this.searchrut
+    },
+    removeItem(item) {
+      this.permiso = this.permiso.filter(function (val) {
+        return item !== val
+      })
+    },
+    permisosFilter(value) {
+      let flag = false
+      if (this.permiso.length == 0) return true
+
+      value.filter(function (e) {
+        flag = this.indexOf(e) > -1
+      }, this.permiso)
+
+      return flag
+    },
+  },
+  computed: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs
+    },
+    computedHeaders() {
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'actions' : h.value))
+    },
+    headers() {
+      return [
         {
           text: 'Nombre',
           align: 'start',
           sortable: true,
           value: 'name',
-          filterable: true,
+          filter: this.nameFilter,
+          search: true,
         },
-        { text: 'Rut', value: 'rut', filterable: true },
-        { text: 'Permisos', value: 'access', sortable: true },
-        { text: 'Acciones', value: 'actions', sortable: false },
-      ],
-      values: [
-        {
-          name: 'Frozen Yogurt',
-          rut: '23.266.206-8',
-          access: ['Administrador', 'Jefe de servicios'],
-        },
-        {
-          name: 'Ice cream sandwich',
-          rut: '23.266.206-8',
-          access: ['Jefe de servicios'],
-        },
-        {
-          name: 'Eclair',
-          rut: '23.266.206-8',
-          access: ['Jefe de servicios'],
-        },
-        {
-          name: 'Cupcake',
-          rut: '23.266.206-8',
-          access: ['Operador'],
-        },
-        {
-          name: 'Gingerbread',
-          rut: '23.266.206-8',
-          access: ['Oficina de partes', 'Jefe de servicios'],
-        },
-        {
-          name: 'Jelly bean',
-          rut: '23.266.206-8',
-          access: ['Administrador'],
-        },
-        {
-          name: 'Lollipop',
-          rut: '23.266.206-8',
-          access: ['Administrador', 'Jefe de servicios'],
-        },
-      ],
-    }
+        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
+        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Acciones', value: 'userid', sortable: false },
+      ]
+    },
   },
 }
 </script>
 <style>
 .v-select .v-input__slot {
   min-height: 48px !important;
+}
+
+table a {
+  text-decoration: none;
+}
+
+.v-application .usuarios .tab-default .v-tab--active {
+  height: 46px !important;
+}
+
+.v-text-field--outlined > .v-input__control > .v-input__slot {
+  min-height: 48px;
+  border-radius: 0px;
 }
 </style>
