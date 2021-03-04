@@ -7,33 +7,30 @@ const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   data: () => ({
     items: [...Array(4)].map((_, i) => `Item ${i}`),
+    label: 'Acción masiva'
   }),
+  computed: {
+    actionColor() {
+      const isDark = this.$vuetify.theme.dark
+      return isDark ? '' : 'deepblue'
+    },
+  },
   template: `
-    <v-menu
-        color="primary"
-        offset-y
-    >
-    <template v-slot:activator="{ attrs, on }">
-      <dx-button
-          color="primary"
-          class="ma-5"
-          v-bind="attrs"
-          v-on="on"
-      >
-        Menu button
-      </dx-button>
-    </template>
-
-    <v-list>
-      <v-list-item
-          v-for="item in items"
-          :key="item"
-          link
-      >
-        <v-list-item-title v-text="item"></v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+        <v-menu offset-y>
+          <template v-slot:activator="{ attrs, on }">
+            <dx-button color="regular" text class="pl-2 my-2" v-bind="attrs" v-on="on">
+              <span class="text-underline line-height-24 weight-400" :class="actionColor"> {{label}} </span>
+              <dx-icon right regular> mdi-chevron-down </dx-icon>
+            </dx-button>
+          </template>
+          <v-list>
+            <v-list-item v-for="item in items" :key="item" link>
+              <v-list-item-title>
+                <span class="text-underline line-height-24 weight-400" :class="actionColor"> {{item}} </span>
+                </v-list-item-title>
+            </v-list-item>
+        </v-list>
+      </v-menu>
   `,
 })
 
