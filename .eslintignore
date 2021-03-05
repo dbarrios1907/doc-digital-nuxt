@@ -7,3 +7,4 @@ public
 dist
 **/ToastService.js
 .env*
+modules/**/plugin.js

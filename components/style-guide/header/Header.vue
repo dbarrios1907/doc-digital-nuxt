@@ -8,7 +8,7 @@
           <dx-icon left>mdi-help-circle</dx-icon>
           <span class="pl-1 text-underline">Ayuda</span>
         </dx-button>
-        <dx-button class="white--text text-underline mr-4" color="primary"> Cerrar Sesión</dx-button>
+        <dx-button class="white--text text-underline mr-4" color="primary" @click="$auth.logout()"> Cerrar Sesión</dx-button>
       </div>
     </div>
   </v-app-bar>

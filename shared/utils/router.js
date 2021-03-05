@@ -4,128 +4,10 @@ import { toString } from './string'
 
 const ANCHOR_TAG = 'a'
 
-// Precompile RegExp
-const commaRE = /%2C/g
-const encodeReserveRE = /[!'()*]/g
-const plusRE = /\+/g
-const queryStartRE = /^(\?|#|&)/
-
-// Method to replace reserved chars
-const encodeReserveReplacer = c => '%' + c.charCodeAt(0).toString(16)
-
-// Fixed encodeURIComponent which is more conformant to RFC3986:
-// - escapes [!'()*]
-// - preserve commas
-const encode = str => encodeURIComponent(toString(str)).replace(encodeReserveRE, encodeReserveReplacer).replace(commaRE, ',')
-
-const decode = decodeURIComponent
-
-// Stringifies an object of query parameters
-// See: https://github.com/vuejs/vue-router/blob/dev/src/util/query.js
-export const stringifyQueryObj = obj => {
-  if (!isPlainObject(obj)) {
-    return ''
-  }
-
-  const query = keys(obj)
-    .map(key => {
-      const val = obj[key]
-      if (isUndefined(val)) {
-        return ''
-      } else if (isNull(val)) {
-        return encode(key)
-      } else if (isArray(val)) {
-        return val
-          .reduce((results, val2) => {
-            if (isNull(val2)) {
-              results.push(encode(key))
-            } else if (!isUndefined(val2)) {
-              // Faster than string interpolation
-              results.push(encode(key) + '=' + encode(val2))
-            }
-            return results
-          }, [])
-          .join('&')
-      }
-      // Faster than string interpolation
-      return encode(key) + '=' + encode(val)
-    })
-    /* must check for length, as we only want to filter empty strings, not things that look falsey! */
-    .filter(x => x.length > 0)
-    .join('&')
-
-  return query ? `?${query}` : ''
-}
-
-export const parseQuery = query => {
-  const parsed = {}
-  query = toString(query).trim().replace(queryStartRE, '')
-
-  if (!query) {
-    return parsed
-  }
-
-  query.split('&').forEach(param => {
-    const parts = param.replace(plusRE, ' ').split('=')
-    const key = decode(parts.shift())
-    const val = parts.length > 0 ? decode(parts.join('=')) : null
-
-    if (isUndefined(parsed[key])) {
-      parsed[key] = val
-    } else if (isArray(parsed[key])) {
-      parsed[key].push(val)
-    } else {
-      parsed[key] = [parsed[key], val]
-    }
-  })
-
-  return parsed
-}
-
 export const isRouterLink = tag => toString(tag).toLowerCase() !== ANCHOR_TAG
 
 export const computeTag = ({ to, disabled } = {}, thisOrParent) => {
   return thisOrParent.$router && to && !disabled ? (thisOrParent.$nuxt ? 'nuxt-link' : 'router-link') : ANCHOR_TAG
-}
-
-export const computeRel = ({ target, rel } = {}) => {
-  if (target === '_blank' && isNull(rel)) {
-    return 'noopener'
-  }
-  return rel || null
-}
-
-export const computeHref = ({ href, to } = {}, tag = ANCHOR_TAG, fallback = '#', toFallback = '/') => {
-  // We've already checked the $router in computeTag(), so isRouterLink() indicates a live router.
-  // When deferring to Vue Router's router-link, don't use the href attribute at all.
-  // We return null, and then remove href from the attributes passed to router-link
-  if (isRouterLink(tag)) {
-    return null
-  }
-
-  // Return `href` when explicitly provided
-  if (href) {
-    return href
-  }
-
-  // Reconstruct `href` when `to` used, but no router
-  if (to) {
-    // Fallback to `to` prop (if `to` is a string)
-    if (isString(to)) {
-      return to || toFallback
-    }
-    // Fallback to `to.path + to.query + to.hash` prop (if `to` is an object)
-    if (isPlainObject(to) && (to.path || to.query || to.hash)) {
-      const path = toString(to.path)
-      const query = stringifyQueryObj(to.query)
-      let hash = toString(to.hash)
-      hash = !hash || hash.charAt(0) === '#' ? hash : `#${hash}`
-      return `${path}${query}${hash}` || toFallback
-    }
-  }
-
-  // If nothing is provided return the fallback
-  return fallback
 }
 
 /**
@@ -134,4 +16,81 @@ export const computeHref = ({ href, to } = {}, tag = ANCHOR_TAG, fallback = '#',
  */
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
+}
+
+export const isSameURL = (a, b) => a.split('?')[0].replace(/\/+$/, '') === b.split('?')[0].replace(/\/+$/, '')
+
+export const isRelativeURL = u => u && u.length && /^\/([a-zA-Z0-9@\-%_~][/a-zA-Z0-9@\-%_~]*)?([?][^#]*)?(#[^#]*)?$/.test(u)
+
+export const parseQuery = queryString => {
+  const query = {}
+  const pairs = queryString.split('&')
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i].split('=')
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '')
+  }
+  return query
+}
+
+export const encodeQuery = queryObject => {
+  return Object.entries(queryObject)
+    .filter(([key, value]) => typeof value !== 'undefined')
+    .map(([key, value]) => encodeURIComponent(key) + (value != null ? '=' + encodeURIComponent(value) : ''))
+    .join('&')
+}
+
+export const routeOption = (route, key, value) => {
+  return route.matched.some(m => {
+    if (process.client) {
+      // Client
+      return Object.values(m.components).some(component => component.options && component.options[key] === value)
+    } else {
+      // SSR
+      return Object.values(m.components).some(component => Object.values(component._Ctor).some(ctor => ctor.options && ctor.options[key] === value))
+    }
+  })
+}
+
+export const getMatchedComponents = (route, matches = false) => {
+  return [].concat.apply(
+    [],
+    route.matched.map(function (m, index) {
+      return Object.keys(m.components).map(function (key) {
+        matches && matches.push(index)
+        return m.components[key]
+      })
+    })
+  )
+}
+
+export function normalizePath(path = '') {
+  // Remove query string
+  let result = path.split('?')[0]
+
+  // Remove redundant / from the end of path
+  if (result.charAt(result.length - 1) === '/') {
+    result = result.slice(0, -1)
+  }
+
+  return result
+}
+
+export function encodeValue(val) {
+  if (typeof val === 'string') {
+    return val
+  }
+  return JSON.stringify(val)
+}
+
+export function decodeValue(val) {
+  // Try to parse as json
+  if (typeof val === 'string') {
+    try {
+      return JSON.parse(val)
+      // eslint-disable-next-line no-empty
+    } catch (_) {}
+  }
+
+  // Return as is
+  return val
 }

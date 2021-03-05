@@ -1,5 +1,6 @@
 <template>
   <v-app class="dark">
+    <div class="dx-notification-container" />
     <dx-navigation v-model="drawer" :routes="routes" :clipped="clipped" fixed app @onmouseover="onMouseOver" @mouseleave="onMouseLeave" />
 
     <dx-header :clipped-left="clipped" fixed app elevation="0" :height="92" />
@@ -38,7 +39,7 @@ export default {
   methods: {
     onMouseOver() {
       this.lockBodyScroll = true
-      console.log(this.lockBodyScroll);
+      console.log(this.lockBodyScroll)
     },
     onMouseLeave() {
       this.lockBodyScroll = false
