@@ -19,13 +19,8 @@ export default {
 @include theme(v-input) using ($material) {
   $font-color: map-get($material, 'font-color');
 
-  .v-input__control {
-    min-height: 48px;
+  & .v-input__control > .v-input__slot {
+    min-height: 48px !important;
   }
-
-  //input,
-  //textarea {
-  //  color: $font-color;
-  //}
 }
 </style>

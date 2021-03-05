@@ -31,7 +31,7 @@
 <script>
 import NavListItem from './components/NavListItem.vue'
 import SidebarItem from './components/SidebarItem.vue'
-import _get from '~/shared/utils/get'
+import _get from 'lodash.get'
 import DxEntitySelectionItem from '~/components/style-guide/layouts/navigation/components/EntitySelectionItem'
 
 export default {

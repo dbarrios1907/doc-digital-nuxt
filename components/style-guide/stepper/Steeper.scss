@@ -13,6 +13,16 @@
         border: 0;
     }
 
+    &.ismobil {
+        .v-stepper__header {
+            width: auto !important;
+
+        }
+
+        .v-stepper__step {
+            flex-basis: auto !important;
+        }
+    }
     & .v-stepper__step {
         &.v-stepper__step--complete {
             .v-icon {
@@ -50,7 +60,7 @@
         padding: 0;
 
         .v-stepper__wrapper {
-            margin-bottom: rem-calc(30px);
+            //margin-bottom: rem-calc(30px);
             .v-card {
                 border-radius: 0;
                 box-shadow: none;
@@ -61,7 +71,8 @@
 
             .next {
                 background-color: map-deep-get($material, 'colors', 'primary');
-                text-align: right;
+                height: rem-calc(43px);
+                //text-align: right;
             }
         }
     }

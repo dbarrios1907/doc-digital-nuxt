@@ -21,6 +21,7 @@
     "clsx": "^1.1.1",
     "core-js": "^3.6.5",
     "js-cookie": "^2.2.1",
+    "lodash.get": "^4.4.2",
     "nuxt": "^2.14.6",
     "nuxt-webfontloader": "^1.1.0",
     "v-scroll-lock": "^1.3.1",
