@@ -1,19 +1,32 @@
 @include theme(v-data-table) using ($material) {
   & tbody tr > td {
     border: none !important;
+    font-size: rem-calc(16px);
   }
   
   & thead tr {
+    & > th {
+      font-size: rem-calc(16px);
+    }
+
     & > .sortable .v-icon {
       font-size: rem-calc(24px) !important;
     }
 
     & > :last-child{
-      min-width: rem-calc(120px);
+      min-width: auto !important; //rem-calc(120px);
       width: rem-calc(120px);
     }
   }
   
+  &.actions1 thead tr > :last-child {
+    width: 50px;
+  }
+
+  &.actions1 tbody tr td {
+    font-weight: 700;
+  }
+
   &.table-check thead > tr {
     & > th:first-child {
       width: 45px !important;
@@ -160,9 +173,6 @@
   }
 
   &.ismobile {
-    /*& thead tr {
-      height: auto;
-    }*/
     & tbody tr { 
       & > :first-child {
         padding: 0 rem-calc(10px) !important;  

@@ -4,7 +4,6 @@
     :ripple="false"
     v-bind="$attrs"
     :items="items"
-    chips
     :label="label"
     persistent-hint
     outlined
@@ -31,7 +30,6 @@
 import './Select.scss'
 export default {
   name: 'DxSelect',
-  inheritAttrs: false,
   props: {
     closableItems: {
       type: Boolean,

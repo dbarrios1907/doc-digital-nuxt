@@ -1,5 +1,5 @@
 <template>
-  <v-checkbox dx-checkbox :ripple="ripple" :label="label" checkbox-disabled-opacity />
+  <v-checkbox dx-checkbox :ripple="ripple" :label="label" checkbox-disabled-opacity v-bind="$attrs" v-on="$listeners" />
 </template>
 
 <script>

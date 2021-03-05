@@ -10,13 +10,13 @@
 
     <div class="d-flex dx-item__bottom">
       <dx-icon right color="primary" medium> mdi-download </dx-icon>
-      <dx-icon right color="primary" medium> mdi-trash-can-outline </dx-icon>
+      <dx-icon right color="primary" medium @click="onRemove(file)"> mdi-trash-can-outline </dx-icon>
     </div>
   </li>
 </template>
 <script>
 import { STATUS } from '../helpers/shared-properties'
-
+global.File = typeof window === 'undefined' ? Object : window.File
 export default {
   name: 'FileItem',
   model: {
@@ -62,7 +62,7 @@ export default {
     isSuccess(status) {
       return status === STATUS.SUCCESS
     },
-    onRemove(e, id, status) {
+    onRemove({ id, status }) {
       this.$emit('onRemove', id, status)
     },
   },

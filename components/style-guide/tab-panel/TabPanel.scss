@@ -4,6 +4,9 @@
   $tx-dissable-color: map-deep-get($material, 'v_tabs', 'tabs-bar-text-dissable-color');
   $primary : map-deep-get($material, 'colors', 'primary');
   $light : map-deep-get($material, 'colors', 'light');
+  & > .v-tabs-bar--is-mobile .tab-header-content {
+    min-width: auto !important;
+  }
   .v-tab{
     font-size: rem-calc(16px);
     line-height: rem-calc(24px);

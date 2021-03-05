@@ -1,0 +1,79 @@
+@include theme(v-stepper) using ($material) {
+    box-shadow: none;
+
+    .v-stepper__header {
+        width: 50%;
+        margin: auto;
+        box-shadow: none;
+    }
+    .v-divider {
+        background-color: map-deep-get($material, 'colors', 'primary');
+        padding: rem-calc(2px);
+        margin: rem-calc(58px) rem-calc(-67px) 0;
+        border: 0;
+    }
+
+    &.ismobil {
+        .v-stepper__header {
+            width: auto !important;
+
+        }
+
+        .v-stepper__step {
+            flex-basis: auto !important;
+        }
+    }
+    & .v-stepper__step {
+        &.v-stepper__step--complete {
+            .v-icon {
+                font-size: rem-calc(33px);
+            }
+        }
+        &.v-stepper__step--inactive {
+            .v-stepper__step__step {
+                background-color: white !important;
+            }
+        }
+        & .v-stepper__step__step {
+            font-family: 'Roboto Slab', sans-serif;
+            border: rem-calc(4px) solid map-deep-get($material, 'colors', 'primary');
+            color:black;
+            width: rem-calc(70px);
+            height: rem-calc(70px);
+            font-size: rem-calc(39.06px);
+            line-height: 49;
+            font-weight: 700;
+        }
+
+        & > .v-stepper__label {
+            font-size: rem-calc(15px);
+        }
+
+        &.v-stepper__step--active {
+            & > .v-stepper__step__step {
+                background-color: map-deep-get($material, 'colors', 'secondary') !important;
+            }
+        }
+    }
+
+    .v-stepper__content {
+        padding: 0;
+
+        .v-stepper__wrapper {
+            //margin-bottom: rem-calc(30px);
+            .v-card {
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .v-card, .next {
+                border: rem-calc(1px) solid map-deep-get($material, 'colors', 'primary');
+            }
+
+            .next {
+                background-color: map-deep-get($material, 'colors', 'primary');
+                height: rem-calc(43px);
+                //text-align: right;
+            }
+        }
+    }
+  }

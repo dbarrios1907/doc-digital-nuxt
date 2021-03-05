@@ -1,7 +1,5 @@
-.v-card > div.v-select {
-    border-radius: 0px !important;
-  }
   @include theme(v-select) using($material) {
+    border-radius: 0px !important;
     $darken3: map-deep-get($material, 'colors', 'darken3');
     &.v-text-field--outlined {
       & > .v-input__control {
@@ -11,7 +9,7 @@
         }
         i.v-icon.v-icon {
           font-size: rem-calc(32px) !important;
-          color: $darken3;
+          color: $darken3 !important;
         }
       }
     }
