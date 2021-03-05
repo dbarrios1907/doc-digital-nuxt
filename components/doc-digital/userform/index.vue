@@ -217,12 +217,12 @@
         </v-row>
       </v-col>
       <div :class="['pr-2', { 'align-center': ismobil == 'ismobil' }, { 'align-right': ismobil == '' }, 'mt-12']">
-        <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2">
+        <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2" to="/administracion/usuarios">
           <span class="text-underline"> Cancelar </span>
         </dx-button>
 
         <dx-button color="white" outlined v-bind="$props" class="text-none primary" @click="submit">
-          <span class="text-underline"> Crear nuevo usuario </span>
+          <span class="text-underline"> {{ btntext }} </span>
         </dx-button>
       </div>
     </div>
@@ -301,6 +301,9 @@ export default {
     // headtitle() {
     //   return !this.userid ? 'Nuevo usuario' : 'Editar usuario'
     // },
+    btntext() {
+      return !this.userid ? 'Crear nuevo usuario' : 'Editar usuario'
+    },
   },
 
   watch: {},
