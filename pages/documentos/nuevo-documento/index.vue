@@ -84,7 +84,7 @@
                     <dx-checkbox v-model="reservado" label="Documento reservado" class="float-left darken--text"></dx-checkbox>
                     <dx-icon left class="ml-4 py-5" size="18" color="warning">mdi-help-circle</dx-icon>
                   </v-col>
-                  <v-col cols="6">
+                  <v-col cols="6" class="pr-0">
                     <span>Folio *</span>
                     <dx-text-field
                       v-model="folio"
@@ -105,7 +105,7 @@
                 <v-row>
                   <v-col cols="6" class="py-0 pl-0">
                     <div>Documento a distribuir *</div>
-                    <div class="font-small line-height-24 weight-400 darken2--text mt-2">
+                    <div class="font-small line-height-24 weight-400 darken2--text mt-2 mb-5">
                       Cargue solo un archivo en formato PDF de máximo 20 MB<br />El sistema reconocerá si éste viene firmado.
                       <dx-icon left size="18" color="warning">mdi-help-circle</dx-icon>
                     </div>
@@ -216,7 +216,7 @@ export default {
       this[key] = data
     },
     blurfield(key, value) {
-      this[key] = this[value] > 0
+      this[key] = this[value].length > 0
     },
   },
   computed: {
