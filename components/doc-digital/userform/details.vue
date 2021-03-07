@@ -1,0 +1,119 @@
+<template>
+  <v-dialog overlay-opacity="0.55" overlay-color="#001C41" v-model="dialog" max-width="525px" :content-class="ismobil" class="v-dialog-details">
+    <v-card>
+      <v-card-title>
+        <h5 class="font-title weight-700 darken3--text font-roboto">Usuario</h5>
+        <v-spacer></v-spacer>
+        <slot name="actionclose" />
+      </v-card-title>
+      <v-divider></v-divider>
+
+      <v-card-text class="mt-12">
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Estado:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> Activo </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >RUT:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> 12345678-9 </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Nombre(s):
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> Nombre Nombre </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Apellidos:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> Apellidos Apellidos </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Correo:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> nombreapellido@mail.com </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Cargo:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> Nombre del cargo seleccionado </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Permisos adicionales:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> Superadmin </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Subrogante:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> Nombre Apellido Apellido </v-col>
+        </v-row>
+        <v-row :class="['align-center', ismobil]">
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+            >Seguidor:
+          </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> Nombre Apellido Apellido </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-card-actions>
+        <div class="pr-2 mb-7">
+          <slot name="actions" />
+        </div>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+export default {
+  name: 'userform-details',
+  props: {
+    dialog: {
+      type: Boolean,
+      default: '',
+    },
+    userid: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {}
+  },
+  computed: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
+    },
+  },
+}
+</script>
+<style scoped>
+.v-sheet.v-card,
+.v-dialog__content .v-dialog,
+.v-dialog:not(.v-dialog--fullscreen) {
+  border-radius: 0px !important;
+}
+.v-card__title {
+  max-height: 60px !important;
+  padding: 13px 15px 10px !important;
+}
+
+.theme--light .col {
+  color: #373737 !important;
+}
+.v-card__actions {
+  display: flow-root !important;
+  text-align: right;
+  margin-right: 10px;
+}
+</style>

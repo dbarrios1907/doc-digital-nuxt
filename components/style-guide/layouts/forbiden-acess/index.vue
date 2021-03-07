@@ -4,8 +4,8 @@
     <div class="content">
       <div class="subcontent">
         <div class="mb-3 span darken3--text font-robotoslab">Lo sentimos,</div>
-        <div class="span darken3--text font-robotoslab">hemos tenido un problema</div>
-        <dx-button color="primary" class="text-underline" to="/login"> Vuelve a intentarlo</dx-button>
+        <div class="span darken3--text font-robotoslab">No tiene permisos suficientes</div>
+        <dx-button color="primary" class="text-underline" :to="$auth.options.redirect.login"> Desea loguerase ?</dx-button>
       </div>
       <span class="link">Si no funciona escríbenos en <a href="https://digital.gob.cl/incidencia">https://digital.gob.cl/incidencia</a> </span>
     </div>
@@ -14,7 +14,7 @@
 <script>
 import Error from '../../svg/components/Error/Error.svg'
 export default {
-  name: 'ErrorPage',
+  name: 'ForbiddenAccess',
   components: {
     Error,
   },

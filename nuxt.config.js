@@ -38,21 +38,24 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    // '@nuxt/auth-next',
+    '~/modules/auth',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     'nuxt-webfontloader',
+    '@nuxtjs/vuetify',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {},
+  axios: {
+    baseUrl: 'http://doc.digital.io/api',
+    browserBaseURL: 'http://doc.digital.io/api',
+  },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
@@ -97,34 +100,31 @@ export default {
     },
   },
 
-  // auth: {
-  //   strategies: {
-  //     oauth2mock: {
-  //       scheme: 'oauth2',
-  //       endpoints: {
-  //         authorization: '/oauth2mockLogin',
-  //         token: '/oauth2mockserver/token',
-  //         userInfo: '/oauth2mockserver/userinfo',
-  //       },
-  //       responseType: 'code',
-  //       grantType: 'authorization_code',
-  //       clientId: 'test-client',
-  //     },
-  //   },
-  // },
+  auth: {
+    defaultStrategy: 'claveUnica',
+    redirect: {
+      home: '/',
+      login: '/login', // redirect user when not connected
+      callback: '/callback',
+      unauthorized: '/401',
+    },
+    // use default strategy claveUnica
+    // add strategies to customize or modify default strategy
+  },
 
   router: {
-    // middleware: ['auth'],
     extendRoutes(routes, resolve) {
       routes.push({
         name: 'login',
         path: '/login',
+        auth: false,
         component: resolve(__dirname, 'components/doc-digital/login/index.vue'),
       })
 
       routes.push({
         name: 'login-callback',
         path: '/callback',
+        auth: false,
         component: resolve(__dirname, 'components/doc-digital/login-callback/index.vue'),
       })
     },
