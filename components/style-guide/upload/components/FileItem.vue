@@ -10,7 +10,7 @@
 
     <div class="d-flex dx-item__bottom">
       <dx-icon right color="primary" medium> mdi-download </dx-icon>
-      <dx-icon right color="primary" medium @click="onRemove(file)"> mdi-trash-can-outline </dx-icon>
+      <dx-icon right color="primary" medium> mdi-trash-can-outline </dx-icon>
     </div>
   </li>
 </template>
@@ -62,7 +62,7 @@ export default {
     isSuccess(status) {
       return status === STATUS.SUCCESS
     },
-    onRemove({ id, status }) {
+    onRemove(e, id, status) {
       this.$emit('onRemove', id, status)
     },
   },
