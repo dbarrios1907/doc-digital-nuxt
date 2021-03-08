@@ -1,9 +1,9 @@
 <template>
   <div :items="items" class="dx-filtermenu">
-    <Badge v-for="sel in selected" :key="sel" type="tertiary" label outlined small link class="dx-filemenu ml-0 my-1"> {{ sel }} </Badge>
+    <!-- <Badge v-for="sel in selected" :key="sel" type="tertiary" label outlined small link class="dx-filemenu ml-0 my-1"> {{ sel }} </Badge> -->
 
     <dx-button color="darken3" outlined @click="toogleOptions">
-      <div class="text-underline float-left">Filtro</div>
+      <div class="text-underline float-left">{{ label }}</div>
       <dx-icon right regular class="text-right float-right"> mdi-filter </dx-icon>
     </dx-button>
     <div v-show="toggled" ref="menulist" class="list-items-content mt-2" @focusout="focusout">
@@ -20,6 +20,10 @@ export default {
   inheritAttrs: false,
   props: {
     items: Array,
+    label: {
+      type: String,
+      default: 'Filtro',
+    },
   },
   data() {
     return {
@@ -86,6 +90,7 @@ export default {
     .v-input {
       padding: 0px 0px 0 0 !important;
       height: 36px !important;
+      margin-bottom: 16px !important;
     }
     .v-label {
       color: $text-color !important;

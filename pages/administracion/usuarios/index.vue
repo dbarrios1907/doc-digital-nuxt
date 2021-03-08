@@ -1,11 +1,12 @@
 <template>
   <div class="fill-height usuarios" style="min-height: 780px">
-    <dx-breadcrumbs :items="breadcrums" />
-    <dx-bodytitle class="mt-11">
+    <dx-breadcrumbs :items="breadcrums" v-if="!ismobil" class="mb-10" />
+    <dx-bodytitle class="" v-if="!ismobil">
       <template v-slot:title>
-        <div class="weight-700 text-md-h4 line-height-31">Usuarios</div>
+        <div class="weight-700 line-height-31 font-25">Usuarios</div>
       </template>
     </dx-bodytitle>
+    <div class="weight-700 line-height-31 font-25" v-else>Usuarios</div>
     <div class="mt-10 weight-400">
       <span class="mr-2">Mostrando hasta</span>
       <v-select
@@ -21,22 +22,24 @@
         ripple="false"
         single-line
         :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+        :class="ismobil"
       />
-      <span class="ml-3">resultados de un total de <b>17 usuarios</b></span>
+      <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>17 usuarios</b></span>
     </div>
     <v-row>
-      <v-col sm="6">
-        <dx-button class="line-height-24 weight-700 mr-4" outlined>
+      <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
+        <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
+        <!-- <dx-button class="line-height-24 weight-700" outlined>        
           <span class="text-underline"> Filtra tu búsqueda </span>
           <v-icon small> mdi-filter </v-icon>
-        </dx-button>
+        </dx-button> -->
       </v-col>
-      <v-col sm="6" class="d-flex justify-end align-center">
+      <v-col sm="6" :class="[ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-5': ismobil }]">
         <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
       </v-col>
     </v-row>
     <v-row class="mt-4">
-      <div class="actions-menu mt-7">
+      <div class="actions-menu mt-7 d-none d-md-flex d-lg-flex d-xl-flex">
         <v-menu offset-y>
           <template v-slot:activator="{ attrs, on }">
             <dx-button text class="pr-1 pl-2" v-bind="attrs" v-on="on">
@@ -61,7 +64,7 @@
               :items="valuess"
               :page.sync="page"
               :items-per-page="itemsPerPage"
-              :class="['table-check', 'table-sm', { ismobile: ismobil }]"
+              :class="['table-check', 'table-sm', ismobil]"
               :mobile-breakpoint="0"
               show-select
               dense
@@ -298,7 +301,14 @@
         <dx-button color="primary" outlined v-bind="$props" class="text-none" :to="'/administracion/usuarios/editar/' + selected_user">
           <span class="text-underline"> Editar </span>
         </dx-button>
-        <dx-button color="white" outlined v-bind="$props" class="text-none mr-2 primary" @click="details_dialog = false">
+        <dx-button
+          color="white"
+          outlined
+          v-bind="$props"
+          :class="[{ 'ml-4': ismobil }]"
+          class="text-none mr-2 primary"
+          @click="details_dialog = false"
+        >
           <span class="text-underline"> Cerrar </span>
         </dx-button>
       </template>
@@ -460,7 +470,7 @@ export default {
   },
   computed: {
     ismobil() {
-      return this.$vuetify.breakpoint.xs
+      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
     computedHeaders() {
       return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'actions' : h.value))
@@ -494,6 +504,7 @@ table a {
 
 .v-application .usuarios .tab-default .v-tab--active {
   height: 46px !important;
+  min-width: 155px !important;
 }
 
 .v-text-field--outlined > .v-input__control > .v-input__slot {
@@ -513,5 +524,19 @@ table a {
   margin-top: 0px !important;
   border: 0px !important;
   box-shadow: none !important;
+}
+
+.col-sm-6.ismobile {
+  min-width: 202px;
+  text-align: center;
+}
+.dx-filtermenu {
+  max-width: 202px;
+}
+.dx-filtermenu.ismobile {
+  max-width: 100% !important;
+}
+.v-select.ismobile {
+  margin: 0 10px;
 }
 </style>

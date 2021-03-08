@@ -1,5 +1,14 @@
 <template>
-  <v-row class="px-9 mt-1 user-form">
+  <v-row :class="['mt-1 user-form']">
+    <dx-bodytitle v-if="!ismobil" class="px-3">
+      <template v-slot:title>
+        <div class="weight-700 line-height-31 font-25">{{ headtitle }}</div>
+      </template>
+    </dx-bodytitle>
+    <div class="weight-700 line-height-31 font-25 mb-10" v-else>{{ headtitle }}</div>
+    <v-col cols="12 d-none d-md-flex d-lg-flex d-xl-flex mt-9">
+      <div class="weight-400 line-height-30 font-16">{{ headtext }}</div>
+    </v-col>
     <div class="mt-2" ref="form" style="min-height: 680px">
       <v-col v-if="userid" cols="12" style="max-height: 74px">
         <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
@@ -167,19 +176,19 @@
         </v-row>
       </v-col>
 
-      <v-col cols="5" :class="[ismobil, { 'mt-9': ismobil }, 'col-container']">
+      <v-col cols="5" :class="[ismobil, { 'mt-13': ismobil }, 'col-container']">
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="4" style="min-width: 140px" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">
+          <v-col style="min-width: 140px" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28 col-4': !ismobil }]">
             <div style="width: 70%; float: left">Permisos adicionales</div>
-            <v-icon color="warning" class="ml-2 mt-3" style="float: left">mdi-help-circle</v-icon>
+            <v-icon color="warning" :class="['ml-2 mt-3', { 'd-none': ismobil }]" style="float: left">mdi-help-circle</v-icon>
           </v-col>
-          <v-col cols="8">
+          <v-col :class="[{ 'col-8': !ismobil }, { 'mt-6': ismobil }]">
             <dx-select :items="permisos_select" @get-selected="get_permisos" label="Seleccione permisos" multiple v-bind="$props" closableItems>
             </dx-select>
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="5" :class="[ismobil, { 'mt-16': ismobil }, 'col-container']">
+      <v-col cols="5" :class="[ismobil, { 'mt-14': ismobil }, 'col-container']">
         <v-row :class="['align-center', ismobil]">
           <v-col
             cols="auto"
@@ -206,9 +215,11 @@
         </v-row>
       </v-col>
 
-      <v-col cols="5" :class="[ismobil, { 'mt-3': ismobil }, { 'mb-10': ismobil }, 'col-container']">
+      <v-col cols="5" :class="[ismobil, { 'mt-3': !ismobil }, { 'mb-10': ismobil }, 'col-container']">
         <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
-          <v-col cols="auto" class="flex weight-400 line-height-30 font-16 mt-3" sryle="height: 100%">Activar subrogancia</v-col>
+          <v-col cols="auto" :class="['flex weight-400 line-height-30 font-16', { 'mt-3': !ismobil }]" sryle="height: 100%"
+            >Activar subrogancia</v-col
+          >
           <v-col style="max-height: 72px">
             <v-switch class="d-inline-block mt-0 pt-0 success-switch" style="width: 40px" v-model="subrogancia" inset :ripple="false" dense>
             </v-switch>
@@ -216,12 +227,19 @@
           </v-col>
         </v-row>
       </v-col>
-      <div :class="['pr-2', { 'align-center': ismobil == 'ismobil' }, { 'align-right': ismobil == '' }, 'mt-12']">
-        <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2" to="/administracion/usuarios">
+      <div :class="['pr-2', { 'text-center': ismobil }, { 'align-right': !ismobil }, 'mt-12']">
+        <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2 bg-white" to="/administracion/usuarios">
           <span class="text-underline"> Cancelar </span>
         </dx-button>
 
-        <dx-button color="white" outlined v-bind="$props" class="text-none primary" @click="submit">
+        <dx-button
+          color="white"
+          outlined
+          v-bind="$props"
+          :class="[{ 'ml-5': !ismobil }, { 'ml-2': ismobil }, 'text-none primary']"
+          @click="submit"
+          style="min-width: 107px"
+        >
           <span class="text-underline"> {{ btntext }} </span>
         </dx-button>
       </div>
@@ -298,11 +316,20 @@ export default {
     ismobil() {
       return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
-    // headtitle() {
-    //   return !this.userid ? 'Nuevo usuario' : 'Editar usuario'
-    // },
+    headtitle() {
+      return !this.userid ? 'Nuevo usuario' : 'Editar usuario'
+    },
+    headtext() {
+      return !this.userid ? 'Complete el formulario para crear un nuevo usuario.' : 'Complete el formulario para editar el usuario.'
+    },
     btntext() {
-      return !this.userid ? 'Crear nuevo usuario' : 'Editar usuario'
+      return !this.userid
+        ? !this.$vuetify.breakpoint.xs
+          ? 'Crear nuevo usuario'
+          : 'Agregar'
+        : !this.$vuetify.breakpoint.xs
+        ? 'Editar usuario'
+        : 'Guardar'
     },
   },
 
@@ -348,6 +375,7 @@ export default {
   }
   .col-5 {
     min-width: 450px;
+    padding: 13px !important;
   }
   .align-right {
     text-align: right;
@@ -378,6 +406,9 @@ export default {
   }
   .v-input--switch__track {
     width: 38px !important;
+  }
+  .bg-white:before {
+    background-color: transparent !important;
   }
 }
 

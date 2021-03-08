@@ -10,63 +10,47 @@
 
       <v-card-text class="mt-12">
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >Estado:
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Estado: </v-col>
           <v-col class="weight-400 line-height-30 font-20"> Activo </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >RUT:
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">RUT: </v-col>
           <v-col class="weight-400 line-height-30 font-20"> 12345678-9 </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >Nombre(s):
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Nombre(s): </v-col>
           <v-col class="weight-400 line-height-30 font-20"> Nombre Nombre </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >Apellidos:
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Apellidos: </v-col>
           <v-col class="weight-400 line-height-30 font-20"> Apellidos Apellidos </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >Correo:
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Correo: </v-col>
           <v-col class="weight-400 line-height-30 font-20"> nombreapellido@mail.com </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >Cargo:
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Cargo: </v-col>
           <v-col class="weight-400 line-height-30 font-20"> Nombre del cargo seleccionado </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']"
             >Permisos adicionales:
           </v-col>
           <v-col class="weight-400 line-height-30 font-20"> Superadmin </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >Subrogante:
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Subrogante: </v-col>
           <v-col class="weight-400 line-height-30 font-20"> Nombre Apellido Apellido </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
-          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1', { 'mt-minus-28': !ismobil }]"
-            >Seguidor:
-          </v-col>
+          <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Seguidor: </v-col>
           <v-col class="weight-400 line-height-30 font-20"> Nombre Apellido Apellido </v-col>
         </v-row>
       </v-card-text>
 
       <v-card-actions>
-        <div class="pr-2 mb-7">
+        <div :class="['pr-2 mb-7', { 'text-center': ismobil }]">
           <slot name="actions" />
         </div>
       </v-card-actions>
@@ -115,5 +99,8 @@ export default {
   display: flow-root !important;
   text-align: right;
   margin-right: 10px;
+}
+.v-dialog-details {
+  overflow-y: none !important;
 }
 </style>
