@@ -105,7 +105,6 @@ export default class Auth {
 
     return Promise.resolve(this.strategy.mounted(...arguments)).catch(error => {
       this.callOnError(error, { method: 'mounted' })
-      debugger
       return Promise.reject(error)
     })
   }

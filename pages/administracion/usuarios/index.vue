@@ -518,13 +518,13 @@ table a {
   right: 28px;
   z-index: 1;
 }
-
+/* 
 .v-application .v-menu__content.theme--light.menuable__content__active,
 .v-application .v-menu__content.theme--dark.menuable__content__active {
   margin-top: 0px !important;
   border: 0px !important;
   box-shadow: none !important;
-}
+} */
 
 .col-sm-6.ismobile {
   min-width: 202px;
