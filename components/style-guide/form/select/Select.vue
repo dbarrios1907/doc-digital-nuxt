@@ -16,6 +16,7 @@
     :rules="rules"
     :required="required"
     @change="emitSelected"
+    :disabled="disabled"
   >
     <template v-if="multiple" v-slot:selection="{ item }">
       <dx-badge type="tertiary" label outlined class="mx-1 my-1">
@@ -43,6 +44,10 @@ export default {
       default: false,
     },
     required: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },
