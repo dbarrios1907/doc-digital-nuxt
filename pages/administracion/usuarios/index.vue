@@ -7,7 +7,7 @@
       </template>
     </dx-bodytitle>
     <div class="weight-700 line-height-31 font-25" v-else>Usuarios</div>
-    <div class="mt-10 weight-400">
+    <div v-if="!isListEmpty" class="mt-10 weight-400">
       <span class="mr-2">Mostrando hasta</span>
       <v-select
         class="d-inline-flex min-content select"
@@ -26,6 +26,18 @@
       />
       <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>17 usuarios</b></span>
     </div>
+    <dx-alert
+      class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0"
+      absolute
+      bottom
+      right
+      type="error"
+      outlined
+      :showLeftIcon="false"
+      :showRightIcon="false"
+      v-else
+      >No se han encontrado coincidencias.</dx-alert
+    >
     <v-row>
       <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
         <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
@@ -490,6 +502,9 @@ export default {
         { text: 'Acciones', value: 'userid', sortable: false },
       ]
     },
+    isListEmpty() {
+      return this.valuess === 0
+    },
   },
 }
 </script>
@@ -502,7 +517,8 @@ table a {
   text-decoration: none;
 }
 
-.v-application .usuarios .tab-default .v-tab--active {
+.v-application .usuarios .tab-default .v-tab--active,
+.v-application .usuarios .tab-default .v-tab:not(.v-tab--active) {
   height: 46px !important;
   min-width: 155px !important;
 }
@@ -538,5 +554,23 @@ table a {
 }
 .v-select.ismobile {
   margin: 0 10px;
+}
+.custom-alert {
+  height: 48px !important;
+  max-width: 334px;
+  border: 1px solid !important;
+  box-shadow: none !important;
+}
+.custom-alert > div {
+  margin: 0px auto;
+  text-align: center;
+}
+.custom-alert > div .dx-alert__content {
+  padding-right: 0px !important;
+}
+.custom-alert .vn-message {
+  font-size: 14px !important;
+  line-height: 18px !important;
+  text-align: center !important;
 }
 </style>

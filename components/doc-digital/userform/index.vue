@@ -391,7 +391,7 @@ export default {
         if (!this.form[f]) this.formHasErrors = true
         this.$refs[f].validate(true)
       })
-      this.$auth.redirect('unauthorized', true)
+      // this.$auth.redirect('unauthorized', true)
       this.$auth.redirect('administracion/usuarios', true)
     },
     get_permisos(permisos_) {
