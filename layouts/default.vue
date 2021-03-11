@@ -5,14 +5,12 @@
 
     <dx-header :clipped-left="clipped" fixed app elevation="0" :height="92" />
     <v-main app>
-      <perfect-scrollbar name="scrollMain">
-        <v-container fluid class="py-8 px-10">
-          <nuxt />
-        </v-container>
-      </perfect-scrollbar>
+      <v-container fluid class="py-8 px-10">
+        <nuxt />
+      </v-container>
     </v-main>
 
-    <dx-footer :absolute="!fixed" class="px-0 py-0" />
+    <dx-footer :absolute="!fixed" class="px-0 py-0" app />
   </v-app>
 </template>
 
