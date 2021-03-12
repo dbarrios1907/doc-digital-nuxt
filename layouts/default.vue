@@ -5,8 +5,8 @@
 
     <dx-header :clipped-left="clipped" fixed app elevation="0" :height="92" />
     <v-main app>
-      <perfect-scrollbar name="scrollMain" :class="[{ 'max-height-522': ismobil }]">
-        <v-container fluid class="py-8 px-10">
+      <perfect-scrollbar name="scrollMain" :class="[{ 'max-height-610': ismobil }]">
+        <v-container fluid :class="['py-8', { 'px-10': !ismobil }, { 'px-5': ismobil }]">
           <nuxt />
         </v-container>
       </perfect-scrollbar>
@@ -51,7 +51,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.max-height-522 {
-  max-height: 522px !important;
+.max-height-610 {
+  max-height: 610px !important;
 }
 </style>

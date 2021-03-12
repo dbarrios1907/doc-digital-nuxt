@@ -6,8 +6,8 @@
         <div class="weight-700 line-height-31 font-25">Usuarios</div>
       </template>
     </dx-bodytitle>
-    <div class="weight-700 line-height-31 font-25" v-else>Usuarios</div>
-    <div v-if="!isListEmpty" class="mt-10 weight-400">
+    <div class="weight-700 line-height-31 font-25 px-4" v-else>Usuarios</div>
+    <div v-if="!isListEmpty" class="mt-10 weight-400" :class="[{ 'px-4': ismobil }]">
       <span class="mr-2">Mostrando hasta</span>
       <v-select
         class="d-inline-flex min-content select"
@@ -28,6 +28,7 @@
     </div>
     <dx-alert
       class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0"
+      :class="[{ 'px-4': ismobil }]"
       absolute
       bottom
       right
@@ -38,13 +39,9 @@
       v-else
       >No se han encontrado coincidencias.</dx-alert
     >
-    <v-row>
+    <v-row :class="[{ 'px-4': ismobil }]">
       <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
         <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
-        <!-- <dx-button class="line-height-24 weight-700" outlined>        
-          <span class="text-underline"> Filtra tu búsqueda </span>
-          <v-icon small> mdi-filter </v-icon>
-        </dx-button> -->
       </v-col>
       <v-col sm="6" :class="[ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-5': ismobil }]">
         <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
@@ -68,24 +65,24 @@
           </v-list>
         </v-menu>
       </div>
-      <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7">
+      <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7" @getActiveTab="get_tab">
         <template v-slot:tab-item>
           <v-tab-item>
             <DataTable
               :headers="computedHeaders"
-              :items="valuess"
+              :items="usuariosActivos"
               :page.sync="page"
               :items-per-page="itemsPerPage"
               :class="['table-check', 'table-sm', ismobil]"
               :mobile-breakpoint="0"
-              show-select
+              :show-select="!ismobil"
               dense
               item-key="name"
               @page-count="pageCount = $event"
               hide-default-footer
               calculate-widths
             >
-              <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
+              <!-- <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
                 {{ h.text }}
                 <v-icon
                   :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
@@ -100,9 +97,9 @@
                   @click="openFilter(header, $event)"
                   v-if="h.filterable"
                   >mdi-filter</v-icon
-                >
-              </template>
-              <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+                > 
+              </template>-->
+              <!-- <template slot="body.prepend" v-if="searchname || searchrut || filtered">
                 <tr class="body-prepend">
                   <td />
                   <td>
@@ -158,7 +155,7 @@
                   </td>
                   <td />
                 </tr>
-              </template>
+              </template> -->
 
               <template v-slot:[`item.name`]="{ item: { name } }">
                 <span class="breaktext">{{ name }}</span>
@@ -170,16 +167,16 @@
                 </v-chip>
               </template>
 
-              <template v-slot:[`item.userid`]="{ item: { userid } }">
+              <template v-slot:[`item.actions`]="{ item: { userid } }">
                 <nuxt-link :to="'/administracion/usuarios/editar/' + userid"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
+                  ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
                 >
-                <v-icon dense :class="[{ 'mr-4': !ismobil }]" @click="open_user_details(userid)"> mdi-eye </v-icon>
+                <v-icon dense class="mr-4" @click="open_user_details(userid)"> mdi-eye </v-icon>
                 <v-icon dense> mdi-delete-outline </v-icon>
               </template>
 
               <template v-slot:footer>
-                <div class="pt-2 v-data-footer">
+                <div :class="['pt-4 v-data-footer', ismobil]">
                   <dx-pagination v-model="page" :length="pageCount" />
                 </div>
               </template>
@@ -188,10 +185,10 @@
           <v-tab-item>
             <DataTable
               :headers="computedHeaders"
-              :items="valuess"
+              :items="usuariosInactivos"
               :page.sync="page"
               :items-per-page="itemsPerPage"
-              :class="['table-check', 'table-sm', { ismobile: ismobil }]"
+              :class="['table-check', 'table-sm', ismobil]"
               :mobile-breakpoint="0"
               show-select
               dense
@@ -337,6 +334,7 @@ export default {
   data() {
     return {
       tabs: [{ tab: 'Activos' }, { tab: 'Inactivos' }],
+      activeTab: 'Activos',
       options: ['10', '20', '30'],
       breadcrums: [
         {
@@ -370,68 +368,6 @@ export default {
       details_dialog: false,
       selected_user: '',
       permisosValues: ['Administrador', 'Jefe de servicio', 'Operador', 'Oficina de partes'],
-      valuess: [
-        {
-          userid: 1,
-          name: 'Nombre Nombre Apellido Apellido',
-          rut: '23.266.206-8',
-          access: ['Administrador', 'Jefe de servicio'],
-        },
-        {
-          userid: 2,
-          name: 'Nombre2 Nombre Apellido Apellido',
-          rut: '21.266.206-8',
-          access: ['Administrador'],
-        },
-        {
-          userid: 3,
-          name: 'Nombre3 Nombre Apellido Apellido',
-          rut: '21.256.206-8',
-          access: ['Jefe de servicio'],
-        },
-        {
-          userid: 4,
-          name: 'Nombre4 Nombre Apellido Apellido',
-          rut: '20.266.206-8',
-          access: ['Operador'],
-        },
-        {
-          userid: 5,
-          name: 'Nombre5 Nombre Apellido Apellido',
-          rut: '20.200.206-8',
-          access: ['Jefe de servicio'],
-        },
-        {
-          userid: 6,
-          name: 'Nombre6 Nombre Apellido Apellido',
-          rut: '24.266.206-8',
-          access: ['Oficina de partes'],
-        },
-        {
-          userid: 7,
-          name: 'Nombre7 Nombre Apellido Apellido',
-          rut: '25.266.206-8',
-          access: ['Administrador'],
-        },
-        {
-          userid: 8,
-          name: 'Nombre8 Nombre Apellido Apellido',
-          rut: '25.366.206-8',
-          access: ['Operador'],
-        },
-        {
-          userid: 9,
-          name: 'Nombre9 Nombre Apellido Apellido',
-          rut: '26.266.206-8',
-          access: ['Operador'],
-        },
-        {
-          userid: 10,
-          name: 'Nombre10 Nombre Apellido Apellido',
-          rut: '27.266.206-8',
-          access: ['Oficina de partes'],
-        },
-      ],
     }
   },
   methods: {
@@ -479,6 +415,9 @@ export default {
       this.selected_user = id.toString()
       this.details_dialog = true
     },
+    get_tab(activetab) {
+      this.activeTab = activetab
+    },
   },
   computed: {
     ismobil() {
@@ -499,16 +438,25 @@ export default {
         },
         { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
         { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
-        { text: 'Acciones', value: 'userid', sortable: false },
+        { text: 'Acciones', value: 'actions', sortable: false },
       ]
     },
     isListEmpty() {
-      return this.valuess === 0
+      const activos = this.$store.getters['usuarios/getActivos']
+      const inactivos = this.$store.getters['usuarios/getInctivos']
+      if (this.activeTab === 'Activos') return activos.length === 0
+      else return inactivos.length === 0
+    },
+    usuariosActivos() {
+      return this.$store.getters['usuarios/getActivos']
+    },
+    usuariosInactivos() {
+      return this.$store.getters['usuarios/getInctivos']
     },
   },
 }
 </script>
-<style>
+<style lang="scss">
 .v-select .v-input__slot {
   min-height: 48px !important;
 }
@@ -572,5 +520,19 @@ table a {
   font-size: 14px !important;
   line-height: 18px !important;
   text-align: center !important;
+}
+.usuarios {
+  .ismobile {
+    table > tbody > tr {
+      height: 47px !important;
+    }
+    table > tbody > tr > td:nth-child(2),
+    table > thead > tr > th:nth-child(2) {
+      text-align: center;
+    }
+    .dx-pagination {
+      margin: 0px auto !important;
+    }
+  }
 }
 </style>

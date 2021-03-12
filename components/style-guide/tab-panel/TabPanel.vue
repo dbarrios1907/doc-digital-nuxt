@@ -1,7 +1,7 @@
 <template>
   <div :items="items" :class="['v-tabs', 'tab-' + tabtype]">
     <v-tabs v-model="tab">
-      <v-tab v-for="item in items" :key="item.tab" :ripple="false" v-bind="$attrs" v-on="$listeners">
+      <v-tab v-for="item in items" :key="item.tab" :ripple="false" v-bind="$attrs" v-on="$listeners" @click="emiteActiveTab(item.tab)">
         <div class="tab-header-content">
           <div class="tab-icon" v-if="item.icon">
             <dx-icon>
@@ -35,6 +35,11 @@ export default {
     return {
       tab: null,
     }
+  },
+  methods: {
+    emiteActiveTab(activeTab) {
+      this.$emit('getActiveTab', activeTab)
+    },
   },
 }
 </script>
