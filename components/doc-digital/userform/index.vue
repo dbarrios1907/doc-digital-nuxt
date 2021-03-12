@@ -333,6 +333,10 @@ export default {
     }
   },
 
+  created() {
+    // console.log(this.$store.getters['usuarios/getUser'])
+  },
+
   computed: {
     form() {
       return {
