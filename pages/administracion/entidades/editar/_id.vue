@@ -37,11 +37,6 @@ export default {
     this.userid = this.$route.params.id
     console.log('REQUEST')
   },
-  computed: {
-    ismobil() {
-      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
-    },
-  },
 }
 </script>
 <style>

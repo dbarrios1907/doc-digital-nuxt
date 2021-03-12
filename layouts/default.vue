@@ -10,7 +10,7 @@
       </v-container>
     </v-main>
 
-    <dx-footer :absolute="!fixed" class="px-0 py-0" app />
+    <dx-footer :absolute="!fixed" class="px-0 py-0" />
   </v-app>
 </template>
 

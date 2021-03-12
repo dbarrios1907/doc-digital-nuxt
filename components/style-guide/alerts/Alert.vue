@@ -1,7 +1,7 @@
 <template>
   <div class="dx-alert d-flex justify-content-center elevation-8" :class="'dx-type__' + type" v-bind="$listeners">
     <div class="dx-alert__wrapper d-inline-flex align-center py-3">
-      <span class="d-flex px-5">
+      <span class="d-flex px-5" v-if="showLeftIcon">
         <component :is="iconByType" />
       </span>
 
@@ -10,7 +10,7 @@
         <div class="vn-message"><slot /></div>
       </div>
     </div>
-    <span class="dx-alert__closeable d-flex px-1 py-1" @click="dismiss">
+    <span v-if="showRightIcon" class="dx-alert__closeable d-flex px-1 py-1" @click="dismiss">
       <alert-close-icon />
     </span>
   </div>
@@ -24,7 +24,14 @@ export default {
     message: String,
     type: String,
     title: String,
-    showLeftIcon: Boolean,
+    showLeftIcon: {
+      type: Boolean,
+      default: true,
+    },
+    showRightIcon: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     iconByType() {

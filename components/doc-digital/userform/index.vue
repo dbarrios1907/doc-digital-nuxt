@@ -1,232 +1,282 @@
 <template>
-  <v-row class="px-9 mt-1 user-form">
-    <div class="mt-2" ref="form" style="min-height: 680px">
-      <v-col v-if="userid" cols="12" style="max-height: 74px">
-        <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
-          <v-col
-            cols="auto"
-            style="max-height: 74px; min-width: 140px; max-width: 140px"
-            :class="['weight-400 line-height-30 font-16 py-1', { 'mt-5': !ismobil }]"
-            >Estado</v-col
-          >
-          <v-col style="max-height: 72px">
-            <span style="min-width: 140px; max-width: 140px" class="flex weight-400 line-height-30 font-16 py-1">Activo</span>
-            <v-switch class="d-inline-block mt-0 pt-0 success-switch ml-4" style="width: 40px" v-model="activo" inset :ripple="false" dense>
-            </v-switch>
-          </v-col>
-        </v-row>
+  <v-container>
+    <v-row :class="['mt-1 user-form']">
+      <dx-bodytitle v-if="!ismobil" class="px-3">
+        <template v-slot:title>
+          <div class="weight-700 line-height-31 font-25">{{ headtitle }}</div>
+        </template>
+      </dx-bodytitle>
+      <div class="weight-700 line-height-31 font-25 mb-10" v-else>{{ headtitle }}</div>
+      <v-col cols="12 d-none d-md-flex d-lg-flex d-xl-flex mt-9">
+        <div class="weight-400 line-height-30 font-16">{{ headtext }}</div>
       </v-col>
-      <v-col cols="12" style="max-height: 74px">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >RUT*</v-col
-          >
-          <v-col>
-            <v-text-field
-              ref="rut"
-              v-model="rut"
-              solo
-              flat
-              outlined
-              :rules="[() => !!rut || !!rut_dv || 'Campo requerido']"
-              :error-messages="errorMessages"
-              label="99.999.999"
-              style="width: 108px"
-              required
-              class="d-inline-block"
-            />
-            -
-            <v-text-field
-              ref="rut_dv"
-              v-model="rut_dv"
-              solo
-              flat
-              outlined
-              :error-messages="errorMessages"
-              label="K"
-              style="width: 37px"
-              required
-              class="d-inline-block"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
+      <div class="mt-2" ref="form" style="min-height: 680px">
+        <v-col v-if="userid" cols="12" style="max-height: 74px">
+          <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
+            <v-col
+              cols="auto"
+              style="max-height: 74px; min-width: 140px; max-width: 140px"
+              :class="['weight-400 line-height-30 font-16 py-1', { 'mt-5': !ismobil }]"
+              >Estado</v-col
+            >
+            <v-col style="max-height: 72px">
+              <span style="min-width: 140px; max-width: 140px" class="flex weight-400 line-height-30 font-16 py-1">Activo</span>
+              <v-switch class="d-inline-block mt-0 pt-0 success-switch ml-4" style="width: 40px" v-model="activo" inset :ripple="false" dense>
+              </v-switch>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col cols="12" style="max-height: 74px">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >RUT*</v-col
+            >
+            <v-col>
+              <v-text-field
+                ref="rut"
+                v-model="rut"
+                solo
+                flat
+                outlined
+                :rules="[() => !!rut || !!rut_dv || 'Campo requerido']"
+                :error-messages="errorMessages"
+                label="99.999.999"
+                style="width: 108px"
+                required
+                class="d-inline-block"
+                :disabled="disabled"
+              />
+              -
+              <v-text-field
+                ref="rut_dv"
+                v-model="rut_dv"
+                solo
+                flat
+                outlined
+                :error-messages="errorMessages"
+                label="K"
+                style="width: 37px"
+                required
+                class="d-inline-block"
+                :disabled="disabled"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
 
-      <v-col cols="5" :class="[ismobil, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >Nombre(s)*</v-col
+        <v-col cols="5" :class="[ismobil, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >Nombre(s)*</v-col
+            >
+            <v-col>
+              <v-text-field
+                ref="name"
+                v-model="name"
+                solo
+                flat
+                outlined
+                :rules="[() => !!name || 'Campo requerido']"
+                label="Nombre Nombre"
+                required
+                :disabled="disabled"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="5" :class="[ismobil, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >Apellido(s)*</v-col
+            >
+            <v-col>
+              <v-text-field
+                ref="lastname"
+                v-model="lastname"
+                solo
+                flat
+                outlined
+                label="Apellido Apellido"
+                :rules="[() => !!lastname || 'Campo requerido']"
+                required
+                :disabled="disabled"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="5" :class="[ismobil, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >Correo*</v-col
+            >
+            <v-col>
+              <v-text-field
+                ref="email"
+                v-model="email"
+                solo
+                flat
+                outlined
+                label="Escribe el correo institucional"
+                :rules="[
+                  () => !!email || 'Campo requerido',
+                  () => !email || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email) || 'Email inválido',
+                ]"
+                required
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="5" v-if="!ismobil" class="d-none d-md-flex d-lg-flex d-xl-flex" style="min-height: 74px"> </v-col>
+
+        <v-col cols="5" :class="[ismobil, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >Entidad*</v-col
+            >
+            <v-col>
+              <v-select
+                :items="entidades"
+                v-model="entidad"
+                flat
+                outlined
+                solo
+                label="Seleccione entidad"
+                v-bind="$props"
+                required
+                :rules="rules.entidadrequired"
+                :disabled="disabled"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="5" :class="[ismobil, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >Cargo*</v-col
+            >
+            <v-col>
+              <v-text-field
+                ref="cargo"
+                v-model="cargo"
+                solo
+                flat
+                outlined
+                label="Escribe el cargo"
+                :rules="[() => !!cargo || 'Campo requerido']"
+                required
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="5" :class="[ismobil, { 'mt-13': ismobil }, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col style="min-width: 140px" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28 col-4': !ismobil }]">
+              <div style="width: 70%; float: left">Permisos adicionales</div>
+              <v-icon color="warning" :class="['ml-2 mt-3', { 'd-none': ismobil }]" style="float: left">mdi-help-circle</v-icon>
+            </v-col>
+            <v-col :class="[{ 'col-8': !ismobil }, { 'mt-6': ismobil }]">
+              <dx-select
+                :items="permisos_select"
+                @get-selected="get_permisos"
+                label="Seleccione permisos"
+                multiple
+                v-bind="$props"
+                closableItems
+                :disabled="disabled"
+              >
+              </dx-select>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col cols="5" :class="[ismobil, { 'mt-14': ismobil }, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >Seguidor</v-col
+            >
+            <v-col>
+              <dx-select :items="seguidores" v-model="seguidor" solo flat outlined label="Seleccione seguidor" v-bind="$props" ripple="true" />
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col cols="5" :class="[ismobil, 'col-container']">
+          <v-row :class="['align-center', ismobil]">
+            <v-col
+              cols="auto"
+              style="min-width: 140px; max-width: 140px"
+              :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
+              >Subrogante</v-col
+            >
+            <v-col>
+              <v-select :items="subrogantes" v-model="subrogante" label="Seleccione subrogante" solo flat outlined v-bind="$props" ripple="true" />
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="5" :class="[ismobil, { 'mt-3': !ismobil }, { 'mb-10': ismobil }, 'col-container']">
+          <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
+            <v-col cols="auto" :class="['flex weight-400 line-height-30 font-16', { 'mt-3': !ismobil }]" sryle="height: 100%"
+              >Activar subrogancia</v-col
+            >
+            <v-col style="max-height: 72px">
+              <v-switch
+                class="d-inline-block mt-0 pt-0 success-switch"
+                style="width: 40px"
+                v-model="subrogancia"
+                inset
+                :ripple="false"
+                dense
+                :disabled="disabled"
+              >
+              </v-switch>
+              <v-icon color="warning" style="margin-top: -4px">mdi-help-circle</v-icon>
+            </v-col>
+          </v-row>
+        </v-col>
+        <div :class="['pr-2', { 'text-center': ismobil }, { 'align-right': !ismobil }, 'mt-12']">
+          <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2 bg-white" to="/administracion/usuarios">
+            <span class="text-underline"> Cancelar </span>
+          </dx-button>
+
+          <dx-button
+            color="white"
+            outlined
+            v-bind="$props"
+            :class="[{ 'ml-5': !ismobil }, { 'ml-2': ismobil }, 'text-none primary']"
+            @click="submit"
+            style="min-width: 107px"
           >
-          <v-col>
-            <v-text-field ref="name" v-model="name" solo flat outlined :rules="[() => !!name || 'Campo requerido']" label="Nombre Nombre" required />
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="5" :class="[ismobil, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >Apellido(s)*</v-col
-          >
-          <v-col>
-            <v-text-field
-              ref="lastname"
-              v-model="lastname"
-              solo
-              flat
-              outlined
-              label="Apellido Apellido"
-              :rules="[() => !!lastname || 'Campo requerido']"
-              required
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="5" :class="[ismobil, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >Correo*</v-col
-          >
-          <v-col>
-            <v-text-field
-              ref="email"
-              v-model="email"
-              solo
-              flat
-              outlined
-              label="Escribe el correo institucional"
-              :rules="[
-                () => !!email || 'Campo requerido',
-                () => !email || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email) || 'Email inválido',
-              ]"
-              required
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="5" v-if="!ismobil" class="d-none d-md-flex d-lg-flex d-xl-flex" style="min-height: 74px"> </v-col>
-
-      <v-col cols="5" :class="[ismobil, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >Entidad*</v-col
-          >
-          <v-col>
-            <v-select
-              :items="entidades"
-              v-model="entidad"
-              flat
-              outlined
-              solo
-              label="Seleccione entidad"
-              v-bind="$props"
-              required
-              :rules="rules.entidadrequired"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="5" :class="[ismobil, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >Cargo*</v-col
-          >
-          <v-col>
-            <v-text-field
-              ref="cargo"
-              v-model="cargo"
-              solo
-              flat
-              outlined
-              label="Escribe el cargo"
-              :rules="[() => !!cargo || 'Campo requerido']"
-              required
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="5" :class="[ismobil, { 'mt-9': ismobil }, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col cols="4" style="min-width: 140px" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">
-            <div style="width: 70%; float: left">Permisos adicionales</div>
-            <v-icon color="warning" class="ml-2 mt-3" style="float: left">mdi-help-circle</v-icon>
-          </v-col>
-          <v-col cols="8">
-            <dx-select :items="permisos_select" @get-selected="get_permisos" label="Seleccione permisos" multiple v-bind="$props" closableItems>
-            </dx-select>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="5" :class="[ismobil, { 'mt-16': ismobil }, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >Seguidor</v-col
-          >
-          <v-col>
-            <dx-select :items="seguidores" v-model="seguidor" solo flat outlined label="Seleccione seguidor" v-bind="$props" ripple="true" />
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="5" :class="[ismobil, 'col-container']">
-        <v-row :class="['align-center', ismobil]">
-          <v-col
-            cols="auto"
-            style="min-width: 140px; max-width: 140px"
-            :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
-            >Subrogante</v-col
-          >
-          <v-col>
-            <v-select :items="subrogantes" v-model="subrogante" label="Seleccione subrogante" solo flat outlined v-bind="$props" ripple="true" />
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="5" :class="[ismobil, { 'mt-3': ismobil }, { 'mb-10': ismobil }, 'col-container']">
-        <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
-          <v-col cols="auto" class="flex weight-400 line-height-30 font-16 mt-3" sryle="height: 100%">Activar subrogancia</v-col>
-          <v-col style="max-height: 72px">
-            <v-switch class="d-inline-block mt-0 pt-0 success-switch" style="width: 40px" v-model="subrogancia" inset :ripple="false" dense>
-            </v-switch>
-            <v-icon color="warning" style="margin-top: -4px">mdi-help-circle</v-icon>
-          </v-col>
-        </v-row>
-      </v-col>
-      <div :class="['pr-2', { 'align-center': ismobil == 'ismobil' }, { 'align-right': ismobil == '' }, 'mt-12']">
-        <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2" to="/administracion/usuarios">
-          <span class="text-underline"> Cancelar </span>
-        </dx-button>
-
-        <dx-button color="white" outlined v-bind="$props" class="text-none primary" @click="submit">
-          <span class="text-underline"> {{ btntext }} </span>
-        </dx-button>
+            <span class="text-underline"> {{ btntext }} </span>
+          </dx-button>
+        </div>
       </div>
-    </div>
-  </v-row>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -283,6 +333,10 @@ export default {
     }
   },
 
+  created() {
+    // console.log(this.$store.getters['usuarios/getUser'])
+  },
+
   computed: {
     form() {
       return {
@@ -296,13 +350,25 @@ export default {
       }
     },
     ismobil() {
-      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
+      return this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
-    // headtitle() {
-    //   return !this.userid ? 'Nuevo usuario' : 'Editar usuario'
-    // },
+    disabled() {
+      return this.userid != ''
+    },
+    headtitle() {
+      return !this.userid ? 'Nuevo usuario' : 'Editar usuario'
+    },
+    headtext() {
+      return !this.userid ? 'Complete el formulario para crear un nuevo usuario.' : 'Complete el formulario para editar el usuario.'
+    },
     btntext() {
-      return !this.userid ? 'Crear nuevo usuario' : 'Editar usuario'
+      return !this.userid
+        ? !this.$vuetify.breakpoint.xs
+          ? 'Crear nuevo usuario'
+          : 'Agregar'
+        : !this.$vuetify.breakpoint.xs
+        ? 'Editar usuario'
+        : 'Guardar'
     },
   },
 
@@ -329,6 +395,8 @@ export default {
         if (!this.form[f]) this.formHasErrors = true
         this.$refs[f].validate(true)
       })
+      // this.$auth.redirect('unauthorized', true)
+      this.$auth.redirect('administracion/usuarios', true)
     },
     get_permisos(permisos_) {
       console.log(permisos_)
@@ -348,6 +416,7 @@ export default {
   }
   .col-5 {
     min-width: 450px;
+    padding: 13px !important;
   }
   .align-right {
     text-align: right;
@@ -378,6 +447,9 @@ export default {
   }
   .v-input--switch__track {
     width: 38px !important;
+  }
+  .bg-white:before {
+    background-color: transparent !important;
   }
 }
 
