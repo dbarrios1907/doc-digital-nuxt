@@ -105,7 +105,6 @@ export default class Auth {
 
     return Promise.resolve(this.strategy.mounted(...arguments)).catch(error => {
       this.callOnError(error, { method: 'mounted' })
-      debugger
       return Promise.reject(error)
     })
   }
@@ -282,7 +281,7 @@ export default class Auth {
   }
 
   requestWith(strategy, endpoint, defaults, withResponse) {
-    const token = this.getToken(strategy)
+    const token = this.strategy.getToken ? this.strategy.getToken() : this.getToken(strategy)
 
     const _endpoint = Object.assign({}, defaults, endpoint)
 

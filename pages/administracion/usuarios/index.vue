@@ -25,13 +25,7 @@
       <span class="ml-3">resultados de un total de <b>17 usuarios</b></span>
     </div>
     <v-row>
-      <v-col sm="6">
-        <dx-button class="line-height-24 weight-700 mr-4" outlined>
-          <span class="text-underline"> Filtra tu búsqueda </span>
-          <v-icon small> mdi-filter </v-icon>
-        </dx-button>
-      </v-col>
-      <v-col sm="6" class="d-flex justify-end align-center">
+      <v-col sm="12" class="d-flex justify-end align-center">
         <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
       </v-col>
     </v-row>
@@ -66,60 +60,63 @@
               show-select
               dense
               item-key="name"
-              @page-count="pageCount = $event"
               hide-default-footer
               calculate-widths
+              @page-count="pageCount = $event"
             >
               <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
                 {{ h.text }}
                 <v-icon
-                  :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
-                  :key="h.value"
-                  @click="activeSearch(header, $event)"
                   v-if="h.search"
-                  >mdi-magnify</v-icon
-                >
-                <v-icon
-                  :class="['float-right', { focus: actived === h.value }]"
                   :key="h.value"
-                  @click="openFilter(header, $event)"
-                  v-if="h.filterable"
-                  >mdi-filter</v-icon
+                  :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
+                  @click="activeSearch(header, $event)"
                 >
+                  mdi-magnify
+                </v-icon>
+                <v-icon
+                  v-if="h.filterable"
+                  :key="h.value"
+                  :class="['float-right', { focus: actived === h.value }]"
+                  @click="openFilter(header, $event)"
+                >
+                  mdi-filter
+                </v-icon>
               </template>
-              <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+              <template v-if="searchname || searchrut || filtered" slot="body.prepend">
                 <tr class="body-prepend">
                   <td />
                   <td>
                     <v-text-field
+                      v-model="filterValue"
                       type="text"
-                      @focus="actived = 'name'"
                       hide-details
                       solo
+                      v-if="searchname"
                       flat
                       outlined
-                      v-model="filterValue"
                       label="Nombre"
-                      v-if="searchname"
+                      @focus="actived = 'name'"
                     />
                   </td>
                   <td v-if="!ismobil">
                     <v-text-field
+                      v-model="filterRut"
                       type="text"
-                      @focus="actived = 'rut'"
                       hide-details
                       solo
+                      v-if="searchrut"
                       flat
                       outlined
-                      v-model="filterRut"
                       label="Rut"
-                      v-if="searchrut"
+                      @focus="actived = 'rut'"
                     />
                   </td>
                   <td v-if="!ismobil" class="filter">
                     <dx-select
-                      :ripple="false"
                       v-model="permiso"
+                      v-if="filtered"
+                      :ripple="false"
                       :items="permisosValues"
                       chips
                       label="Filtra por permisos"
@@ -129,7 +126,6 @@
                       hide-details
                       outlined
                       :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-                      v-if="filtered"
                       @click="actived = 'access'"
                       @blur="actived = null"
                     >
@@ -156,9 +152,9 @@
               </template>
 
               <template v-slot:[`item.userid`]="{ item: { userid } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + userid"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
-                >
+                <nuxt-link :to="'/administracion/usuarios/editar/' + userid">
+                  <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon>
+                </nuxt-link>
                 <v-icon dense :class="[{ 'mr-4': !ismobil }]" @click="open_user_details(userid)"> mdi-eye </v-icon>
                 <v-icon dense> mdi-delete-outline </v-icon>
               </template>
@@ -181,60 +177,63 @@
               show-select
               dense
               item-key="name"
-              @page-count="pageCount = $event"
               hide-default-footer
               calculate-widths
+              @page-count="pageCount = $event"
             >
               <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
                 {{ h.text }}
                 <v-icon
-                  :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
-                  :key="h.value"
-                  @click="activeSearch(header, $event)"
                   v-if="h.search"
-                  >mdi-magnify</v-icon
-                >
-                <v-icon
-                  :class="['float-right', { focus: actived === h.value }]"
                   :key="h.value"
-                  @click="openFilter(header, $event)"
-                  v-if="h.filterable"
-                  >mdi-filter</v-icon
+                  :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
+                  @click="activeSearch(header, $event)"
                 >
+                  mdi-magnify
+                </v-icon>
+                <v-icon
+                  v-if="h.filterable"
+                  :key="h.value"
+                  :class="['float-right', { focus: actived === h.value }]"
+                  @click="openFilter(header, $event)"
+                >
+                  mdi-filter
+                </v-icon>
               </template>
-              <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+              <template v-if="searchname || searchrut || filtered" slot="body.prepend">
                 <tr class="body-prepend">
                   <td />
                   <td>
                     <v-text-field
+                      v-model="filterValue"
                       type="text"
-                      @focus="actived = 'name'"
                       hide-details
                       solo
+                      v-if="searchname"
                       flat
                       outlined
-                      v-model="filterValue"
                       label="Nombre"
-                      v-if="searchname"
+                      @focus="actived = 'name'"
                     />
                   </td>
                   <td v-if="!ismobil">
                     <v-text-field
+                      v-model="filterRut"
                       type="text"
-                      @focus="actived = 'rut'"
                       hide-details
                       solo
+                      v-if="searchrut"
                       flat
                       outlined
-                      v-model="filterRut"
                       label="Rut"
-                      v-if="searchrut"
+                      @focus="actived = 'rut'"
                     />
                   </td>
                   <td v-if="!ismobil" class="filter">
                     <dx-select
-                      :ripple="false"
                       v-model="permiso"
+                      v-if="filtered"
+                      :ripple="false"
                       :items="permisosValues"
                       chips
                       label="Filtra por permisos"
@@ -244,7 +243,6 @@
                       hide-details
                       outlined
                       :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-                      v-if="filtered"
                       @click="actived = 'access'"
                       @blur="actived = null"
                     >
@@ -271,9 +269,9 @@
               </template>
 
               <template v-slot:[`item.userid`]="{ item: { userid } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + userid"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
-                >
+                <nuxt-link :to="'/administracion/usuarios/editar/' + userid">
+                  <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon>
+                </nuxt-link>
                 <v-icon dense :class="[{ 'mr-4': !ismobil }]" @click="open_user_details(userid)"> mdi-eye </v-icon>
                 <v-icon dense> mdi-delete-outline </v-icon>
               </template>
@@ -412,6 +410,29 @@ export default {
       ],
     }
   },
+  computed: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs
+    },
+    computedHeaders() {
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'actions' : h.value))
+    },
+    headers() {
+      return [
+        {
+          text: 'Nombre',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+          filter: this.nameFilter,
+          search: true,
+        },
+        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
+        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Acciones', value: 'userid', sortable: false },
+      ]
+    },
+  },
   methods: {
     actionColor() {
       const isDark = this.$vuetify.theme.dark
@@ -456,29 +477,6 @@ export default {
     open_user_details(id) {
       this.selected_user = id.toString()
       this.details_dialog = true
-    },
-  },
-  computed: {
-    ismobil() {
-      return this.$vuetify.breakpoint.xs
-    },
-    computedHeaders() {
-      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'actions' : h.value))
-    },
-    headers() {
-      return [
-        {
-          text: 'Nombre',
-          align: 'start',
-          sortable: true,
-          value: 'name',
-          filter: this.nameFilter,
-          search: true,
-        },
-        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
-        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
-        { text: 'Acciones', value: 'userid', sortable: false },
-      ]
     },
   },
 }

@@ -12,15 +12,15 @@ export const Demo = () => ({
     <div>
       <h3>Ejemplo de insginias en notificaciones</h3>
       <div>
-        <Badge type="notification" label>            
+        <Badge type="notification" label>
             <div class="badge-text">Type something</div>
             <div class="badge-number">1</div>
         </Badge>
-        <Badge type="notification" label small>            
+        <Badge type="notification" label small>
             <div class="badge-text">Type something</div>
             <div class="badge-number">1</div>
-        </Badge>        
-        <Badge type="notification" label x-small>            
+        </Badge>
+        <Badge type="notification" label x-small>
             <div class="badge-text">Type something</div>
             <div class="badge-number">1</div>
         </Badge>
@@ -30,35 +30,35 @@ export const Demo = () => ({
         <Badge type="primary" label>
           primary
         </Badge>
-  
+
         <Badge type="secondary" label>
           secondary
         </Badge>
-  
+
         <Badge type="tertiary" label outlined>
           tertiary
         </Badge>
-  
+
         <Badge type="success" label>
           success
         </Badge>
-  
+
         <Badge label type="error">
           error
         </Badge>
-  
+
         <Badge label type="warning">
           warning
         </Badge>
-  
+
         <Badge label type="info">
           info
         </Badge>
-  
+
         <Badge label>
           Light
         </Badge>
-  
+
         <Badge type="dark" label>
           Dark
         </Badge>
@@ -67,35 +67,35 @@ export const Demo = () => ({
         <Badge type="primary" label small>
           primary
         </Badge>
-  
+
         <Badge type="secondary" label small>
           secondary
         </Badge>
-  
+
         <Badge type="tertiary" label outlined small>
           tertiary
         </Badge>
-  
+
         <Badge type="success" label small>
           success
         </Badge>
-  
+
         <Badge label type="error" small>
           error
         </Badge>
-  
+
         <Badge label type="warning" small>
           warning
         </Badge>
-  
+
         <Badge label type="info" small>
           info
         </Badge>
-  
+
         <Badge label small>
           Light
         </Badge>
-  
+
         <Badge type="dark" label small>
           Dark
         </Badge>
@@ -104,55 +104,55 @@ export const Demo = () => ({
         <Badge type="primary" label x-small>
           primary
         </Badge>
-  
+
         <Badge type="secondary" label x-small>
           secondary
         </Badge>
-  
+
         <Badge type="tertiary" label outlined x-small>
           tertiary
         </Badge>
-  
+
         <Badge type="success" label x-small>
           success
         </Badge>
-  
+
         <Badge label type="error" x-small>
           error
         </Badge>
-  
+
         <Badge label type="warning" x-small>
           warning
         </Badge>
-  
+
         <Badge label type="info" x-small>
           info
         </Badge>
-  
+
         <Badge label x-small>
           Light
         </Badge>
-  
+
         <Badge type="dark" label x-small>
           Dark
         </Badge>
       </div>
-    
+
       <h3>Insignias curvas</h3>
       <div>
         <Badge type="primary" small>
           primary
         </Badge>
 
-        <Badge type="secondary"small>
+        <Badge type="secondary" small>
           secondary
         </Badge>
 
-        <Badge type="tertiary"outlined small>
+        <Badge type="tertiary" outlined small>
           tertiary
         </Badge>
 
-        <Badge type="success"small>
+        <Badge type="success" small>
           success
         </Badge>
 
@@ -176,7 +176,7 @@ export const Demo = () => ({
           Dark
         </Badge>
       </div>
-    
+
     <h3>Links con insignia</h3>
       <div>
         <Badge type="primary" label small link>

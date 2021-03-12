@@ -1,3 +1,7 @@
+label {
+  line-height: 32px;
+}
+
 .font-nunito {
   font-family: 'Nunito', sans-serif;
 }
@@ -69,6 +73,11 @@
 .line-height-16 {
   line-height: rem-calc(16px);
 }
+
+.line-height-20 {
+  line-height: rem-calc(20px);
+}
+
 .line-height-24 {
   line-height: rem-calc(24px);
 }
