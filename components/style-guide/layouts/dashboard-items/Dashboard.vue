@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div dx-dashboard>
     <v-row>
       <div :class="colclass">
         <dx-dashbitem hidecontent="true" class="primary--text dashb-item ml-0" textheader="9.999" titleheader="Usuarios activos" messaje="" />
@@ -40,33 +40,33 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.relative {
-  position: relative;
+<style lang="scss" scoped>
+[dx-dashboard] {
+  .relative {
+    position: relative;
+  }
+  .col-md-4 {
+    max-width: 32% !important;
+    min-width: 296px;
+  }
+  .col-md-6 {
+    max-width: 49% !important;
+    min-width: 296px;
+  }
+  .dashb-item {
+    // min-width: 300px !important;
+    max-width: 300px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .with-v-divider:after {
+    content: '';
+    top: -10px;
+    right: 20px;
+    position: absolute;
+    height: calc(100% - 10px);
+    margin: 20px 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+  }
 }
-.col-md-4 {
-  max-width: 32% !important;
-  min-width: 296px;
-}
-.col-md-6 {
-  max-width: 49% !important;
-  min-width: 296px;
-}
-.dashb-item {
-  // min-width: 300px !important;
-  max-width: 300px;
-  margin: 0 auto;
-  position: relative;
-}
-.with-v-divider:after {
-  content: '';
-  top: -10px;
-  right: 20px;
-  position: absolute;
-  height: calc(100% - 10px);
-  margin: 20px 0;
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-
 </style>

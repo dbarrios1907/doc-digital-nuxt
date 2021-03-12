@@ -10,12 +10,12 @@ export const state = () => ({
       },
       children: [
         {
-          path: 'visar',
+          path: 'visar-documento',
           name: 'Visar',
           meta: { title: 'Visar', icon: 'mdi-eye' },
         },
         {
-          path: 'firmar',
+          path: 'firmar-documento',
           name: 'Firmar',
           meta: { title: 'Firmar', icon: 'mdi-pencil' },
         },

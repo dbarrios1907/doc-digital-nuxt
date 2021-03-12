@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
     return {
       tab: null,
       items: [
-        { tab: 'Correo electrónico', icon: 'mdi-plus-circle-outline'},
+        { tab: 'Correo electrónico', icon: 'mdi-plus-circle-outline' },
         { tab: 'Oficina de Partes', icon: 'mdi-plus-circle-outline' },
         { tab: 'Lista guardada', icon: 'mdi-plus-circle-outline' },
       ],
@@ -32,7 +32,7 @@ const Template = (args, { argTypes }) => ({
             <h4>Contenido 3</h4>
           </v-tab-item>
         </template>
-      </dx-tabs>  
+      </dx-tabs>
   </div>
   `,
 })

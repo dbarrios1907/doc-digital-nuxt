@@ -10,7 +10,7 @@ export default {
   props: {
     message: {
       type: String,
-      default: () => '...cargando',
+      default: () => 'Cargando',
     },
     loading: {
       type: Boolean,

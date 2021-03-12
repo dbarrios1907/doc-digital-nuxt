@@ -42,14 +42,13 @@ export default class ClaveUnicaScheme {
     const { url, method } = this.options.logout
     let resp = null
     try {
-      resp = await this.$auth.request({
+      resp = await this.$auth.requestWith('claveUnica', {
         method,
         url,
         headers: {
           'Content-Type': 'application/json',
         },
         baseURL: process.server ? undefined : false,
-        data: { token: this.getUserToken() },
       })
       // eslint-disable-next-line no-empty
     } catch (err) {}
@@ -61,9 +60,11 @@ export default class ClaveUnicaScheme {
         message: 'Ocurrió un error inesperado, no se pudo desloguear al usuario',
       })
     }
-
+    Toast.success({
+      message: 'Usuario deslogueado',
+    })
     await this.reset()
-    this.$auth.redirect('home', true)
+    this.$auth.redirect('unauthorized', true)
   }
 
   async mounted() {
@@ -103,7 +104,7 @@ export default class ClaveUnicaScheme {
     this.$auth.ctx.app.$axios.setHeader(this.options.tokenName, _token)
   }
 
-  getUserToken() {
+  getToken() {
     // Set Authorization token for all axios requests
     let _token = this.$auth.getToken(this.name)
     if (this.options.token_type) {
@@ -143,7 +144,7 @@ export default class ClaveUnicaScheme {
       // with `auth: false` to avoid an unnecessary redirect from callback to login)
       if (!pageIsInGuestMode && (!callback || !insidePage(callback))) {
         await this.reset()
-        this.$auth.redirect('home', true)
+        this.$auth.redirect('unauthorized', true)
         return false
       }
     }
@@ -156,7 +157,7 @@ export default class ClaveUnicaScheme {
 
     if (!token || !token.length) {
       await this.reset()
-      this.$auth.redirect('home', true)
+      this.$auth.redirect('unauthorized', true)
     }
 
     this.setUserToken(token)
@@ -177,15 +178,6 @@ export default class ClaveUnicaScheme {
     const state = this.$auth.$storage.getUniversal(this.name + '.state')
     this.$auth.$storage.setUniversal(this.name + '.state', null)
 
-    // accessToken/idToken
-    // let code = parsedQuery[this.options.token_key]
-    // // refresh token
-    // let refreshToken = parsedQuery[this.options.refresh_token_key]
-    //
-    // if (state && parsedQuery.state !== state) {
-    //   return
-    // }
-
     const { url, method } = this.options.login
 
     // -- Authorization Code Grant --
@@ -205,9 +197,7 @@ export default class ClaveUnicaScheme {
     })
 
     let token = get(resp, `result.${this.options.token_key}`, null)
-
-    // get refresh token
-    // const refreshToken = get(resp, `result.${this.options.refresh_token_key}`, null)
+    this.options.expires = get(resp, `result.expires_in`, 3000)
 
     if (!token || !token.length) {
       // if token is null try to use persisted token
@@ -216,7 +206,7 @@ export default class ClaveUnicaScheme {
         token = this.$auth.getToken(this.name)
       } else {
         await this.reset()
-        this.$auth.redirect('home', true)
+        this.$auth.redirect('unauthorized', true)
       }
     }
 

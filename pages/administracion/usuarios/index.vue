@@ -97,7 +97,7 @@
                   @click="openFilter(header, $event)"
                   v-if="h.filterable"
                   >mdi-filter</v-icon
-                > 
+                >
               </template>-->
               <!-- <template slot="body.prepend" v-if="searchname || searchrut || filtered">
                 <tr class="body-prepend">
@@ -482,7 +482,7 @@ table a {
   right: 28px;
   z-index: 1;
 }
-/* 
+/*
 .v-application .v-menu__content.theme--light.menuable__content__active,
 .v-application .v-menu__content.theme--dark.menuable__content__active {
   margin-top: 0px !important;

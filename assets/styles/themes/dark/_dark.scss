@@ -19,7 +19,7 @@ $material-dark: (
       'dark': map-get($dark-colors, 'dark'),
       'regular': map-get($dark-colors, 'darken3'),
     )
-  ),  
+  ),
   'v_chip': (
     'dark': map-get($dark-colors, 'dark'),
     'light': map-get($dark-colors, 'light'),
@@ -69,7 +69,7 @@ $material-dark: (
     'darken2': map-get($dark-colors, 'darken2'),
   ),
   'primary': map-get($dark-colors, 'primary'),
-  'light': map-get($dark-colors, 'light'),  
+  'light': map-get($dark-colors, 'light'),
   'v_filtermenu': (
     'dark': map-get($dark-colors, 'dark'),
     'light': map-get($dark-colors, 'light'),
@@ -77,6 +77,9 @@ $material-dark: (
     'darken3': map-get($dark-colors, 'darken3'),
     'darken2': map-get($dark-colors, 'darken2'),
   ),
+  'stepper': (
+    'border': 1px solid map-get($light-colors, 'primary')
+  )
       //'status-bar': (
       //  'regular': map-get($shades, 'black'),
       //  'lights-out': rgba(map-get($shades, 'black'), 0.2)

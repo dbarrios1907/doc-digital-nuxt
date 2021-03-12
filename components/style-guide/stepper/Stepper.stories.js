@@ -15,52 +15,36 @@ const Template = (args, { argTypes }) => ({
   },
   template: `
   <dx-stepper v-model="e1">
-  <v-stepper-header>
-  <v-stepper-step
-      :complete="e1 > 1"
-      step="1"
-  >
-      1. Documento
-  </v-stepper-step>
+    <v-stepper-header>
+      <v-stepper-step :complete="e1 > 1" step="1">
+          1. Documento
+      </v-stepper-step>
 
-  <v-divider></v-divider>
+      <v-divider></v-divider>
 
-  <v-stepper-step
-      :complete="e1 > 2"
-      step="2"
-  >
-      2. Destinatarios
-  </v-stepper-step>
-  </v-stepper-header>
+      <v-stepper-step :complete="e1 > 2" step="2">
+          2. Destinatarios
+      </v-stepper-step>
+    </v-stepper-header>
 
-  <v-stepper-items>
-  <v-stepper-content step="1">
-      <v-card height="200px">
-          
-      </v-card>
-      <div class="next">
-      <dx-button color="white" small text @click="e1 = 2">
-          <span class="underline-text">Siguiente</span>
-          <dx-icon right chevron>
-              mdi-arrow-right
-          </dx-icon>
-      </dx-button>
-      </div>
-  </v-stepper-content>
-  <v-stepper-content step="2">
-      <v-card height="200px">
-          
-      </v-card>
-      <div class="next">
-      <dx-button color="white" text @click="e1 = 3" small>
-          <span class="underline-text">Siguiente</span>
-          <dx-icon right chevron>
-              mdi-arrow-right
-          </dx-icon>
-      </dx-button>
-      </div>
-  </v-stepper-content>
-  </v-stepper-items>
+    <v-stepper-items>
+      <v-stepper-content step="1">
+        <dx-step-body>
+          <dx-step-title title='This is a sample title for the step' help-hint='this is a help hint' />
+        </dx-step-body>
+        <dx-step-actions>
+
+        </dx-step-actions>
+      </v-stepper-content>
+      <v-stepper-content step="2">
+        <dx-step-body>
+          <dx-step-title title='This is a sample title for the step' help-hint='this is a help hint' />
+        </dx-step-body>
+        <dx-step-actions>
+
+        </dx-step-actions>
+      </v-stepper-content>
+    </v-stepper-items>
 </dx-stepper>
   `,
 })

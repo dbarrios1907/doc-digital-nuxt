@@ -17,9 +17,9 @@
       <v-col cols="12" class="mb-15">
         <dx-stepper v-model="e1">
           <v-stepper-header>
-            <v-stepper-step :complete="e1 > 1" step="1"> 1. Documento </v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 2" step="2"> 2. Destinatarios </v-stepper-step>
+            <v-stepper-step :complete="e1 > 1" step="1"> 1. Documento</v-stepper-step>
+            <v-divider />
+            <v-stepper-step :complete="e1 > 2" step="2"> 2. Destinatarios</v-stepper-step>
           </v-stepper-header>
           <v-stepper-items>
             <v-stepper-content step="1">
@@ -44,7 +44,7 @@
                       :rules="[() => !!tipo || 'Campo requerido']"
                       label="Selecciona una opción"
                       @change="updatefield('tipo', $event)"
-                    ></dx-select>
+                    />
                   </v-col>
                   <v-col cols="6" class="py-0 pr-0">
                     <span>Materia o Tema del documento *</span>
@@ -55,33 +55,33 @@
                       label="Selecciona una opción"
                       append-icon=""
                       @change="updatefield('tema', $event)"
-                    ></dx-select>
+                    />
                   </v-col>
                   <v-col cols="12" class="py-0 px-0">
                     <span>Descripción del documento *</span>
                     <v-textarea
+                      v-model="description"
                       no-resize
                       rows="4"
                       outlined
-                      v-model="description"
                       :value="description"
                       :maxlength="limitmaxCount"
-                      @input="updatefield('description', $event)"
-                      @blur="blurfield('hiddedesc', 'description')"
                       required
                       :rules="[() => !!description || 'Campo requerido']"
                       :hide-details="hiddedesc"
+                      @input="updatefield('description', $event)"
+                      @blur="blurfield('hiddedesc', 'description')"
                     >
-                      <template v-slot:append
-                        ><div class="count darken3--text">{{ desclength }}/{{ limitmaxCount }}</div></template
-                      >
+                      <template v-slot:append>
+                        <div class="count darken3--text">{{ desclength }}/{{ limitmaxCount }}</div>
+                      </template>
                     </v-textarea>
                     <span class="font-small line-height-30 weight-400">Resuma brevemente el contenido del documento.</span>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="6" class="py-0 pl-0">
-                    <dx-checkbox v-model="reservado" label="Documento reservado" class="float-left darken--text"></dx-checkbox>
+                    <dx-checkbox v-model="reservado" label="Documento reservado" class="float-left darken--text" />
                     <dx-icon left class="ml-4 py-5" size="18" color="warning">mdi-help-circle</dx-icon>
                   </v-col>
                   <v-col cols="6" class="pr-0">
@@ -116,7 +116,9 @@
                     <div class="mb-5 font-small line-height-24 weight-400 darken2--text mt-2">
                       Puede cargar múltiples archivos con un máximo de 50 MB y en formato libre.
                     </div>
-                    <Upload multiple v-bind="$props" class="d-inline-block mr-2" /> o <Upload multiple v-bind="$props" class="ml-2 d-inline-block" />
+                    <Upload multiple v-bind="$props" class="d-inline-block mr-2" />
+                    o
+                    <Upload multiple v-bind="$props" class="ml-2 d-inline-block" />
                   </v-col>
                 </v-row>
               </v-card>
@@ -124,16 +126,16 @@
               <div class="next text-right">
                 <dx-button color="white" small text @click="e1 = 2">
                   <span class="underline-text">Siguiente</span>
-                  <dx-icon right chevron> mdi-arrow-right </dx-icon>
+                  <dx-icon right chevron> mdi-arrow-right</dx-icon>
                 </dx-button>
               </div>
               <div class="text-right mt-8 mb-9">
                 <dx-button color="primary" small text @click="e1 = 2">
-                  <dx-icon right chevron> mdi-close </dx-icon>
+                  <dx-icon right chevron> mdi-close</dx-icon>
                   <span class="underline-text ml-1">Descartar documento</span>
                 </dx-button>
                 <dx-button color="primary" small text @click="e1 = 2">
-                  <dx-icon right chevron> mdi-content-save </dx-icon>
+                  <dx-icon right chevron> mdi-content-save</dx-icon>
                   <span class="underline-text ml-1">Guardar borrador</span>
                 </dx-button>
               </div>
@@ -144,11 +146,11 @@
                   <v-col cols="6" class="px-0 py-0">
                     <p class="weight-400 mt-3 font-regular line-height-24">Complete la información general del documento.</p>
                     <dx-button color="primary" outlined small>
-                      <dx-icon right chevron class="mx-0 mr-2"> mdi-plus-circle </dx-icon>
+                      <dx-icon right chevron class="mx-0 mr-2"> mdi-plus-circle</dx-icon>
                       <span class="underline-text">Oficina de Partes</span>
                     </dx-button>
                     <dx-button color="primary" outlined small>
-                      <dx-icon right chevron class="mx-0 mr-2"> mdi-plus-circle </dx-icon>
+                      <dx-icon right chevron class="mx-0 mr-2"> mdi-plus-circle</dx-icon>
                       <span class="underline-text">Lista guardada</span>
                     </dx-button>
                   </v-col>
@@ -163,26 +165,26 @@
               <div class="next">
                 <v-row>
                   <v-col cols="6" class="text-left">
-                    <dx-button color="white" text @click="e1 = 1" small>
-                      <dx-icon right chevron class="mr-1 ml-0"> mdi-arrow-left </dx-icon>
+                    <dx-button color="white" text small @click="e1 = 1">
+                      <dx-icon right chevron class="mr-1 ml-0"> mdi-arrow-left</dx-icon>
                       <span class="underline-text">Anterior</span>
-                    </dx-button></v-col
-                  >
+                    </dx-button>
+                  </v-col>
                   <v-col cols="6" class="text-right">
-                    <dx-button color="white" text @click="e1 = 3" small class="float-rigth success">
+                    <dx-button color="white" text small class="float-rigth success" @click="e1 = 3">
                       <span class="underline-text">Finalizar y enviar</span>
-                      <dx-icon right chevron> mdi-send </dx-icon>
-                    </dx-button></v-col
-                  >
+                      <dx-icon right chevron> mdi-send</dx-icon>
+                    </dx-button>
+                  </v-col>
                 </v-row>
               </div>
               <div class="text-right mt-8 mb-9">
                 <dx-button color="primary" small text @click="e1 = 2">
-                  <dx-icon right chevron> mdi-close </dx-icon>
+                  <dx-icon right chevron> mdi-close</dx-icon>
                   <span class="underline-text ml-1">Descartar documento</span>
                 </dx-button>
                 <dx-button color="primary" small text @click="e1 = 2">
-                  <dx-icon right chevron> mdi-content-save </dx-icon>
+                  <dx-icon right chevron> mdi-content-save</dx-icon>
                   <span class="underline-text ml-1">Guardar borrador</span>
                 </dx-button>
               </div>
@@ -211,20 +213,20 @@ export default {
       rules: [value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!'],
     }
   },
-  methods: {
-    updatefield(key, data) {
-      this[key] = data
-    },
-    blurfield(key, value) {
-      this[key] = this[value].length > 0
-    },
-  },
   computed: {
     desclength() {
       return this.description.length
     },
     foliolength() {
       return this.folio.length
+    },
+  },
+  methods: {
+    updatefield(key, data) {
+      this[key] = data
+    },
+    blurfield(key, value) {
+      this[key] = this[value].length > 0
     },
   },
 }

@@ -11,6 +11,17 @@
   }
 }
 
+@mixin theme-wrap ($component) {
+  .theme--light #{$component},
+  .theme--light#{$component} {
+    @content($material-light);
+  }
+  .theme--dark #{$component},
+  .theme--dark#{$component} {
+    @content($material-dark);
+  }
+}
+
 //@mixin themeGlobal ($component) {
 //  .theme--light .#{$component},  .theme--light.#{$component} {
 //    @content($material-light);
