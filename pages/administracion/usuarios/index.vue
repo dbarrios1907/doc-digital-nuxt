@@ -329,7 +329,8 @@
 export default {
   name: 'Usuarios',
   fetch() {
-    console.log('FETCH ON USERS')
+    // console.log('FETCH ON USERS')    
+    this.$store.dispatch('usuarios/getUsers')
   },
   data() {
     return {
