@@ -2,10 +2,14 @@
     box-shadow: none;
 
     .v-stepper__header {
-        width: 50%;
         margin: auto;
         box-shadow: none;
+
+        .v-stepper__step {
+          flex-basis: 200px;
+        }
     }
+
     .v-divider {
         background-color: map-deep-get($material, 'colors', 'primary');
         padding: rem-calc(2px);
@@ -23,6 +27,7 @@
             flex-basis: auto !important;
         }
     }
+
     & .v-stepper__step {
         &.v-stepper__step--complete {
             .v-icon {
@@ -61,18 +66,13 @@
 
         .v-stepper__wrapper {
             //margin-bottom: rem-calc(30px);
-            .v-card {
-                border-radius: 0;
-                box-shadow: none;
-            }
-            .v-card, .next {
-                border: rem-calc(1px) solid map-deep-get($material, 'colors', 'primary');
+            .dx-step-body {
+              border: map-deep-get($material, 'stepper', 'border');
+              border-bottom: none;
             }
 
-            .next {
+            .next, .dx-step-actions {
                 background-color: map-deep-get($material, 'colors', 'primary');
-                height: rem-calc(43px);
-                //text-align: right;
             }
         }
     }

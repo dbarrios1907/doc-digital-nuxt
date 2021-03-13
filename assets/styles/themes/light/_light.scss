@@ -84,6 +84,9 @@ $material-light: (
     'darken3': map-get($light-colors, 'darken3'),
     'darken2': map-get($light-colors, 'darken2'),
   ),
+  'stepper': (
+    'border': 1px solid map-get($light-colors, 'primary')
+  )
       //'status-bar': (
       //  'regular': map-get($grey, 'lighten-2'),
       //  'lights-out': rgba(map-get($shades, 'white'), 0.7)

@@ -21,6 +21,7 @@
 
     &.v-size--default {
       font-size: 1rem;
+      max-height: 48px;
       .v-btn__content {
         line-height: rem-calc(24px);
 
@@ -30,12 +31,12 @@
 
         .v-icon--left {
           margin-left: 0;
-          margin-right: rem-calc(5px);
+          margin-right: rem-calc(8px);
         }
 
         .v-icon--right {
           margin-right: 0;
-          margin-left: rem-calc(5px);
+          margin-left: rem-calc(8px);
         }
 
         i[chevron] {
@@ -91,6 +92,14 @@
       height: 56px;
     }
 
+    &:focus {
+      outline: 1px dashed #000;
+    }
+
+    &.v-btn--text:focus {
+      outline: 1px dashed #000;
+    }
+
     @each $name, $color in map-get(map-get($material, 'buttons'), 'darken-variants') {
       @if $name {
         &.#{$name}:hover {
@@ -103,9 +112,7 @@
         &.#{$name}:visited {
           background: darken($color, 10%) !important;
         }
-        &.#{$name}:focus {
-          outline: 1px dashed #000;
-        }
+
         &.#{$name}:focus:before {
           background: transparent;
         }
@@ -128,9 +135,6 @@
         }
         &.v-btn--text.#{$name}--text:hover:before {
           color: darken($color, 10%) !important;
-        }
-        &.v-btn--text.#{$name}--text:focus {
-          outline: 1px dashed #000;
         }
 
         &.v-btn--disabled {
@@ -154,9 +158,9 @@
         &.#{$name}:visited {
           background: lighten($color, 10%) !important;
         }
-        &.#{$name}:focus {
-          outline: 1px dashed #000;
-        }
+        //&.#{$name}:focus {
+        //  outline: 1px dashed #000;
+        //}
         &.#{$name}:focus:before {
           background: transparent;
         }
@@ -167,9 +171,9 @@
         &.v-btn--outlined.#{$name}--text:hover:before {
           color: lighten($color, 10%) !important;
         }
-        &.v-btn--outlined.#{$name}--text:focus {
-          outline: 1px dashed #000;
-        }
+        //&.v-btn--outlined.#{$name}--text:focus {
+        //  outline: 1px dashed #000;
+        //}
         &.v-btn--outlined.#{$name}--text:focus:before {
           background: transparent;
         }
@@ -180,9 +184,9 @@
         &.v-btn--text.#{$name}--text:hover:before {
           color: darken($color, 10%) !important;
         }
-        &.v-btn--text.#{$name}--text:focus {
-          outline: 1px dashed #000;
-        }
+        //&.v-btn--text.#{$name}--text:focus {
+        //  outline: 1px dashed #000;
+        //}
       }
     }
   }

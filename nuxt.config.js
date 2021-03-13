@@ -127,6 +127,12 @@ export default {
         auth: false,
         component: resolve(__dirname, 'components/doc-digital/login-callback/index.vue'),
       })
+
+      routes.push({
+        name: 'not-found',
+        path: '*',
+        component: resolve(__dirname, 'pages/404.vue'),
+      })
     },
   },
 }

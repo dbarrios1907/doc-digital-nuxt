@@ -33,5 +33,9 @@ export default {
   .v-input__control i.v-icon {
     font-size: rem-calc(32px) !important;
   }
+
+  .v-messages {
+    display: none;
+  }
 }
 </style>

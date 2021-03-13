@@ -5,14 +5,12 @@
 
     <dx-header :clipped-left="clipped" fixed app elevation="0" :height="92" />
     <v-main app>
-      <perfect-scrollbar name="scrollMain" :class="[{ 'max-height-610': ismobil }]">
-        <v-container fluid :class="['py-8', { 'px-10': !ismobil }, { 'px-5': ismobil }]">
-          <nuxt />
-        </v-container>
-      </perfect-scrollbar>
+      <v-container fluid class="py-8 px-10">
+        <nuxt />
+      </v-container>
     </v-main>
 
-    <dx-footer :absolute="!fixed" class="px-0 py-0" />
+    <dx-footer :absolute="!fixed" class="mt-8 px-0 py-0" app />
   </v-app>
 </template>
 
@@ -35,9 +33,6 @@ export default {
 
   computed: {
     ...mapState(['routes']),
-    ismobil() {
-      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
-    },
   },
   methods: {
     onMouseOver() {
@@ -50,8 +45,3 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.max-height-610 {
-  max-height: 610px !important;
-}
-</style>
