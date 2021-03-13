@@ -1,10 +1,10 @@
 <template>
   <v-row>
-    <div :class="{ 'col-12': isMovileScreen, 'col-9': !isMovileScreen }">
+    <div :class="['px-0', { 'col-12': isMovileScreen, 'col-9': !isMovileScreen }]">
       <slot name="title" />
       <slot name="subtitle" />
     </div>
-    <dx-icons-actions class="text-right float-right col-3 d-none d-sm-block mt-1" />
+    <dx-icons-actions class="text-right float-right col-3 d-none d-sm-block mt-1 px-0" />
   </v-row>
 </template>
 
