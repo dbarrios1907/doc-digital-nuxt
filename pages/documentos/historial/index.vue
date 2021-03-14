@@ -247,6 +247,7 @@ export default {
     tema: '',
     tipo: '',
     folio: '',
+    search: '',
     options: ['10', '20', '30'],
     itempage: '10',
     doctype: ['Oficio', 'otro'],

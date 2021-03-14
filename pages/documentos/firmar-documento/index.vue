@@ -258,7 +258,6 @@ export default {
     filtermenu: [...Array(4)].map((_, i) => `Texto de ejemplo  ${i}`),
     selected: [],
     search: '',
-    hiddesearch: true,
     isleft: true,
     page: 1,
     pageCount: 0,
@@ -282,7 +281,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Circular normativa de Teletrabajo',
+        tema: 'Circular normativa de Teletrabajo1',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -290,7 +289,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Instructivo de Modernización',
+        tema: 'Instructivo de Modernización1',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -298,7 +297,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Oficio ORD Permisos Administrativos',
+        tema: 'Oficio ORD Permisos Administrativos2',
         tipo: 'Oficio',
         folio: '178',
         creacion: '10-09-2020 9:58',
@@ -306,7 +305,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Circular normativa de Teletrabajo',
+        tema: 'Circular normativa de Teletrabajo2',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -314,7 +313,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Instructivo de Modernización',
+        tema: 'Instructivo de Modernización3',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -322,7 +321,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Oficio ORD Permisos Administrativos',
+        tema: 'Oficio ORD Permisos Administrativos3',
         tipo: 'Oficio',
         folio: '178',
         creacion: '10-09-2020 9:58',
@@ -330,7 +329,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Circular normativa de Teletrabajo',
+        tema: 'Circular normativa de Teletrabajo3',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
