@@ -26,8 +26,11 @@ export default {
   .v-pagination__item:not(.v-pagination__item--active) {
     border-bottom: 1px solid #0f69c4;
     color: #0f69c4;
+    background-color: inherit;
   }
-
+  .v-pagination__navigation {
+    background-color: inherit;
+  }
   .v-pagination__navigation i {
     transform: scale(1.6);
     width: 11px;

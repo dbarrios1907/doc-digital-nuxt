@@ -17,7 +17,7 @@
 <script>
 export default {
   name: 'DxFiltermenu',
-  inheritAttrs: false,
+  inheritAttrs: true,
   props: {
     items: Array,
     label: {

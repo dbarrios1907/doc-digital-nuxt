@@ -16,16 +16,23 @@
         </div>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        {{ item.description }}
+        <block-item v-if="item.name === 'block'" :item="item.description" />
+        <card-item v-else-if="item.name === 'card'" :items="item.description" />
+        <span v-else>{{ item.description }}</span>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
 <script>
+import BlockItem from './components/BlockItem'
+import CardItem from './components/CardItem'
 export default {
   name: 'DxCollapse',
-  inheritAttrs: false,
+  components: {
+    BlockItem,
+    CardItem,
+  },
   props: {
     items: Array,
   },
@@ -41,8 +48,11 @@ export default {
     min-height: rem-calc(65px);
   }
 
+  .v-expansion-panel-header--active {
+    border-bottom: 1px solid #3f87d0 !important;
+  }
   .v-expansion-panel-content__wrap {
-    padding: 24px 35px;
+    padding: 20px 35px !important;
   }
 
   .v-expansion-panel-header__disabled {

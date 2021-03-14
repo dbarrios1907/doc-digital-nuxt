@@ -12,7 +12,7 @@
             </template>
           </dx-bodytitle>
         </v-col>
-        <v-col cols="12" :class="['bg-grey1', 'mb-10', { 'px-9': !ismobil }]">
+        <v-col cols="12" :class="['bg-grey1', 'pt-1', 'mb-10', { 'px-9': !ismobil }]">
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
             <v-select
@@ -29,6 +29,22 @@
             ></v-select>
             <span class="ml-3">resultados de un total de <b>3 documentos pendientes por firmar</b>.</span>
           </div>
+          <v-row class="pb-9">
+            <v-col cols="3">
+              <dx-text-field
+                v-model="search"
+                flat
+                solo
+                outlined
+                append-icon="mdi-magnify"
+                placeholder="Escribe tu búsqueda"
+                @input="updatefield('search', $event)"
+              />
+            </v-col>
+            <v-col cols="3">
+              <dx-filtermenu label="Filtrar" :items="filtermenu" @get-selected="get_selected"></dx-filtermenu>
+            </v-col>
+          </v-row>
           <dx-tabs :items="tabs" tabtype="primary">
             <template v-slot:tab-item>
               <v-tab-item v-for="item in items" :key="item.tab">
@@ -59,7 +75,7 @@
                   </template>
 
                   <template v-slot:footer>
-                    <div class="py-7 v-data-footer">
+                    <div class="py-7 v-data-footer bg-grey1">
                       <dx-pagination v-model="page" :length="pageCount" />
                     </div>
                   </template>
@@ -79,6 +95,10 @@ export default {
     options: ['10', '20', '30'],
     tabs: [{ tab: 'Pendientes', number: 5 }],
     items: ['Administrador', 'otro'],
+    filtermenu: [...Array(4)].map((_, i) => `Texto de ejemplo  ${i}`),
+    selected: [],
+    search: '',
+    hiddesearch: true,
     isleft: true,
     page: 1,
     pageCount: 0,
@@ -90,7 +110,7 @@ export default {
         folio: '-',
         creacion: '10-09-2020 9:58',
         actualizacion: '10-09-2020 9:58',
-        href: '#',
+        href: '/documentos/firmar-documento/details/1',
       },
       {
         tema: 'Oficio ORD Permisos Administrativos',
@@ -109,7 +129,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Instructivo de Modernización',
+        tema: 'Instructivo de Modernización2',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -117,7 +137,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Oficio ORD Permisos Administrativos',
+        tema: 'Oficio ORD Permisos Administrativos2',
         tipo: 'Oficio',
         folio: '178',
         creacion: '10-09-2020 9:58',
@@ -125,7 +145,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Circular normativa de Teletrabajo',
+        tema: 'Circular normativa de Teletrabajo2',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -133,7 +153,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Instructivo de Modernización',
+        tema: 'Instructivo de Modernización3',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -141,7 +161,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Oficio ORD Permisos Administrativos',
+        tema: 'Oficio ORD Permisos Administrativos3',
         tipo: 'Oficio',
         folio: '178',
         creacion: '10-09-2020 9:58',
@@ -149,7 +169,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Circular normativa de Teletrabajo',
+        tema: 'Circular normativa de Teletrabajo3',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -158,6 +178,15 @@ export default {
       },
     ],
   }),
+  methods: {
+    updatefield(key, data) {
+      this[key] = data
+    },
+    get_selected(sel) {
+      this.selected = sel
+      console.log(this.selected)
+    },
+  },
   computed: {
     ismobil() {
       return this.$vuetify.breakpoint.xs
@@ -187,6 +216,8 @@ export default {
 @include theme(v-select) using ($material) {
   width: rem-calc(104px) !important;
   height: rem-calc(48px) !important;
+
+  margin-bottom: 0;
 }
 
 @include theme(v-data-footer) using ($material) {
@@ -199,7 +230,20 @@ export default {
   }
 }
 
-.bg-grey1 {
-  background-color: #f5f5f5;
+@include theme(v-text-field) using($material) {
+  border-radius: 0 !important;
+  margin: 0;
+}
+
+@include theme(v-input) using($material) {
+  .v-label {
+    color: map-deep-get($material, 'colors', 'darken3') !important;
+  }
+}
+
+@include theme(row) using($material) {
+  .bg-grey1 {
+    background-color: #f5f5f5;
+  }
 }
 </style>
