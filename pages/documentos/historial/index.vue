@@ -249,11 +249,7 @@ export default {
     folio: '',
     options: ['10', '20', '30'],
     itempage: '10',
-    tabs: [{ tab: 'Pendientes', number: 5 }],
-    items: ['Administrador', 'otro'],
     doctype: ['Oficio', 'otro'],
-    search: '',
-    hiddesearch: true,
     isleft: true,
     page: 1,
     pageCount: 0,
@@ -337,10 +333,6 @@ export default {
   methods: {
     updatefield(key, data) {
       this[key] = data
-    },
-    get_selected(sel) {
-      this.selected = sel
-      console.log(this.selected)
     },
     buscar() {
       this.dialog = false

@@ -64,9 +64,9 @@
       </v-col>
     </v-row>
     <div class="weight-700 font-25 line-height-31 font-robotoslab mt-13">Información general del documento</div>
-    <div class="weight-700 font-title line-height-29 mt-13">Barra de avance de la tramitación</div>
-    <v-progress-linear color="#0F69C4" background-color="#CFE1F3"></v-progress-linear>
-    <dx-collapse :items="items"></dx-collapse>
+    <div class="weight-700 font-title line-height-29 mt-8">Barra de avance de la tramitación</div>
+    <dx-docprogress :items="items" class="mt-7" />
+    <dx-collapse :items="itemscollapse"></dx-collapse>
     <v-dialog overlay-opacity="0.55" overlay-color="#001C41" v-model="dialog1" max-width="600px" :content-class="ismobil">
       <v-card>
         <v-card-title>
@@ -158,6 +158,33 @@ export default {
       },
     ],
     items: [
+      {
+        title: '1. Inicio de la tramitación',
+        done: true,
+        disable: false,
+      },
+      {
+        title: '2. Visación (no requiere)',
+        done: true,
+        disable: true,
+      },
+      {
+        title: '3. Firma',
+        done: false,
+        disable: false,
+      },
+      {
+        title: '4. Folio y despacho',
+        done: false,
+        disable: false,
+      },
+      {
+        title: '5. Destinatarios',
+        done: false,
+        disable: false,
+      },
+    ],
+    itemscollapse: [
       {
         name: 'block',
         title: '1. Inicio de la tramitación',
