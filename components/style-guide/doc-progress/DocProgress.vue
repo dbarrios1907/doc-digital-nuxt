@@ -24,7 +24,6 @@ export default {
   },
 }
 </script>
-
 <style lang="scss">
 @include theme(container) using ($material) {
   $primary-color: map-deep-get($material, 'colors', 'primary');
