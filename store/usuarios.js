@@ -29,8 +29,7 @@ export const actions = {
     commit('update', id, newuser)
   },
   async getUsers({ commit }){
-    const body_ = 
-    JSON.stringify({
+    const params = {
       entidad: 0,
       isBloqueado: true,
       nombre: "string",
@@ -42,17 +41,15 @@ export const actions = {
        "ROLE_ADMIN"
       ],
       run: 0
-    })
-    console.log(body_)
+    }
     try {
       resp = await this.$auth.requestWith('claveUnica', {
         method: 'GET',
-        url: '/usuarios/',
+        url: '/usuarios/1',
         headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/json',
+          'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJNYXJpYSBDYXJtZW4gRGUgbG9zIGFuZ2VsZXMgRGVsIHJpbyBHb256YWxleiIsImN0eCI6eyJrZXkiOjMsInJ1biI6ODg4ODg4ODgsIm5vbWJyZSI6Ik1hcmlhIENhcm1lbiBEZSBsb3MgYW5nZWxlcyBEZWwgcmlvIEdvbnphbGV6IiwiY2FyZ28iOiJEZXZPcHMiLCJlbnRpZGFkSWQiOjEsImVudGlkYWROb21icmUiOiJFbnRpZGFkIFRlc3QgS0UiLCJjb250ZXh0VHlwZSI6IkNUWF9VU0VSIn0sImlkIjozLCJjdHhfdHlwZSI6InVzciIsImV4cCI6MTYxNTg1MzE0OSwiaWF0IjoxNjE1ODQ5NTQ5LCJhdXRob3JpdGllcyI6WyJST0xFX1VTVUFSSU8iXX0.uDrrV17eoL2bo0rETsGjELmFDYCsNnpQim4pKct-tcko1tigFbaLT_P94-52QUxDAqncKxSWiYUl1Ze2odVdyQ',
         },
-        // body: body_,
+        // params: params,
         // data: body_,
       })
       console.log(resp);
