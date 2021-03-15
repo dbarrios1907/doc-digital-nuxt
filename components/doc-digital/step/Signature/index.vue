@@ -44,7 +44,7 @@
             solo
             flat
             outlined
-            :rules="[() => 'This field is required']"
+            :rules="[() => 'Campo Requerido']"
             label="cm"
             required
           />

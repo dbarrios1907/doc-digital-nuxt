@@ -18,6 +18,7 @@ const Template = (args, { argTypes }) => ({
       <doc-signed-icon fill="white" color="primary" />
       <doc-digital-icon color="primary"/>
       <vector color="primary"/>
+      <cc-plus-icon />
     </div>
   `,
 })

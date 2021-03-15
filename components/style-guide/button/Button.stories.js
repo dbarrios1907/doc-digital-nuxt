@@ -56,7 +56,7 @@ const Template = (args, { argTypes }) => ({
       <v-row>
         <v-col>
           <dx-button class="primary--text" color="secondary" v-bind="$props"> <span class="underline-text">{{label}}</span> </dx-button>
-          <dx-button class="primary--text" color="secondary"  rounded v-bind="$props">
+          <dx-button class="primary--text" color="secondary" rounded v-bind="$props">
             <dx-icon left>
               mdi-pencil
             </dx-icon>

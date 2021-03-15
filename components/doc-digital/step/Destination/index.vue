@@ -8,10 +8,10 @@
             <TabDocEmail></TabDocEmail>
           </v-tab-item>
           <v-tab-item>
-            <h4>Contenido 2</h4>
+            <TabDocOffice></TabDocOffice>
           </v-tab-item>
           <v-tab-item>
-            <h4>Contenido 3</h4>
+            <TabDocSavedList></TabDocSavedList>
           </v-tab-item>
         </template>
       </dx-tabs>

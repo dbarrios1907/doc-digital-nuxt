@@ -12,12 +12,19 @@
         </div>
       </div>
     </perfect-scrollbar>
+    <v-row no-gutters class="mt-4">
+      <email-saved-list-modal />
+    </v-row>
   </div>
 </template>
 
 <script>
+import EmailSavedListModal from '../SaveListModal'
 export default {
   name: 'EmailDestinationList',
+  components: {
+    EmailSavedListModal,
+  },
   props: {
     list: {
       type: Array,

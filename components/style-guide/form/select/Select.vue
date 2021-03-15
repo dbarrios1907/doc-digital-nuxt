@@ -24,6 +24,12 @@
         <dx-icon v-if="closableItems" left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
       </dx-badge>
     </template>
+
+    <!-- Pass on all named slots -->
+    <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot" />
+
+    <!-- Pass on all scoped slots -->
+    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope"/></template>
   </v-select>
 </template>
 

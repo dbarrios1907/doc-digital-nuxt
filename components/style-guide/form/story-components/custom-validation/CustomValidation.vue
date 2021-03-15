@@ -9,7 +9,7 @@
             solo
             flat
             outlined
-            :rules="[() => !!name || 'This field is required']"
+            :rules="[() => !!name || 'Campo Requerido']"
             :error-messages="errorMessages"
             label="Full Name"
             placeholder="John Doe"
@@ -22,7 +22,7 @@
             flat
             outlined
             :rules="[
-              () => !!address || 'This field is required',
+              () => !!address || 'Campo Requerido',
               () => (!!address && address.length <= 25) || 'Address must be less than 25 characters',
               addressCheck,
             ]"
@@ -37,7 +37,7 @@
             solo
             flat
             outlined
-            :rules="[() => !!city || 'This field is required', addressCheck]"
+            :rules="[() => !!city || 'Campo Requerido', addressCheck]"
             label="City"
             placeholder="El Paso"
             required
@@ -48,7 +48,7 @@
             solo
             flat
             outlined
-            :rules="[() => !!state || 'This field is required']"
+            :rules="[() => !!state || 'Campo Requerido']"
             label="State/Province/Region"
             required
             placeholder="TX"
@@ -56,7 +56,7 @@
           <v-text-field
             ref="zip"
             v-model="zip"
-            :rules="[() => !!zip || 'This field is required']"
+            :rules="[() => !!zip || 'Campo Requerido']"
             label="ZIP / Postal Code"
             required
             placeholder="79938"
@@ -67,7 +67,7 @@
             solo
             flat
             outlined
-            :rules="[() => !!country || 'This field is required']"
+            :rules="[() => !!country || 'Campo Requerido']"
             :items="countries"
             label="Country"
             placeholder="Select..."
