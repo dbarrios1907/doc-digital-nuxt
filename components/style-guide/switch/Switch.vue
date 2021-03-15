@@ -6,6 +6,5 @@
 import './Switch.scss'
 export default {
   name: 'DxSwitch',
-  inheritAttrs: false,
 }
 </script>

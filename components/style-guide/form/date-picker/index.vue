@@ -28,6 +28,10 @@ export default {
   name: 'DxDatePicker',
   inheritAttrs: true,
   props: {
+    cleared: {
+      type: Boolean,
+      default: false,
+    },
     value: {
       type: String,
       default: () => null,
@@ -36,7 +40,7 @@ export default {
   data: vm => ({
     style: { width: 292 + 'px' },
     date: vm.parseDate(vm.value) || new Date().toISOString(),
-    dateFormatted: vm.formatDate(vm.parseDate(vm.value)) || vm.formatDate(new Date().toISOString().substr(0, 10)),
+    dateFormatted: vm.formatDate(vm.parseDate(vm.value)) || (vm.cleared ? '' : vm.formatDate(new Date().toISOString().substr(0, 10))),
     showPicker: false,
   }),
 
