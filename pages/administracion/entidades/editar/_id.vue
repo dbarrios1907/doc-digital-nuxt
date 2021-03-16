@@ -1,6 +1,6 @@
 <template>
   <div :class="['fill-height', { 'px-custom-6': ismobil }]">
-    <dx-breadcrumbs :items="breadcrums" v-if="!ismobil" class="mb-10" />
+    <dx-breadcrumbs v-if="!ismobil" :items="breadcrums" class="mb-10" />
     <userform :userid="userid" />
   </div>
 </template>

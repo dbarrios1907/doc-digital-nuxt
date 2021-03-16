@@ -39,7 +39,7 @@ export const state = () => ({
     {
       path: '/oficina-de-partes',
       redirect: 'noRedirect',
-      name: 'root-oficina-partes',
+      name: 'oficina-partes',
       meta: {
         title: 'Oficina de Partes',
         icon: 'mdi-bank',
