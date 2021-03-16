@@ -300,7 +300,7 @@
         </template>
       </dx-tabs>
     </v-row>
-    <userform-details :dialog="details_dialog" :userid="selected_user">
+    <userform-details :dialog="details_dialog" :user="selectedUser">
       <template v-slot:actionclose>
         <v-btn icon color="darken3" @click="details_dialog = false">
           <v-icon>mdi-close</v-icon>
@@ -326,11 +326,12 @@
 </template>
 
 <script>
+import { isValidResponse } from '~/shared/utils/request'
 export default {
   name: 'Usuarios',
   fetch() {
     // console.log('FETCH ON USERS')    
-    this.$store.dispatch('usuarios/getUsers')
+    // this.$store.dispatch('usuarios/getUsers')
   },
   data() {
     return {
@@ -369,6 +370,8 @@ export default {
       details_dialog: false,
       selected_user: '',
       permisosValues: ['Administrador', 'Jefe de servicio', 'Operador', 'Oficina de partes'],
+      loading: false,
+      selectedUser: null,
     }
   },
   methods: {
@@ -412,9 +415,27 @@ export default {
 
       return flag
     },
-    open_user_details(id) {
+    async open_user_details(id) {
       this.selected_user = id.toString()
-      this.details_dialog = true
+      let resp = null
+      this.selectedUser = null
+      this.loading = true
+      try{ 
+        resp = await this.$store.dispatch('usuarios/getUser', this.selected_user)
+      }catch(error) {}
+
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Usuario no encontrado',
+        })
+      }
+      else{
+        this.selectedUser = resp.result        
+        this.details_dialog = true
+        this.loading = false
+      }
     },
     get_tab(activetab) {
       this.activeTab = activetab
