@@ -2,8 +2,7 @@ import { getMatchedComponents, normalizePath, routeOption } from '~/shared/utils
 import jwt_decode from 'jwt-decode'
 import get from 'lodash.get'
 import { mapLoginUrl } from '~/shared/mappers/login.mappers'
-import { isValidResponse } from '~/shared/utils/request'
-import Toast from '~/components/style-guide/alerts/Toast'
+import { isUserErrorResponse, isValidResponse } from '~/shared/utils/request'
 
 // const isHttps = process.server ? require('is-https') : null
 
@@ -36,6 +35,7 @@ export default class ClaveUnicaScheme {
 
     if (!this._redirectURI) return this.$auth.callOnError('Could not fetch authorization URI')
     window.location = this._redirectURI
+    // this.$auth.redirect(this._redirectURI, true)
   }
 
   async logout() {
@@ -186,15 +186,29 @@ export default class ClaveUnicaScheme {
       code: parsedQuery.code,
       state: parsedQuery.state,
     }
-    const resp = await this.$auth.request({
-      method,
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      baseURL: process.server ? undefined : false,
-      data,
-    })
+
+    let resp = null
+    try {
+      resp = await this.$auth.request({
+        method,
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        baseURL: process.server ? undefined : false,
+        data,
+      })
+    } catch (e) {
+      resp = get(e, `response.data`, null)
+      if (isUserErrorResponse(resp)) {
+        const message = resp?.error || 'Acceso no autorizado'
+        this.$auth.$storage.setUniversal('route.message', message)
+      }
+      this.$auth.ctx.app.router.replace({
+        name: 'unauthorized',
+      })
+      return false
+    }
 
     let token = get(resp, `result.${this.options.token_key}`, null)
     this.options.expires = get(resp, `result.expires_in`, 3000)

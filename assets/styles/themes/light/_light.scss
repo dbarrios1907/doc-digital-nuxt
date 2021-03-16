@@ -8,6 +8,11 @@ $material-light: (
     'link': map-get($light-colors, 'primary'),
     'link-hover': darken(map-get($light-colors, 'primary'), 10%)
   ),
+  'section': (
+    'colors': (
+      'secondary-light': rgba(219, 237, 255, 0.5)
+    )
+  ),
   'outline': 1px dashed #000,
   'buttons': (
     //'disabled': rgba(map-get($shades, 'black'), 0.26),

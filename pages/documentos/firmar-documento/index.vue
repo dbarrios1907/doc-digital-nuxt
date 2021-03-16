@@ -15,29 +15,29 @@
         <v-col cols="12" :class="['bg-grey1', 'pt-1', 'mb-10', { 'px-9': !ismobil }]">
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
-            <dx-select class="d-inline-flex min-content" :items="options" :label="itempage"></dx-select>
+            <dx-select class="d-inline-flex min-content" :items="options" :label="itempage" />
             <span class="ml-3">resultados de un total de <b>3 documentos pendientes por firmar</b>.</span>
           </div>
 
           <div v-if="emptyfilter && filtered">
             <v-row class="mb-2">
               <v-col cols="12">
-                <dx-badge type="tertiary" label outlined class="mx-0 my-0 mr-3" v-if="tema">
+                <dx-badge v-if="tema" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Tema</div>
                   <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tema', '')"> mdi-close </dx-icon>
                 </dx-badge>
 
-                <dx-badge type="tertiary" label outlined class="mx-0 my-0 mr-3" v-if="tipo">
+                <dx-badge v-if="tipo" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Tipo</div>
                   <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tipo', '')"> mdi-close </dx-icon>
                 </dx-badge>
 
-                <dx-badge type="tertiary" label outlined class="mx-0 my-0 mr-3" v-if="folio">
+                <dx-badge v-if="folio" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Folio</div>
                   <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('folio', '')"> mdi-close </dx-icon>
                 </dx-badge>
 
-                <dx-badge type="tertiary" label outlined class="mx-0 my-0 mr-3" v-if="picker1 || picker2">
+                <dx-badge v-if="picker1 || picker2" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Creación</div>
                   <dx-icon
                     left
@@ -51,7 +51,7 @@
                   </dx-icon>
                 </dx-badge>
 
-                <dx-badge type="tertiary" label outlined class="mx-0 my-0 mr-3" v-if="picker3 || picker4">
+                <dx-badge v-if="picker3 || picker4" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Actualización</div>
                   <dx-icon
                     left
@@ -114,7 +114,7 @@
               />
             </v-col>
             <v-col cols="3">
-              <dx-button color="darken3" outlined @click="dialog = true" class="filter">
+              <dx-button color="darken3" outlined class="filter" @click="dialog = true">
                 <div class="text-underline float-left">Filtrar</div>
                 <dx-icon right regular class="text-right float-right"> mdi-filter </dx-icon>
               </dx-button>
@@ -161,16 +161,16 @@
         </v-col>
       </perfect-scrollbar>
     </v-row>
-    <v-dialog overlay-opacity="0.55" overlay-color="#001C41" v-model="dialog" max-width="960px" :class="[{ ismobil: ismobil }]">
+    <v-dialog v-model="dialog" overlay-opacity="0.55" overlay-color="#001C41" max-width="960px" :class="[{ ismobil: ismobil }]">
       <v-card>
         <v-card-title>
           <h5 class="font-title weight-700 darken3--text">Buscar documento por firmar</h5>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn color="darken3" icon @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <v-divider class="darken1"></v-divider>
+        <v-divider class="darken1" />
 
         <v-card-text class="font-roboto weight-400 line-height-30 font-title darken3--text py-10 px-10">
           <div class="font-title line-height-30 mb-10">
@@ -218,7 +218,7 @@
         </v-card-text>
 
         <v-card-actions class="px-10 pb-10">
-          <v-spacer></v-spacer>
+          <v-spacer />
           <dx-button
             color="primary"
             outlined
@@ -338,6 +338,33 @@ export default {
       },
     ],
   }),
+  computed: {
+    emptyfilter() {
+      return this.picker1 || this.picker2 || this.picker3 || this.picker1 || this.tema || this.tipo || this.tema || this.folio
+    },
+    ismobil() {
+      return this.$vuetify.breakpoint.xs
+    },
+    computedHeaders() {
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'tema' || h.value == 'actions' : h.value))
+    },
+    headers() {
+      return [
+        {
+          text: 'Tema',
+          align: 'start',
+          value: 'tema',
+          sortable: true,
+          filter: this.temaFilter,
+        },
+        { text: 'Tipo', value: 'tipo', sortable: true, filter: this.tipoFilter },
+        { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
+        { text: 'Creación', value: 'creacion', sortable: true, filter: this.creacionFilter },
+        { text: 'Actualización', value: 'actualizacion', sortable: true, filter: this.actualizacionFilter },
+        { text: 'Ver', value: 'actions', sortable: false },
+      ]
+    },
+  },
   methods: {
     updatefield(key, data) {
       this[key] = data
@@ -378,9 +405,9 @@ export default {
       if (!from || !from || !this.filtered) {
         return true
       }
-      let from_ = new Date(from)
-      let to_ = new Date(to)
-      let current_ = new Date(current)
+      const from_ = new Date(from)
+      const to_ = new Date(to)
+      const current_ = new Date(current)
       return current_ >= from_ && current_ <= to_
     },
     creacionFilter(value) {
@@ -388,33 +415,6 @@ export default {
     },
     actualizacionFilter(value) {
       return this.between(this.picker3, this.picker4, value)
-    },
-  },
-  computed: {
-    emptyfilter() {
-      return this.picker1 || this.picker2 || this.picker3 || this.picker1 || this.tema || this.tipo || this.tema || this.folio
-    },
-    ismobil() {
-      return this.$vuetify.breakpoint.xs
-    },
-    computedHeaders() {
-      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'tema' || h.value == 'actions' : h.value))
-    },
-    headers() {
-      return [
-        {
-          text: 'Tema',
-          align: 'start',
-          value: 'tema',
-          sortable: true,
-          filter: this.temaFilter,
-        },
-        { text: 'Tipo', value: 'tipo', sortable: true, filter: this.tipoFilter },
-        { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
-        { text: 'Creación', value: 'creacion', sortable: true, filter: this.creacionFilter },
-        { text: 'Actualización', value: 'actualizacion', sortable: true, filter: this.actualizacionFilter },
-        { text: 'Ver', value: 'actions', sortable: false },
-      ]
     },
   },
 }

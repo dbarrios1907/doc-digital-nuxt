@@ -72,11 +72,6 @@ export default {
     edit: Boolean,
     remove: Boolean,
   },
-  // data() {
-  //   return {
-  //     value: [],
-  //   }
-  // },
   methods: {
     emitSelected() {
       this.$emit('get-selected', this.value)

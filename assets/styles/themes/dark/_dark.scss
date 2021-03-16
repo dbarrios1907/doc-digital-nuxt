@@ -1,6 +1,11 @@
 $material-dark: (
   'font-color': map-get($dark-colors, 'darken3'),
   'outline': 1px solid #fff,
+  'section': (
+    'colors': (
+      'secondary-light': rgba(219, 237, 255, 0.5)
+    )
+  ),
   'buttons': (
     //'disabled': rgba(map-get($shades, 'black'), 0.26),
     //'focused': rgba(map-get($shades, 'black'), 0.12),

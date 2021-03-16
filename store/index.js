@@ -10,33 +10,32 @@ export const state = () => ({
       },
       children: [
         {
-          path: 'visar-documento',
-          name: 'Visar',
+          path: 'bandeja-visar',
+          name: 'bandeja-visar',
           meta: { title: 'Visar', icon: 'mdi-eye' },
         },
         {
-          path: 'firmar-documento',
-          name: 'Firmar',
+          path: 'bandeja-firmar',
+          name: 'bandeja-firmar',
           meta: { title: 'Firmar', icon: 'mdi-pencil' },
         },
         {
-          path: 'editar-borradores',
-          name: 'editar-borradores',
+          path: 'bandeja-borradores',
+          name: 'bandeja-borradores',
           meta: { title: 'Editar Borradores', icon: 'mdi-file-multiple' },
         },
         {
-          path: 'revisar-devueltos',
-          name: 'revisar-devueltos',
+          path: 'bandeja-devueltos',
+          name: 'bandeja-devueltos',
           meta: { title: 'Revisar Devueltos', icon: 'mdi-clipboard-arrow-down' },
         },
         {
-          path: 'historial',
-          name: 'historial',
+          path: 'bandeja-historial',
+          name: 'bandeja-historial',
           meta: { title: 'Historial', icon: 'mdi-folder-outline' },
         },
       ],
     },
-
     {
       path: '/oficina-de-partes',
       redirect: 'noRedirect',
@@ -86,6 +85,25 @@ export const state = () => ({
           path: 'correos-de-notificacion',
           name: 'correos-de-notificacion',
           meta: { title: 'Correos de Notificación', icon: 'mdi-email' },
+        },
+      ],
+    },
+    {
+      path: '/nuevo-documento',
+      name: 'nuevo-documento',
+      redirect: 'noRedirect',
+      hidden: true,
+      meta: {},
+      children: [
+        {
+          path: 'firmar',
+          name: 'firmar',
+          meta: { title: 'Enviar a firma' },
+        },
+        {
+          path: 'visar',
+          name: 'visar',
+          meta: { title: 'Enviar a visar' },
         },
       ],
     },
