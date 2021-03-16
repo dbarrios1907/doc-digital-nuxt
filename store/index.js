@@ -37,7 +37,7 @@ export const state = () => ({
       ],
     },
     {
-      path: '/oficina-de-partes',
+      path: '/oficina-partes',
       redirect: 'noRedirect',
       name: 'oficina-partes',
       meta: {
