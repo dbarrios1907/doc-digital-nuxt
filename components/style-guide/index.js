@@ -38,6 +38,7 @@ export { default as StepButton } from './stepper/components/step-actions/step-bu
 export { default as OverlayLoader } from './overlay-loader'
 export { default as Upload } from './upload/Upload'
 export { default as Menu } from './menu/Menu'
+export { default as CreateDocMenu } from './menu/CreateDocMenu'
 export { default as Box } from './box'
 export { default as DocProgress } from './doc-progress/DocProgress'
 export { default as Modal } from './modal/Modal'

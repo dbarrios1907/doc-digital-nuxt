@@ -1,7 +1,7 @@
 <template>
-  <div class="dx-alert d-flex justify-content-center elevation-8" :class="'dx-type__' + type" v-bind="$listeners">
+  <div :class="_class" v-bind="$listeners">
     <div class="dx-alert__wrapper d-inline-flex align-center py-3">
-      <span class="d-flex px-5" v-if="showLeftIcon">
+      <span v-if="showLeftIcon" class="d-flex px-5">
         <component :is="iconByType" />
       </span>
 
@@ -24,6 +24,10 @@ export default {
     message: String,
     type: String,
     title: String,
+    shadow: {
+      type: Boolean,
+      default: true,
+    },
     showLeftIcon: {
       type: Boolean,
       default: true,
@@ -52,6 +56,16 @@ export default {
       }
 
       return false
+    },
+    _class() {
+      let base = 'dx-alert d-flex justify-content-center '
+      if (this.shadow) {
+        base += 'elevation-8 '
+      }
+      if (this.type) {
+        base += 'dx-type__' + this.type
+      }
+      return base
     },
   },
   methods: {
