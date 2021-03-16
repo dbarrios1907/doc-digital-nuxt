@@ -5,10 +5,10 @@
         <v-col cols="12" class="mt-3 mb-7 d-none d-md-flex d-lg-flex d-xl-flex">
           <dx-bodytitle>
             <template v-slot:title>
-              <div class="weight-700 font-25 line-height-31">Firmar</div>
+              <div class="weight-700 font-25 line-height-31">Historial</div>
             </template>
             <template v-slot:subtitle>
-              <div class="weight-400 mt-3 font-regular line-height-24">Revisa tus documentos pendientes por firmar.</div>
+              <div class="weight-400 mt-3 font-regular line-height-24">Revisa tu histórico de documentos.</div>
             </template>
           </dx-bodytitle>
         </v-col>
@@ -16,9 +16,8 @@
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
             <dx-select class="d-inline-flex min-content" :items="options" :label="itempage" />
-            <span class="ml-3">resultados de un total de <b>3 documentos pendientes por firmar</b>.</span>
+            <span class="ml-3">resultados de un total de <b>6 documentos</b>.</span>
           </div>
-
           <div v-if="emptyfilter && filtered">
             <v-row class="mb-2">
               <v-col cols="12">
@@ -120,44 +119,42 @@
               </dx-button>
             </v-col>
           </v-row>
-          <dx-tabs :items="tabs" tabtype="primary">
-            <template v-slot:tab-item>
-              <v-tab-item v-for="item in items" :key="item.tab">
-                <DataTable
-                  color="primary"
-                  :headers="computedHeaders"
-                  :items="valuess"
-                  :page.sync="page"
-                  :items-per-page="itemsPerPage"
-                  :class="['bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
-                  :mobile-breakpoint="0"
-                  hide-default-footer
-                  item-key="tema"
-                  @page-count="pageCount = $event"
-                >
-                  <template v-slot:[`item.tema`]="{ item: { tema, href } }" class="column">
-                    <a class="breaktext" :href="href">{{ tema }}</a>
-                  </template>
 
-                  <template v-slot:[`item.access`]="{ item: { access } }">
-                    <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
-                      {{ v }}
-                    </v-chip>
-                  </template>
-
-                  <template v-slot:[`item.actions`]>
-                    <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
-                  </template>
-
-                  <template v-slot:footer>
-                    <div class="py-7 v-data-footer bg-grey1">
-                      <dx-pagination v-model="page" :length="pageCount" />
-                    </div>
-                  </template>
-                </DataTable>
-              </v-tab-item>
+          <DataTable
+            color="primary"
+            :headers="computedHeaders"
+            :items="valuess"
+            :page.sync="page"
+            :items-per-page="itemsPerPage"
+            :class="['table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
+            :mobile-breakpoint="0"
+            hide-default-footer
+            show-select
+            item-key="tema"
+            @page-count="pageCount = $event"
+          >
+            <template v-slot:[`item.tema`]="{ item: { tema, href } }" class="column">
+              <a class="breaktext" :href="href">{{ tema }}</a>
             </template>
-          </dx-tabs>
+
+            <template v-slot:[`item.access`]="{ item: { access } }">
+              <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
+                {{ v }}
+              </v-chip>
+            </template>
+
+            <template v-slot:[`item.actions`]>
+              <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon>
+              <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+              <v-icon dense> mdi-delete-outline </v-icon>
+            </template>
+
+            <template v-slot:footer>
+              <div class="py-7 v-data-footer bg-grey1">
+                <dx-pagination v-model="page" :length="pageCount" />
+              </div>
+            </template>
+          </DataTable>
         </v-col>
       </perfect-scrollbar>
     </v-row>
@@ -250,14 +247,10 @@ export default {
     tema: '',
     tipo: '',
     folio: '',
+    search: '',
     options: ['10', '20', '30'],
     itempage: '10',
     doctype: ['Oficio', 'otro'],
-    tabs: [{ tab: 'Pendientes', number: 5 }],
-    items: ['Administrador', 'otro'],
-    filtermenu: [...Array(4)].map((_, i) => `Texto de ejemplo  ${i}`),
-    selected: [],
-    search: '',
     isleft: true,
     page: 1,
     pageCount: 0,
@@ -270,7 +263,7 @@ export default {
         folio: '-',
         creacion: '10-09-2020 9:58',
         actualizacion: '10-09-2020 9:58',
-        href: '/documentos/firmar-documento/details/1',
+        href: '#',
       },
       {
         tema: 'Oficio ORD Permisos Administrativos',
@@ -281,7 +274,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Circular normativa de Teletrabajo1',
+        tema: 'Circular normativa de Teletrabajo',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -289,7 +282,7 @@ export default {
         href: '#',
       },
       {
-        tema: 'Instructivo de Modernización1',
+        tema: 'Instructivo de Modernización2',
         tipo: 'Oficio',
         folio: '-',
         creacion: '10-09-2020 9:58',
@@ -361,7 +354,7 @@ export default {
         { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
         { text: 'Creación', value: 'creacion', sortable: true, filter: this.creacionFilter },
         { text: 'Actualización', value: 'actualizacion', sortable: true, filter: this.actualizacionFilter },
-        { text: 'Ver', value: 'actions', sortable: false },
+        { text: 'Acciones', value: 'actions', sortable: false },
       ]
     },
   },
@@ -419,7 +412,7 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @include theme(v-select) using ($material) {
   width: rem-calc(104px) !important;
   height: rem-calc(48px) !important;
@@ -429,12 +422,6 @@ export default {
 
 @include theme(v-data-footer) using ($material) {
   border-top: none !important;
-}
-
-@include theme(v-tabs) using ($material) {
-  .v-slide-group__content {
-    background-color: #f5f5f5;
-  }
 }
 
 @include theme(v-text-field) using($material) {
