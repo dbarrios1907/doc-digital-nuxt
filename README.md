@@ -1,6 +1,6 @@
 # doc-digital-nuxt
 
-## Build Setup
+## Build & Deploy Setup
 
 ```bash
 # install dependencies
