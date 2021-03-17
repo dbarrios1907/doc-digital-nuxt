@@ -1,0 +1,64 @@
+# image: docker:stable-dind
+image: public.ecr.aws/l0c7s1h5/k8s-ci:latest
+
+variables:
+  REPOSITORY_URL: 799809842304.dkr.ecr.us-west-2.amazonaws.com/docdigitalv3-front
+
+stages:
+  - build
+  - deploy
+
+#paso1 creacion docker image
+build:docker-image:
+  stage: build
+  allow_failure: false
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE" -t "$CI_REGISTRY_IMAGE":"$CI_COMMIT_REF_NAME" -t "$REPOSITORY_URL" -t "$REPOSITORY_URL":"$CI_COMMIT_REF_NAME" .
+    - docker push "$CI_REGISTRY_IMAGE"
+    - docker push "$CI_REGISTRY_IMAGE":"$CI_COMMIT_REF_NAME"
+    - $(aws ecr get-login --no-include-email --region us-west-2)
+    - docker push "$REPOSITORY_URL"
+    - docker push "$REPOSITORY_URL":"$CI_COMMIT_REF_NAME"
+  after_script:
+    - docker ps -a
+    # - docker container prune -f
+    - echo "imagen creada" 
+    - echo "$REPOSITORY_URL":"$CI_COMMIT_REF_NAME"
+    - docker images
+  only:
+    - tags
+  except:
+    - develop
+
+#paso2 deploy docker image en K8s
+deploy:k8s-QA:
+  stage: deploy
+  allow_failure: true
+  # when: manual
+  variables:
+    KUBECONFIG: /etc/deploy/config
+    KUBE_CONTEXT: arn:aws:eks:us-west-2:799809842304:cluster/eks-test
+    KUBE_NS: docdigitalv3-test-front
+    KUBE_DEPLOY: java
+  before_script:
+    - mkdir -p /etc/deploy
+    - echo ${K8S_CONFIG_QA} | base64 -d > ${KUBECONFIG}
+    - kubectl config use-context ${KUBE_CONTEXT}
+  script:
+    - kubectl get all -n ${KUBE_NS}
+    - kubectl set image deployment/${KUBE_DEPLOY} ${KUBE_DEPLOY}="$REPOSITORY_URL":"$CI_COMMIT_REF_NAME" -n ${KUBE_NS}
+    - kubectl rollout status deployment/${KUBE_DEPLOY} -n ${KUBE_NS}
+  only:
+    refs:
+    - tags
+  except:
+    refs:
+    - develop
+    - master
+  dependencies:
+    - build:docker-image
+  retry:
+    max: 1
+    when: runner_system_failure
