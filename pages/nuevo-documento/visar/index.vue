@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" class="mt-3 mb-7 d-none d-md-flex d-lg-flex d-xl-flex">
+    <v-col cols="12" class="mt-3 mb-7 d-md-flex d-lg-flex d-xl-flex">
       <dx-bodytitle>
         <template v-slot:title>
           <div class="weight-700 font-title line-height-29">Nuevo documento a distribuir</div>

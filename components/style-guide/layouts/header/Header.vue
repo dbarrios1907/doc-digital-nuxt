@@ -3,7 +3,11 @@
     <div class="d-flex container container--fluid px-0 py-0">
       <HeaderLogo />
 
-      <div class="text-right ml-auto mt-auto mb-auto" style="height: auto">
+      <div v-if="_isMobile" class="d-flex flex-fill align-center justify-end pr-5">
+        <dx-nav-bar-icon :is-active="drawer" color="light" @onToggleMenu="$emit('onToggleMenu')" />
+      </div>
+
+      <div v-else class="text-right ml-auto mt-auto mb-auto" style="height: auto">
         <dx-button color="light" text v-bind="$props">
           <dx-icon left>mdi-help-circle</dx-icon>
           <span class="pl-1 text-underline">Ayuda</span>
@@ -15,9 +19,20 @@
 </template>
 
 <script>
+import { responsiveMixin } from '~/shared/mixins/responsiveMixin'
+
 export default {
   name: 'DxHeader',
+  mixins: [responsiveMixin],
   inheritAttrs: false,
+  props: {
+    drawer: Boolean,
+  },
+  computed: {
+    _isMobile() {
+      return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md
+    },
+  },
 }
 </script>
 

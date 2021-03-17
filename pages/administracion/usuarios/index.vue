@@ -1,12 +1,11 @@
 <template>
   <div class="fill-height usuarios" style="min-height: 780px">
     <dx-breadcrumbs v-if="!ismobil" :items="breadcrums" class="mb-10" />
-    <dx-bodytitle v-if="!ismobil" class="">
+    <dx-bodytitle class="">
       <template v-slot:title>
         <div class="weight-700 line-height-31 font-25">Usuarios</div>
       </template>
     </dx-bodytitle>
-    <div v-else class="weight-700 line-height-31 font-25 px-4">Usuarios</div>
     <div v-if="!isListEmpty" class="mt-10 weight-400" :class="[{ 'px-4': ismobil }]">
       <span class="mr-2">Mostrando hasta</span>
       <v-select

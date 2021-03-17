@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="12" class="mt-3 mb-7 d-none d-md-flex d-lg-flex d-xl-flex">
+  <v-row no-gutters>
+    <v-col cols="12" class="mt-3 mb-7 d-md-flex d-lg-flex d-xl-flex">
       <dx-bodytitle>
         <template v-slot:title>
           <div class="weight-700 font-25 line-height-31">Estás en el Módulo de Envío y Recepción</div>
@@ -10,7 +10,7 @@
         </template>
       </dx-bodytitle>
     </v-col>
-    <v-col cols="12" :class="['mb-10', { 'px-9': !ismobil }]">
+    <v-col cols="12" class="mb-9">
       <div class="my-9 weight-400">
         <span class="mr-2">Mostrando hasta</span>
         <v-select
