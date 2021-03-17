@@ -77,7 +77,7 @@
               :mobile-breakpoint="0"
               :show-select="!ismobil"
               dense
-              item-key="name"
+              item-key="nombres"
               @page-count="pageCount = $event"
               hide-default-footer
               calculate-widths
@@ -157,22 +157,26 @@
                 </tr>
               </template> -->
 
-              <template v-slot:[`item.name`]="{ item: { name } }">
-                <span class="breaktext">{{ name }}</span>
+              <template v-slot:[`item.nombres`]="{ item: { nombres, apellidos } }">
+                <span class="breaktext">{{ nombres + ' ' + apellidos }}</span>
+              </template>
+              
+              <template v-slot:[`item.rut`]="{ item: { run, dv } }">
+                <span class="breaktext">{{ run + '-' + dv }}</span>
               </template>
 
-              <template v-slot:[`item.access`]="{ item: { access } }">
-                <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
+              <template v-slot:[`item.access`]="{ item: { roles } }">
+                <v-chip v-for="v in roles" :key="v" class="ml-2 my-1" color="primary" small>
                   {{ v }}
                 </v-chip>
               </template>
 
-              <template v-slot:[`item.actions`]="{ item: { userid } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + userid"
+              <template v-slot:[`item.actions`]="{ item: { id } }">
+                <nuxt-link :to="'/administracion/usuarios/editar/' + id"
                   ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
                 >
-                <v-icon dense class="mr-4" @click="open_user_details(userid)"> mdi-eye </v-icon>
-                <v-icon dense> mdi-delete-outline </v-icon>
+                <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
+                <v-icon dense @click="deleteUser(id)"> mdi-delete-outline </v-icon>
               </template>
 
               <template v-slot:footer>
@@ -272,22 +276,26 @@
                 </tr>
               </template>
 
-              <template v-slot:[`item.name`]="{ item: { name } }">
-                <span class="breaktext">{{ name }}</span>
+              <template v-slot:[`item.nombres`]="{ item: { nombres, apellidos } }">
+                <span class="breaktext">{{ nombres + ' ' + apellidos }}</span>
+              </template>
+              
+              <template v-slot:[`item.rut`]="{ item: { run, dv } }">
+                <span class="breaktext">{{ run + '-' + dv }}</span>
               </template>
 
-              <template v-slot:[`item.access`]="{ item: { access } }">
-                <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
+              <template v-slot:[`item.access`]="{ item: { roles, id } }">
+                <v-chip v-for="v in roles" :key="v+id" class="ml-2 my-1" color="primary" small>
                   {{ v }}
                 </v-chip>
               </template>
 
-              <template v-slot:[`item.userid`]="{ item: { userid } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + userid"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
+              <template v-slot:[`item.actions`]="{ item: { id } }">
+                <nuxt-link :to="'/administracion/usuarios/editar/' + id"
+                  ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
                 >
-                <v-icon dense :class="[{ 'mr-4': !ismobil }]" @click="open_user_details(userid)"> mdi-eye </v-icon>
-                <v-icon dense> mdi-delete-outline </v-icon>
+                <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
+                <v-icon dense @click="deleteUser(id)"> mdi-delete-outline </v-icon>
               </template>
 
               <template v-slot:footer>
@@ -331,7 +339,7 @@ export default {
   name: 'Usuarios',
   fetch() {
     // console.log('FETCH ON USERS')    
-    // this.$store.dispatch('usuarios/getUsers')
+    this.$store.dispatch('usuarios/getUsers')
   },
   data() {
     return {
@@ -440,13 +448,37 @@ export default {
     get_tab(activetab) {
       this.activeTab = activetab
     },
+    async deleteUser(id){
+      let resp = null
+      try{
+        resp = await this.$store.dispatch('usuarios/deleteUser', id)
+      }
+      catch(err){ 
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      }
+
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'No se pudo eliminar el usuario',
+        })
+      }
+      else{
+        Toast.success({
+          message: 'Usuario eliminado',
+        })
+      }
+    }
   },
   computed: {
     ismobil() {
       return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
     computedHeaders() {
-      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'actions' : h.value))
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'nombres' || h.value == 'actions' : h.value))
     },
     headers() {
       return [
@@ -454,7 +486,7 @@ export default {
           text: 'Nombre',
           align: 'start',
           sortable: true,
-          value: 'name',
+          value: 'nombres',
           filter: this.nameFilter,
           search: true,
         },
@@ -478,7 +510,7 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style lang="scss" sooped >
 .v-select .v-input__slot {
   min-height: 48px !important;
 }
@@ -543,10 +575,30 @@ table a {
   line-height: 18px !important;
   text-align: center !important;
 }
+// .v-application .usuarios table > thead > tr > th:nth-child(3){
+//   max-width: 250px !important;
+// }
+// table > tbody > tr > td:nth-child(3) {
+//   max-width: 250px !important;
+// }
 .usuarios {
+  table > tbody > tr > td {
+      padding: 6px 10px !important;
+  }
+  :not(.ismobile){
+    table > thead > tr > th:nth-child(3){
+      max-width: 250px !important;
+      width: 17% !important;
+    }
+    
+    table > thead > tr > th:nth-child(4){
+      width: 42% !important;
+    }
+    
+  }
   .ismobile {
     table > tbody > tr {
-      height: 47px !important;
+      height: 37px !important;
     }
     table > tbody > tr > td:nth-child(2),
     table > thead > tr > th:nth-child(2) {

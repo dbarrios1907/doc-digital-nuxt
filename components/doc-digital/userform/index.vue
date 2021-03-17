@@ -11,7 +11,7 @@
         <div class="weight-400 line-height-30 font-16">{{ headtext }}</div>
       </v-col>
       <div class="mt-2" ref="form" style="min-height: 680px">
-        <v-col v-if="userid" cols="12" style="max-height: 74px">
+        <v-col v-if="user" cols="12" style="max-height: 74px">
           <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
             <v-col
               cols="auto"
@@ -21,7 +21,7 @@
             >
             <v-col style="max-height: 72px">
               <span style="min-width: 140px; max-width: 140px" class="flex weight-400 line-height-30 font-16 py-1">Activo</span>
-              <v-switch class="d-inline-block mt-0 pt-0 success-switch ml-4" style="width: 40px" v-model="activo" inset :ripple="false" dense>
+              <v-switch class="d-inline-block mt-0 pt-0 success-switch ml-4" style="width: 40px" v-model="isBloqueado" inset :ripple="false" dense>
               </v-switch>
             </v-col>
           </v-row>
@@ -36,12 +36,12 @@
             >
             <v-col>
               <v-text-field
-                ref="rut"
-                v-model="rut"
+                ref="run"
+                v-model="run"
                 solo
                 flat
                 outlined
-                :rules="[() => !!rut || !!rut_dv || 'Campo requerido']"
+                :rules="[() => !!run || !!dv || 'Campo requerido']"
                 :error-messages="errorMessages"
                 label="99.999.999"
                 style="width: 108px"
@@ -51,8 +51,8 @@
               />
               -
               <v-text-field
-                ref="rut_dv"
-                v-model="rut_dv"
+                ref="dv"
+                v-model="dv"
                 solo
                 flat
                 outlined
@@ -77,12 +77,12 @@
             >
             <v-col>
               <v-text-field
-                ref="name"
-                v-model="name"
+                ref="nombres"
+                v-model="nombres"
                 solo
                 flat
                 outlined
-                :rules="[() => !!name || 'Campo requerido']"
+                :rules="[() => !!nombres || 'Campo requerido']"
                 label="Nombre Nombre"
                 required
                 :disabled="disabled"
@@ -101,13 +101,13 @@
             >
             <v-col>
               <v-text-field
-                ref="lastname"
-                v-model="lastname"
+                ref="apellidos"
+                v-model="apellidos"
                 solo
                 flat
                 outlined
                 label="Apellido Apellido"
-                :rules="[() => !!lastname || 'Campo requerido']"
+                :rules="[() => !!apellidos || 'Campo requerido']"
                 required
                 :disabled="disabled"
               />
@@ -125,15 +125,15 @@
             >
             <v-col>
               <v-text-field
-                ref="email"
-                v-model="email"
+                ref="correoInstitucional"
+                v-model="correoInstitucional"
                 solo
                 flat
                 outlined
                 label="Escribe el correo institucional"
                 :rules="[
-                  () => !!email || 'Campo requerido',
-                  () => !email || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email) || 'Email inválido',
+                  () => !!correoInstitucional || 'Campo requerido',
+                  () => !correoInstitucional || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(correoInstitucional) || 'Email inválido',
                 ]"
                 required
               />
@@ -199,9 +199,9 @@
             </v-col>
             <v-col :class="[{ 'col-8': !ismobil }, { 'mt-6': ismobil }]">
               <dx-select
-                :items="permisos_select"
-                @get-selected="get_permisos"
-                label="Seleccione permisos"
+                :items="roles_select"
+                @get-selected="get_roles"
+                label="Seleccione roles"
                 multiple
                 v-bind="$props"
                 closableItems
@@ -241,13 +241,13 @@
         <v-col cols="5" :class="[ismobil, { 'mt-3': !ismobil }, { 'mb-10': ismobil }, 'col-container']">
           <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
             <v-col cols="auto" :class="['flex weight-400 line-height-30 font-16', { 'mt-3': !ismobil }]" sryle="height: 100%"
-              >Activar subrogancia</v-col
+              >Activar isSubroganteActivado</v-col
             >
             <v-col style="max-height: 72px">
               <v-switch
                 class="d-inline-block mt-0 pt-0 success-switch"
                 style="width: 40px"
-                v-model="subrogancia"
+                v-model="isSubroganteActivado"
                 inset
                 :ripple="false"
                 dense
@@ -280,34 +280,38 @@
 </template>
 
 <script>
+import { isValidResponse } from '~/shared/utils/request'
 export default {
   name: 'userform',
-  props: {
-    userid: {
+  props:{
+    userid:{
       type: String,
-      default: '',
+      default: ''
     },
+    user:{
+      type: Object,
+      default: null
+    }
   },
   data() {
     return {
       entidades: ['Entidad 1', 'Entidad 2'],
-      permisos_select: ['Administrador', 'otro'],
+      roles_select: ['ROLE_USUARIO', 'ROLE_OFICINA_PARTES', 'ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_JEFE_SERVICIO'],
       subrogantes: ['Subragante 1', 'Subragante 2'],
       seguidores: ['Miguel', 'Juan'],
       labelClass: 'text-body-1 font-20',
       errorMessages: '',
       formHasErrors: false,
-      subrogancia: true,
-      activo: true,
-      name: null,
-      rut: null,
-      rut_dv: null,
-      name: null,
-      lastname: null,
-      email: null,
+      isSubroganteActivado: true,
+      isBloqueado: true,
+      nombres: null,
+      run: null,
+      dv: null,
+      apellidos: null,
+      correoInstitucional: null,
       cargo: null,
       entidad: [],
-      permisos: [],
+      roles: [],
       seguidor: [],
       subrogante: [],
       breadcrumbs: [
@@ -333,18 +337,15 @@ export default {
     }
   },
 
-  created() {
-    // console.log(this.$store.getters['usuarios/getUser'])
-  },
 
   computed: {
     form() {
       return {
-        name: this.name,
-        lastname: this.lastname,
-        rut: this.rut,
-        rut_dv: this.rut_dv,
-        email: this.email,
+        nombres: this.nombres,
+        apellidos: this.apellidos,
+        run: this.run,
+        dv: this.dv,
+        correoInstitucional: this.correoInstitucional,
         cargo: this.cargo,
         // entidad: this.entidad,
       }
@@ -353,16 +354,16 @@ export default {
       return this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
     disabled() {
-      return this.userid != ''
+      return this.user
     },
     headtitle() {
-      return !this.userid ? 'Nuevo usuario' : 'Editar usuario'
+      return !this.user ? 'Nuevo usuario' : 'Editar usuario'
     },
     headtext() {
-      return !this.userid ? 'Complete el formulario para crear un nuevo usuario.' : 'Complete el formulario para editar el usuario.'
+      return !this.user ? 'Complete el formulario para crear un nuevo usuario.' : 'Complete el formulario para editar el usuario.'
     },
     btntext() {
-      return !this.userid
+      return !this.user
         ? !this.$vuetify.breakpoint.xs
           ? 'Crear nuevo usuario'
           : 'Agregar'
@@ -376,7 +377,7 @@ export default {
 
   methods: {
     addressCheck() {
-      this.errorMessages = !this.name ? `Campos requeridos vacíos` : ''
+      this.errorMessages = !this.nombres ? `Campos requeridos vacíos` : ''
 
       return true
     },
@@ -388,19 +389,55 @@ export default {
         this.$refs[f].reset()
       })
     },
-    submit() {
-      this.formHasErrors = false
-
+    async submit() {
+      this.formHasErrors = false  
+      let resp = null
       Object.keys(this.form).forEach(f => {
         if (!this.form[f]) this.formHasErrors = true
         this.$refs[f].validate(true)
       })
-      // this.$auth.redirect('unauthorized', true)
-      this.$auth.redirect('administracion/usuarios', true)
+      if(!this.formHasErrors){
+          let user = 
+            {
+                isSubroganteActivado: this.isSubroganteActivado,
+                isBloqueado: this.isBloqueado,
+                nombres: this.nombres,
+                run: this.run,
+                dv: this.dv,
+                apellidos: this.apellidos,
+                correoInstitucional: this.correoInstitucional,
+                cargo: this.cargo,
+                entidad: this.entidad,
+                roles: this.roles,
+                seguidor: this.seguidor,
+                subrogante: this.subrogante,
+            }
+        if(this.userid){}
+        else
+          try{
+            resp = await this.$store.dispatch('usuarios/insertUser', user)
+          }catch(error) {console.log(error)}
+
+        const [valid, Toast] = isValidResponse(resp)
+
+        console.log(resp)
+
+        if (valid) {
+          Toast.success({
+            message: 'Usuario creado exitósamente',
+          })
+          this.$auth.redirect('administracion/usuarios', true)
+        }
+        else{
+           Toast.error({
+            message: 'Ha ocurrido un error al crear el usuario',
+          })
+        }
+      }
     },
-    get_permisos(permisos_) {
-      console.log(permisos_)
-      this.permisos = permisos_
+    get_roles(roles_) {
+      console.log(roles_)
+      this.roles = roles_
     },
   },
 }
