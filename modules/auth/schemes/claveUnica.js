@@ -38,7 +38,7 @@ export default class ClaveUnicaScheme {
     // this.$auth.redirect(this._redirectURI, true)
   }
 
-  async logout() {
+  async logout(idle) {
     const { url, method } = this.options.logout
     let resp = null
     try {
@@ -60,11 +60,8 @@ export default class ClaveUnicaScheme {
         message: 'Ocurrió un error inesperado, no se pudo desloguear al usuario',
       })
     }
-    Toast.success({
-      message: 'Usuario deslogueado',
-    })
     await this.reset()
-    this.$auth.redirect('home', true)
+    idle ? this.$auth.ctx.store.dispatch('session/expireSession') : this.$auth.ctx.store.dispatch('session/closeSession')
   }
 
   async mounted() {

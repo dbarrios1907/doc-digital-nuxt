@@ -27,7 +27,13 @@ export default {
   css: ['~/assets/styles/main.scss'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ['~/plugins/tooltip.client.js', '~/plugins/perfect-scrollbar.js', '~/plugins/style-guide.js', '~/plugins/scroll-lock.js'],
+  plugins: [
+    '~/plugins/v-idle.client.js',
+    '~/plugins/tooltip.client.js',
+    '~/plugins/perfect-scrollbar.js',
+    '~/plugins/style-guide.js',
+    '~/plugins/scroll-lock.js',
+  ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: ['~components/doc-digital'],
@@ -103,7 +109,7 @@ export default {
   auth: {
     defaultStrategy: 'claveUnica',
     redirect: {
-      home: '/',
+      home: '/ingreso',
       login: '/login', // redirect user when not connected
       callback: '/callback',
       unauthorized: '/401',
@@ -129,10 +135,17 @@ export default {
       })
 
       routes.push({
-        name: 'not-found',
-        path: '*',
-        component: resolve(__dirname, 'pages/404.vue'),
+        name: 'unauthorized',
+        path: '/401',
+        auth: false,
+        component: resolve(__dirname, 'pages/401.vue'),
       })
+
+      // routes.push({
+      //   name: 'not-found',
+      //   path: '*',
+      //   component: resolve(__dirname, 'pages/404.vue'),
+      // })
     },
   },
 }

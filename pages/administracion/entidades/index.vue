@@ -1,12 +1,11 @@
 <template>
   <div class="fill-height entidades" style="min-height: 780px">
-    <dx-breadcrumbs :items="breadcrums" v-if="!ismobil" class="mb-10" />
-    <dx-bodytitle class="" v-if="!ismobil">
+    <dx-breadcrumbs v-if="!ismobil" :items="breadcrums" class="mb-10" />
+    <dx-bodytitle class="">
       <template v-slot:title>
         <div class="weight-700 line-height-31 font-25">Entidades</div>
       </template>
     </dx-bodytitle>
-    <div class="weight-700 line-height-31 font-25" v-else>Entidades</div>
     <div class="mt-10 weight-400">
       <span class="mr-2">Mostrando hasta</span>
       <v-select
@@ -26,10 +25,10 @@
       />
       <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>17 entidades</b></span>
     </div>
-    <v-row>
+    <v-row no-gutters>
       <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
         <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
-        <!-- <dx-button class="line-height-24 weight-700" outlined>        
+        <!-- <dx-button class="line-height-24 weight-700" outlined>
           <span class="text-underline"> Filtra tu búsqueda </span>
           <v-icon small> mdi-filter </v-icon>
         </dx-button> -->
@@ -38,7 +37,7 @@
         <NuxtLink to="/administracion/entidades/insertar" class="text-underline weight-700 font-title"> + Agregar Entidad</NuxtLink>
       </v-col>
     </v-row>
-    <v-row class="mt-6">
+    <v-row class="mt-6" no-gutters>
       <DataTable
         :headers="computedHeaders"
         :items="valuess"
@@ -49,46 +48,48 @@
         show-select
         dense
         item-key="name"
-        @page-count="pageCount = $event"
         hide-default-footer
         calculate-widths
+        @page-count="pageCount = $event"
       >
         <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
           {{ h.text }}
           <v-icon
-            :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
-            :key="h.value"
-            @click="activeSearch(header, $event)"
             v-if="h.search"
-            >mdi-magnify</v-icon
+            :key="h.value"
+            :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
+            @click="activeSearch(header, $event)"
           >
-          <v-icon :class="['float-right', { focus: actived === h.value }]" :key="h.value" @click="openFilter(header, $event)" v-if="h.filterable"
-            >mdi-filter</v-icon
-          >
+            mdi-magnify
+          </v-icon>
+          <v-icon v-if="h.filterable" :key="h.value" :class="['float-right', { focus: actived === h.value }]" @click="openFilter(header, $event)">
+            mdi-filter
+          </v-icon>
         </template>
-        <template slot="body.prepend" v-if="searchname || searchid || filtered">
+        <template v-if="searchname || searchid || filtered" slot="body.prepend">
           <tr class="body-prepend">
             <td />
             <td>
               <v-text-field
+                v-model="filterValue"
                 type="text"
-                @focus="actived = 'name'"
                 hide-details
                 solo
+                v-if="searchname"
                 flat
                 outlined
-                v-model="filterValue"
                 label="Nombre"
-                v-if="searchname"
+                @focus="actived = 'name'"
               />
             </td>
             <td v-if="!ismobil">
-              <v-text-field type="text" @focus="actived = 'id'" hide-details solo flat outlined v-model="filterid" label="id" v-if="searchid" />
+              <v-text-field v-model="filterid" type="text" hide-details solo v-if="searchid" flat outlined label="id" @focus="actived = 'id'" />
             </td>
             <td v-if="!ismobil" class="filter">
               <dx-select
-                :ripple="false"
                 v-model="permiso"
+                v-if="filtered"
+                :ripple="false"
                 :items="permisosValues"
                 chips
                 label="Filtra por permisos"
@@ -98,7 +99,6 @@
                 hide-details
                 outlined
                 :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-                v-if="filtered"
                 @click="actived = 'access'"
                 @blur="actived = null"
               >
@@ -125,9 +125,9 @@
         </template>
 
         <template v-slot:[`item.entidadid`]="{ item: { entidadid } }">
-          <nuxt-link :to="'/administracion/entidades/editar/' + entidadid"
-            ><v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
-          >
+          <nuxt-link :to="'/administracion/entidades/editar/' + entidadid">
+            <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-square-edit-outline </v-icon>
+          </nuxt-link>
           <v-icon dense :class="[{ 'mr-4': !ismobil }]" @click="open_entidad_details(entidadid)"> mdi-eye </v-icon>
           <v-icon dense> mdi-delete-outline </v-icon>
         </template>
@@ -159,7 +159,7 @@
 
 <script>
 export default {
-  name: 'entidades',
+  name: 'Entidades',
   fetch() {
     console.log('FETCH ON USERS')
   },
@@ -262,6 +262,29 @@ export default {
       ],
     }
   },
+  computed: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
+    },
+    computedHeaders() {
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'entidadid' : h.value))
+    },
+    headers() {
+      return [
+        { text: 'Id', value: 'id', sortable: true, search: false },
+        {
+          text: 'Nombre',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+          filter: this.nameFilter,
+          search: true,
+        },
+        { text: 'Entidad dependiente', value: 'entidaddep', filterable: true, sortable: false, filter: this.entdepFilter },
+        { text: 'Acciones', value: 'entidadid', sortable: false },
+      ]
+    },
+  },
   methods: {
     actionColor() {
       const isDark = this.$vuetify.theme.dark
@@ -306,29 +329,6 @@ export default {
     open_entidad_details(id) {
       this.selected_entidad = id.toString()
       this.details_dialog = true
-    },
-  },
-  computed: {
-    ismobil() {
-      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
-    },
-    computedHeaders() {
-      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'entidadid' : h.value))
-    },
-    headers() {
-      return [
-        { text: 'Id', value: 'id', sortable: true, search: false },
-        {
-          text: 'Nombre',
-          align: 'start',
-          sortable: true,
-          value: 'name',
-          filter: this.nameFilter,
-          search: true,
-        },
-        { text: 'Entidad dependiente', value: 'entidaddep', filterable: true, sortable: false, filter: this.entdepFilter },
-        { text: 'Acciones', value: 'entidadid', sortable: false },
-      ]
     },
   },
 }

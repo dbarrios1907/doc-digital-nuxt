@@ -10,6 +10,9 @@ yarn-error.log*
 # exclude storybook build
 storybook-static
 
+# exclude npm lock
+package-lock.json
+
 # Runtime data
 pids
 *.pid

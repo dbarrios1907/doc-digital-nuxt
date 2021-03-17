@@ -13,10 +13,7 @@
         <DxEntitySelectionItem />
 
         <div class="py-4" style="display: flex; justify-content: center">
-          <dx-button style="background-color: white" large color="primary" text v-bind="$props">
-            <span class="underline-text"><a href="/documentos/nuevo-documento">Nuevo Documento</a></span>
-            <dx-icon right chevron regular> mdi-chevron-down </dx-icon>
-          </dx-button>
+          <create-doc-menu />
         </div>
       </slot>
       <slot name="menu">
@@ -24,11 +21,26 @@
           <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
         </v-list>
       </slot>
+      <template v-if="_isMobile">
+        <v-divider class="light my-2 mx-6" />
+
+        <NavListItem>
+          <dx-button color="light" text class="my-4">
+            <dx-icon left>mdi-help-circle</dx-icon>
+            <span class="pl-1 text-underline">Ayuda</span>
+          </dx-button>
+        </NavListItem>
+
+        <NavListItem>
+          <dx-button class="white--text text-underline mb-4 text-right" color="primary" @click="$auth.logout()"> Cerrar Sesión</dx-button>
+        </NavListItem>
+      </template>
     </dx-scrollbar>
   </v-navigation-drawer>
 </template>
 
 <script>
+import { responsiveMixin } from '~/shared/mixins/responsiveMixin'
 import NavListItem from './components/NavListItem.vue'
 import SidebarItem from './components/SidebarItem.vue'
 import _get from 'lodash.get'
@@ -41,7 +53,8 @@ export default {
     NavListItem,
     SidebarItem,
   },
-  inheritAttrs: true,
+  mixins: [responsiveMixin],
+  inheritAttrs: false,
   props: {
     routes: {
       type: Array,

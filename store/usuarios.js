@@ -99,8 +99,8 @@ export const getters = {
 
 export const mutations = {
   update: (state, id, newuser) => {
-      userIndex = state.users.findIndex((obj => obj.userid == id));
-      state.users[userIndex] = newuser        
+    userIndex = state.users.findIndex(obj => obj.userid == id)
+    state.users[userIndex] = newuser
   },
   setUserList: (state, listUsers, count) => {
     state.users = listUsers,
@@ -124,9 +124,9 @@ export const actions = {
     const params = {
       entidad: 0,
       isBloqueado: true,
-      nombre: "string",
-      orderby: "string",
-      ordertype: "ASC",
+      nombre: 'string',
+      orderby: 'string',
+      ordertype: 'ASC',
       page_number: 0,
       page_size: 0,
       roles: [
@@ -222,5 +222,4 @@ export const actions = {
     return  resp
     
   },
-
 }

@@ -7,6 +7,7 @@ networks:
 
 services:
   docdigital:
+    image: docdigital-img
     container_name: docdigital
     networks:
       - corp
@@ -15,6 +16,6 @@ services:
     volumes:
       - ./dist:/app/dist
     ports:
-      - "3000:80"
+      - "4000:80"
     env_file:
       - ./.env.production

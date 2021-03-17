@@ -9,7 +9,7 @@ module.exports = function claveUnica(strategy) {
     logout: { url: '/api/auth/logout', method: 'post' },
     unauthorizedPath: '/401',
     tokenName: 'Authorization',
-    token_key: 'access_token',
+    token_key: 'token',
     code_key: 'code',
     state_key: 'state',
     token_type: 'Bearer',

@@ -87,6 +87,10 @@ export default {
       return this.user
     }
   },
+  created() {
+    this.userid = this.$route.params.id
+    console.log('REQUEST')
+  },
 }
 </script>
 <style>

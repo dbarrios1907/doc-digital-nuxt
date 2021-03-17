@@ -1,12 +1,11 @@
 <template>
   <div class="fill-height usuarios" style="min-height: 780px">
-    <dx-breadcrumbs :items="breadcrums" v-if="!ismobil" class="mb-10" />
-    <dx-bodytitle class="" v-if="!ismobil">
+    <dx-breadcrumbs v-if="!ismobil" :items="breadcrums" class="mb-10" />
+    <dx-bodytitle class="">
       <template v-slot:title>
         <div class="weight-700 line-height-31 font-25">Usuarios</div>
       </template>
     </dx-bodytitle>
-    <div class="weight-700 line-height-31 font-25 px-4" v-else>Usuarios</div>
     <div v-if="!isListEmpty" class="mt-10 weight-400" :class="[{ 'px-4': ismobil }]">
       <span class="mr-2">Mostrando hasta</span>
       <v-select
@@ -27,6 +26,7 @@
       <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>17 usuarios</b></span>
     </div>
     <dx-alert
+      v-else
       class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0"
       :class="[{ 'px-4': ismobil }]"
       absolute
@@ -34,11 +34,11 @@
       right
       type="error"
       outlined
-      :showLeftIcon="false"
-      :showRightIcon="false"
-      v-else
-      >No se han encontrado coincidencias.</dx-alert
+      :show-left-icon="false"
+      :show-right-icon="false"
     >
+      No se han encontrado coincidencias.
+    </dx-alert>
     <v-row :class="[{ 'px-4': ismobil }]">
       <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
         <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
@@ -81,6 +81,7 @@
               @page-count="pageCount = $event"
               hide-default-footer
               calculate-widths
+              @page-count="pageCount = $event"
             >
               <!-- <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
                 {{ h.text }}
@@ -197,60 +198,63 @@
               show-select
               dense
               item-key="name"
-              @page-count="pageCount = $event"
               hide-default-footer
               calculate-widths
+              @page-count="pageCount = $event"
             >
               <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
                 {{ h.text }}
                 <v-icon
-                  :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
-                  :key="h.value"
-                  @click="activeSearch(header, $event)"
                   v-if="h.search"
-                  >mdi-magnify</v-icon
-                >
-                <v-icon
-                  :class="['float-right', { focus: actived === h.value }]"
                   :key="h.value"
-                  @click="openFilter(header, $event)"
-                  v-if="h.filterable"
-                  >mdi-filter</v-icon
+                  :class="[{ iconsearch: h.search }, { focus: actived === h.value }]"
+                  @click="activeSearch(header, $event)"
                 >
+                  mdi-magnify
+                </v-icon>
+                <v-icon
+                  v-if="h.filterable"
+                  :key="h.value"
+                  :class="['float-right', { focus: actived === h.value }]"
+                  @click="openFilter(header, $event)"
+                >
+                  mdi-filter
+                </v-icon>
               </template>
-              <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+              <template v-if="searchname || searchrut || filtered" slot="body.prepend">
                 <tr class="body-prepend">
                   <td />
                   <td>
                     <v-text-field
+                      v-model="filterValue"
                       type="text"
-                      @focus="actived = 'name'"
                       hide-details
                       solo
+                      v-if="searchname"
                       flat
                       outlined
-                      v-model="filterValue"
                       label="Nombre"
-                      v-if="searchname"
+                      @focus="actived = 'name'"
                     />
                   </td>
                   <td v-if="!ismobil">
                     <v-text-field
+                      v-model="filterRut"
                       type="text"
-                      @focus="actived = 'rut'"
                       hide-details
                       solo
+                      v-if="searchrut"
                       flat
                       outlined
-                      v-model="filterRut"
                       label="Rut"
-                      v-if="searchrut"
+                      @focus="actived = 'rut'"
                     />
                   </td>
                   <td v-if="!ismobil" class="filter">
                     <dx-select
-                      :ripple="false"
                       v-model="permiso"
+                      v-if="filtered"
+                      :ripple="false"
                       :items="permisosValues"
                       chips
                       label="Filtra por permisos"
@@ -260,7 +264,6 @@
                       hide-details
                       outlined
                       :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-                      v-if="filtered"
                       @click="actived = 'access'"
                       @blur="actived = null"
                     >
@@ -338,7 +341,7 @@ import { isValidResponse } from '~/shared/utils/request'
 export default {
   name: 'Usuarios',
   fetch() {
-    // console.log('FETCH ON USERS')    
+    // console.log('FETCH ON USERS')
     this.$store.dispatch('usuarios/getUsers')
   },
   data() {
@@ -381,6 +384,41 @@ export default {
       loading: false,
       selectedUser: null,
     }
+  },
+  computed: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
+    },
+    computedHeaders() {
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'name' || h.value == 'actions' : h.value))
+    },
+    headers() {
+      return [
+        {
+          text: 'Nombre',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+          filter: this.nameFilter,
+          search: true,
+        },
+        { text: 'Rut', value: 'rut', sortable: true, filter: this.nameFilter1, search: true },
+        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Acciones', value: 'actions', sortable: false },
+      ]
+    },
+    isListEmpty() {
+      const activos = this.$store.getters['usuarios/getActivos']
+      const inactivos = this.$store.getters['usuarios/getInctivos']
+      if (this.activeTab === 'Activos') return activos.length === 0
+      else return inactivos.length === 0
+    },
+    usuariosActivos() {
+      return this.$store.getters['usuarios/getActivos']
+    },
+    usuariosInactivos() {
+      return this.$store.getters['usuarios/getInctivos']
+    },
   },
   methods: {
     actionColor() {
