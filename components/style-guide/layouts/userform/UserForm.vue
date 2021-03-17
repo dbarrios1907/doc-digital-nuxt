@@ -1,7 +1,7 @@
 <template>
   <v-row class="px-9 user-form" :userid="userid">
     <perfect-scrollbar :style="{ height: '100%' }">
-      <v-col cols="12" v-if="!ismobil" class="mt-6 d-none d-md-flex d-lg-flex d-xl-flex">
+      <v-col cols="12" class="mt-6 d-none d-md-flex d-lg-flex d-xl-flex">
         <dx-bodytitle>
           <template v-slot:title>
             <div class="weight-700 text-md-h4 line-height-31">Nuevo Usuario</div>

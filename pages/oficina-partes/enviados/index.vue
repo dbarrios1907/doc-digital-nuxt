@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <perfect-scrollbar :style="{ height: '100%', width: '100%' }">
-        <v-col cols="12" class="mt-3 mb-7 d-none d-md-flex d-lg-flex d-xl-flex">
+        <v-col cols="12" class="mt-3 mb-7 d-md-flex d-lg-flex d-xl-flex">
           <dx-bodytitle>
             <template v-slot:title>
               <div class="weight-700 font-25 line-height-31">Estás en el Módulo de Documentos Enviados</div>

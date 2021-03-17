@@ -71,7 +71,7 @@
         </svg>
       </span>
       <slot>
-        <span :style="{ 'border-left': `2px solid ${dcolor}`, color: dcolor}" style="width: 211px; height: 40px" class="d-flex align-center ml-4 pl-4 line-height-16 font-nunito font-small weight-300">
+        <span v-if="!$vuetify.breakpoint.xs" :style="{ 'border-left': `2px solid ${dcolor}`, color: dcolor}" style="width: 211px; height: 40px" class="d-flex align-center ml-4 pl-4 line-height-16 font-nunito font-small weight-300">
           Plataforma de Comunicaciones oficiales del Estado</span
         >
       </slot>
@@ -80,6 +80,7 @@
 </template>
 <script>
 import BrandWatermark from '../BrandWatermark/BrandWatermark.svg'
+
 export default {
   name: 'HeaderLogo',
   components: {

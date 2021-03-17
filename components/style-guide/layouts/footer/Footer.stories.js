@@ -1,5 +1,5 @@
 export default {
-  title: 'Style Guide/Footer',
+  title: 'Style Guide/Layouts/Footer',
   argTypes: {
     color: { control: { type: 'color' } },
   },

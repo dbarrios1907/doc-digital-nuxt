@@ -27,7 +27,13 @@ export default {
   css: ['~/assets/styles/main.scss'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ['~/plugins/tooltip.client.js', '~/plugins/perfect-scrollbar.js', '~/plugins/style-guide.js', '~/plugins/scroll-lock.js'],
+  plugins: [
+    '~/plugins/v-idle.client.js',
+    '~/plugins/tooltip.client.js',
+    '~/plugins/perfect-scrollbar.js',
+    '~/plugins/style-guide.js',
+    '~/plugins/scroll-lock.js',
+  ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: ['~components/doc-digital'],

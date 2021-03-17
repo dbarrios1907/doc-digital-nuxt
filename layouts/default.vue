@@ -1,40 +1,70 @@
 <template>
   <v-app class="dark">
     <div class="dx-notification-container" />
-    <dx-navigation v-model="drawer" :routes="routes" :clipped="clipped" fixed app @onmouseover="onMouseOver" @mouseleave="onMouseLeave" />
+    <dx-navigation
+      v-model="drawer"
+      :right="_rightDrawer"
+      :routes="routes"
+      :clipped="clipped"
+      fixed
+      app
+      @onmouseover="onMouseOver"
+      @mouseleave="onMouseLeave"
+    />
 
-    <dx-header :clipped-left="clipped" fixed app elevation="0" :height="92" />
+    <dx-header :drawer="drawer" :clipped-left="clipped" fixed app elevation="0" :height="92" @onToggleMenu="toggleDrawer" />
     <v-main app>
-      <v-container fluid class="py-8 px-10">
+      <v-container fluid class="py-8 px-5 px-sm-10">
         <nuxt />
       </v-container>
     </v-main>
 
     <dx-footer :absolute="!fixed" class="mt-8 px-0 py-0" app />
+
+    <dx-session-closed-modal v-model="sessionClosed" />
+    <dx-session-expired-modal v-model="sessionExpired" @onClose="onExpirationModalClose" />
+    <v-idle :loop="true" :wait="0" :duration="60 * 30" @idle="onIdle" />
   </v-app>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data() {
     return {
       clipped: true, // toggles nav full height
-      drawer: false,
       fixed: false,
+      drawer: this.$vuetify.breakpoint.lg,
       miniVariant: false,
       right: true,
-      rightDrawer: false,
       lockBodyScroll: false,
-      title: 'Vuetify.js',
     }
   },
 
   computed: {
     ...mapState(['routes']),
+    sessionExpired() {
+      return this.$store.state.session.expired
+    },
+    sessionClosed() {
+      return this.$store.state.session.closed
+    },
+    _isMobile() {
+      return this.$vuetify.breakpoint.lg
+    },
+    _rightDrawer() {
+      return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md
+    },
   },
   methods: {
+    ...mapActions({
+      closeSession: 'session/closeSession',
+      expireSession: 'session/expireSession',
+    }),
+    toggleDrawer() {
+      this.drawer = !this.drawer
+    },
     onMouseOver() {
       this.lockBodyScroll = true
       console.log(this.lockBodyScroll)
@@ -42,6 +72,18 @@ export default {
     onMouseLeave() {
       this.lockBodyScroll = false
     },
+
+    onIdle() {
+      this.$auth.logout(true)
+    },
+
+    onExpirationModalClose() {
+      this.$auth.redirect('unauthorized', true)
+    },
+  },
+  onCreate() {
+    console.log(this.sessionExpired)
+    console.log(this)
   },
 }
 </script>

@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { responsiveMixin } from '~/shared/mixins/responsiveMixin'
 import NavListItem from './components/NavListItem.vue'
 import SidebarItem from './components/SidebarItem.vue'
 import _get from 'lodash.get'
@@ -52,7 +53,8 @@ export default {
     NavListItem,
     SidebarItem,
   },
-  inheritAttrs: true,
+  mixins: [responsiveMixin],
+  inheritAttrs: false,
   props: {
     routes: {
       type: Array,
@@ -71,10 +73,6 @@ export default {
     _color() {
       const isDark = _get(this, `$vuetify.theme.isDark.`)
       return isDark ? '#093F76' : '#093F75'
-    },
-
-    _isMobile() {
-      return this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs
     },
   },
   watch: {

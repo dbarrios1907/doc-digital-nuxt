@@ -82,8 +82,8 @@ export const state = () => ({
           meta: { title: 'Entidades', icon: 'mdi-bank' },
         },
         {
-          path: 'correos-de-notificacion',
-          name: 'correos-de-notificacion',
+          path: 'correos',
+          name: 'correos',
           meta: { title: 'Correos de Notificación', icon: 'mdi-email' },
         },
       ],
