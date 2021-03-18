@@ -1,19 +1,61 @@
 <template>
   <div :class="['fill-height', { 'px-custom-6': ismobil }]">
-    <dx-breadcrumbs v-if="!ismobil" :items="breadcrums" class="mb-10" />
-    <userform :userid="userid" />
+    <dx-breadcrumbs :items="breadcrums" v-if="!ismobil" class="mb-10" />
+    <userform :user="getuser" />
   </div>
 </template>
 
 <script>
+import { isValidResponse } from '~/shared/utils/request'
 export default {
   name: 'InsertarUsuario',
-  fetch() {
-    console.log('FETCH ON USERS')
+  async fetch() {
+     let resp = null
+     try{ 
+        resp = await this.$store.dispatch('usuarios/getUser', this.$route.params.id)
+      }catch(error) {}
+
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Usuario no encontrado',
+        })
+      }
+      else{
+        this.user = resp.result
+      }
+    
   },
   data() {
     return {
-      userid: String,
+      user: {
+        type: Object,
+        default: {
+         id : null,
+         run: null,
+         dv: null,
+         nombres: null,
+         apellidos: null,
+         correoInstitucional: null,
+         cargo: null,
+         entidad: {
+            id: null,
+            nombre: null,
+            entidadDependencia: null,
+            correoOficinaPartes: null,
+            region: null,
+            provincia: null,
+            comuna: null,
+         },
+         subrogante: null,
+         isSubroganteActivado: false,
+         seguidor: null,
+         roles: [],    
+         isBloqueado: false,
+         nombreCompleto: null
+        },
+      },
       breadcrums: [
         {
           text: 'Administración',
@@ -33,10 +75,17 @@ export default {
       ],
     }
   },
+  created() {
+    // this.userid = this.$route.params.id
+    // console.log('REQUEST')
+  },
   computed: {
     ismobil() {
       return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
+    getuser(){
+      return this.user
+    }
   },
   created() {
     this.userid = this.$route.params.id
