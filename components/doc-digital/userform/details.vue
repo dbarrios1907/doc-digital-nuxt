@@ -1,5 +1,5 @@
 <template>
-  <v-dialog overlay-opacity="0.55" overlay-color="#001C41" v-model="dialog" max-width="525px" :content-class="ismobil" class="v-dialog-details">
+  <v-dialog overlay-opacity="0.55" :user="user" rlay-color="#001C41" v-model="dialog" max-width="525px" :content-class="ismobil" class="v-dialog-details">
     <v-card>
       <v-card-title>
         <h5 class="font-title weight-700 darken3--text font-roboto">Usuario</h5>
@@ -8,44 +8,44 @@
       </v-card-title>
       <v-divider></v-divider>
 
-      <v-card-text class="mt-12">
+      <v-card-text class="mt-6">
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Estado: </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> Activo </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getestado}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">RUT: </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> 12345678-9 </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getrut}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Nombre(s): </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> Nombre Nombre </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getnombres}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Apellidos: </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> Apellidos Apellidos </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getapellidos}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Correo: </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> nombreapellido@mail.com </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getemail}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Cargo: </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> Nombre del cargo seleccionado </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getcargo}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']"
             >Permisos adicionales:
           </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> Superadmin </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getpermisos}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Subrogante: </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> Nombre Apellido Apellido </v-col>
+          <v-col class="weight-400 line-height-30 font-20"> {{getsubrogante}} </v-col>
         </v-row>
         <v-row :class="['align-center', ismobil]">
           <v-col cols="auto" style="weight-700 max-width: 140px" :class="['flex weight-700 line-height-30 font-20 py-1']">Seguidor: </v-col>
-          <v-col class="weight-400 line-height-30 font-20"> Nombre Apellido Apellido </v-col>
+          <v-col class="weight-400 line-height-30 font-20">{{getseguidor}} </v-col>
         </v-row>
       </v-card-text>
 
@@ -64,11 +64,11 @@ export default {
   props: {
     dialog: {
       type: Boolean,
-      default: '',
+      default: '-',
     },
-    userid: {
-      type: String,
-      default: '',
+    user: {
+      type: Object,
+      default: null,
     },
   },
   data() {
@@ -78,6 +78,33 @@ export default {
     ismobil() {
       return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
+    getestado(){
+      return this.user ? (!this.user.isBloqueado ? 'Activo': 'Inactivo') : '-'
+    },
+    getrut(){
+      return this.user ? (this.user.run + (this.user.dv ? '-' + this.user.dv : '-')) : '-'
+    },    
+    getnombres(){
+      return this.user ? (this.user.nombres ? this.user.nombres : '-') : '-'
+    }, 
+    getapellidos(){
+      return this.user ? (this.user.apellidos ? this.user.apellidos : '-') : '-'
+    },
+    getemail(){
+      return this.user ? (this.user.correoInstitucional ? this.user.correoInstitucional : '-') : '-'
+    },    
+    getcargo(){
+      return this.user ? (this.user.cargo ? this.user.cargo : '-') : '-'
+    },    
+    getpermisos(){
+      return '-' //this.user ? (this.user.roles ? this.user.roles.join(', ') : '-') : '-'
+    },
+    getsubrogante(){
+      return this.user ? (this.user.subrogante ? this.user.subrogante : '-') : '-'
+    },    
+    getseguidor(){
+      return this.user ? (this.user.seguidor ? this.user.seguidor : '-') : '-'
+    },
   },
 }
 </script>
@@ -86,6 +113,7 @@ export default {
 .v-dialog__content .v-dialog,
 .v-dialog:not(.v-dialog--fullscreen) {
   border-radius: 0px !important;
+  max-height: 100% !important;
 }
 .v-card__title {
   max-height: 60px !important;
