@@ -5,7 +5,7 @@
         <v-col cols="12" class="mt-3 mb-7 d-md-flex d-lg-flex d-xl-flex">
           <dx-bodytitle>
             <template v-slot:title>
-              <div class="weight-700 font-25 line-height-31">Firmar</div>
+              <div class="weight-700 font-25 line-height-31">Firmar documentos</div>
             </template>
             <template v-slot:subtitle>
               <div class="weight-400 mt-3 font-regular line-height-24">Revisa tus documentos pendientes por firmar.</div>
@@ -120,13 +120,14 @@
               </dx-button>
             </v-col>
           </v-row>
+
           <dx-tabs :items="tabs" tabtype="primary">
             <template v-slot:tab-item>
               <v-tab-item v-for="item in items" :key="item.tab">
                 <DataTable
                   color="primary"
                   :headers="computedHeaders"
-                  :items="valuess"
+                  :items="documentos"
                   :page.sync="page"
                   :items-per-page="itemsPerPage"
                   :class="['bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
@@ -135,8 +136,12 @@
                   item-key="tema"
                   @page-count="pageCount = $event"
                 >
-                  <template v-slot:[`item.tema`]="{ item: { tema, href } }" class="column">
-                    <a class="breaktext" :href="href">{{ tema }}</a>
+                  <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
+                    <a class="breaktext" :href="'/documentos/bandeja-firmar/details/' + id">{{ materia }}</a>
+                  </template>
+
+                  <template v-slot:[`item.createAt`]="{ item: { createAt } }" class="column">
+                    {{ formatdate(createAt) }}
                   </template>
 
                   <template v-slot:[`item.access`]="{ item: { access } }">
@@ -240,7 +245,11 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
+  fetch() {
+    this.$store.dispatch('documentos/getDocuments')
+  },
   data: () => ({
     dialog: false,
     picker1: '',
@@ -270,7 +279,7 @@ export default {
         folio: '-',
         creacion: '10-09-2020 9:58',
         actualizacion: '10-09-2020 9:58',
-        href: '/documentos/firmar-documento/details/1',
+        href: '/documentos/bandeja-firmar/details/1',
       },
       {
         tema: 'Oficio ORD Permisos Administrativos',
@@ -348,24 +357,30 @@ export default {
     computedHeaders() {
       return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'tema' || h.value == 'actions' : h.value))
     },
+    documentos() {
+      return this.$store.getters['documentos/getDocs']
+    },
     headers() {
       return [
         {
           text: 'Tema',
           align: 'start',
-          value: 'tema',
+          value: 'materia',
           sortable: true,
           filter: this.temaFilter,
         },
-        { text: 'Tipo', value: 'tipo', sortable: true, filter: this.tipoFilter },
+        { text: 'Tipo', value: 'tipoDocumentoOficial', sortable: true, filter: this.tipoFilter },
         { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
-        { text: 'Creación', value: 'creacion', sortable: true, filter: this.creacionFilter },
-        { text: 'Actualización', value: 'actualizacion', sortable: true, filter: this.actualizacionFilter },
+        { text: 'Creación', value: 'createAt', sortable: true, filter: this.creacionFilter },
+        { text: 'Actualización', value: 'updateAt', sortable: true, filter: this.actualizacionFilter },
         { text: 'Ver', value: 'actions', sortable: false },
       ]
     },
   },
   methods: {
+    formatdate(date) {
+      return moment(date).format('DD-MM-YYYY hh:mm')
+    },
     updatefield(key, data) {
       this[key] = data
     },
