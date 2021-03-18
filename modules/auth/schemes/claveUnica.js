@@ -141,7 +141,7 @@ export default class ClaveUnicaScheme {
       // with `auth: false` to avoid an unnecessary redirect from callback to login)
       if (!pageIsInGuestMode && (!callback || !insidePage(callback))) {
         await this.reset()
-        this.$auth.redirect('home', true)
+        this.$auth.redirect('unauthorized', true)
         return false
       }
     }
@@ -154,7 +154,7 @@ export default class ClaveUnicaScheme {
 
     if (!token || !token.length) {
       await this.reset()
-      this.$auth.redirect('home', true)
+      this.$auth.redirect('unauthorized', true)
     }
 
     this.setUserToken(token)
@@ -217,7 +217,7 @@ export default class ClaveUnicaScheme {
         token = this.$auth.getToken(this.name)
       } else {
         await this.reset()
-        this.$auth.redirect('home', true)
+        this.$auth.redirect('unauthorized', true)
       }
     }
 
