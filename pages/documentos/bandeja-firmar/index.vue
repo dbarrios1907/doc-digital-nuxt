@@ -270,7 +270,7 @@ export default {
         folio: '-',
         creacion: '10-09-2020 9:58',
         actualizacion: '10-09-2020 9:58',
-        href: '/documentos/firmar-documento/details/1',
+        href: '/documentos/bandeja-firmar/details/1',
       },
       {
         tema: 'Oficio ORD Permisos Administrativos',
