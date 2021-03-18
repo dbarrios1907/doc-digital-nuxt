@@ -6,95 +6,23 @@ export const headers = {
 export const state = () => ({  
   selectedUser: null,
   count: 0,
-  users: [
-    // {
-    //   userid: 1,
-    //   name: 'Nombre Nombre Apellido Apellido',
-    //   rut: '23.266.206-8',
-    //   access: ['Administrador', 'Jefe de servicio'],
-    //   status: 'active',
-    // },
-    // {
-    //   userid: 2,
-    //   name: 'Nombre2 Nombre Apellido Apellido',
-    //   rut: '21.266.206-8',
-    //   access: ['Administrador'],
-    //   status: 'active',
-    // },
-    // {
-    //   userid: 3,
-    //   name: 'Nombre3 Nombre Apellido Apellido',
-    //   rut: '21.256.206-8',
-    //   access: ['Jefe de servicio'],
-    //   status: 'active',
-    // },
-    // {
-    //   userid: 4,
-    //   name: 'Nombre4 Nombre Apellido Apellido',
-    //   rut: '20.266.206-8',
-    //   access: ['Operador'],
-    //   status: 'active',
-    // },
-    // {
-    //   userid: 5,
-    //   name: 'Nombre5 Nombre Apellido Apellido',
-    //   rut: '20.200.206-8',
-    //   access: ['Jefe de servicio'],
-    //   status: 'active',
-    // },
-    // {
-    //   userid: 6,
-    //   name: 'Nombre6 Nombre Apellido Apellido',
-    //   rut: '24.266.206-8',
-    //   access: ['Oficina de partes'],
-    //   status: 'inactive',
-    // },
-    // {
-    //   userid: 7,
-    //   name: 'Nombre7 Nombre Apellido Apellido',
-    //   rut: '25.266.206-8',
-    //   access: ['Administrador'],
-    //   status: 'inactive',
-    // },
-    // {
-    //   userid: 8,
-    //   name: 'Nombre8 Nombre Apellido Apellido',
-    //   rut: '25.366.206-8',
-    //   access: ['Operador'],
-    //   status: 'inactive',
-    // },
-    // {
-    //   userid: 9,
-    //   name: 'Nombre9 Nombre Apellido Apellido',
-    //   rut: '26.266.206-8',
-    //   access: ['Operador'],
-    //   status: 'inactive',
-    // },
-    // {
-    //   userid: 10,
-    //   name: 'Nombre10 Nombre Apellido Apellido',
-    //   rut: '27.266.206-8',
-    //   access: ['Oficina de partes'],
-    //   status: 'inactive',
-    // },
-  ],
+  users: [],
 })
 
 export const getters = {
     getActivos(state){
       return state.users.filter(function(user) {
         return !user.isBloqueado;
-      });
+      })
     },
     getInctivos(state){
       return state.users.filter(function(user) {
         return user.isBloqueado;
-      });
+      })
     }, 
     getSelectedUser(state){
         return state.selectedUser
-    }
-    
+    }    
 }
 
 export const mutations = {
@@ -103,7 +31,23 @@ export const mutations = {
     state.users[userIndex] = newuser
   },
   setUserList: (state, listUsers, count) => {
-    state.users = listUsers,
+    let users = [];
+    for(let i = 0; i < listUsers.length; i++){
+      users.push({
+        id : listUsers[i].id,
+        rut : listUsers[i].run + '-' + listUsers[i].dv,
+        nombres : listUsers[i].nombreCompleto,
+        apellidos : listUsers[i].apellidos,
+        correoInstitucional : listUsers[i].correoInstitucional,
+        cargo : listUsers[i].cargo,
+        subrogante : listUsers[i].subrogante,
+        roles:  listUsers[i].roles,
+        isBloqueado : listUsers[i].isBloqueado,
+        isDelete : listUsers[i].isDelete,
+        nombreCompleto : listUsers[i].nombreCompleto
+      })
+    }
+    state.users = users
     state.count = count     
   },
   setSelecterUser : (state, user) => {
@@ -135,10 +79,10 @@ export const actions = {
       run: 0
     }
     try {
-      resp = await this.$auth.requestWith('claveUnica', {
+      resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/',
-        headers,
+        // headers,
         // params: params,
         // data: body_,
       })
@@ -152,24 +96,22 @@ export const actions = {
       else{
         commit('setUserList', resp.result, resp.count)
       }
-    } catch (err) {}
-    
+    } catch (err) {}   
     
   },
 
   async getUser({ commit }, id){
     let resp = null
     try {
-      resp = this.$auth.requestWith('claveUnica', {
+      resp = this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/'+id,
-        headers,
+        // headers,
       })
     } catch (err) {}
     
     commit('setSelecterUser', resp.result)
-    return resp
-    
+    return resp    
   },
 
   
@@ -191,11 +133,11 @@ export const actions = {
     }
     
     try {
-      resp = await this.$auth.requestWith('claveUnica', {
+      resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
         url: '/usuarios/',
         data: body_,
-        headers
+        // headers
       })
     } catch (err) {}
 
@@ -206,10 +148,10 @@ export const actions = {
   async deleteUser({ commit }, id){
     let resp = null
     try {
-      resp = await this.$auth.requestWith('claveUnica', {
+      resp = await this.$auth.requestWith(STRATEGY, {
         method: 'DELETE',
         url: '/usuarios/'+id,
-        headers, 
+        // headers, 
       })
     } catch (err) {}
 
@@ -219,7 +161,6 @@ export const actions = {
     if (valid) {
       commit('deleteUser', id)
     }
-    return  resp
-    
+    return  resp    
   },
 }

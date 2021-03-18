@@ -202,6 +202,8 @@
                 :items="roles_select"
                 @get-selected="get_roles"
                 label="Seleccione roles"
+                item-text="name"
+                item-value="key"
                 multiple
                 v-bind="$props"
                 closableItems
@@ -296,7 +298,7 @@ export default {
   data() {
     return {
       entidades: ['Entidad 1', 'Entidad 2'],
-      roles_select: ['ROLE_USUARIO', 'ROLE_OFICINA_PARTES', 'ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_JEFE_SERVICIO'],
+      // roles_select: ['ROLE_USUARIO', 'ROLE_OFICINA_PARTES', 'ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_JEFE_SERVICIO'],
       subrogantes: ['Subragante 1', 'Subragante 2'],
       seguidores: ['Miguel', 'Juan'],
       labelClass: 'text-body-1 font-20',
@@ -334,6 +336,32 @@ export default {
       rules: {
         entidadrequired: [v => !!v || 'Campo requerido'],
       },
+      roles_select:[
+        {
+          key : 'ROLE_USUARIO',
+          name : 'Operador'
+        },
+        {
+          key : 'ROLE_VER_RESERVADOS',
+          name : 'Ver reservados'
+        },
+        {
+          key : 'ROLE_OFICINA_PARTES',
+          name : 'Oficina de partes'
+        },
+        {
+          key : 'ROLE_ADMIN',
+          name : 'Administrador'
+        },
+        {
+          key : 'ROLE_JEFE_SERVICIO',
+          name : 'Jefe de servicio'
+        },
+        {
+          key : 'ROLE_SUPERADMIN',
+          name : 'Súper administrador'
+        }
+      ]
     }
   },
 
@@ -426,7 +454,7 @@ export default {
           Toast.success({
             message: 'Usuario creado exitósamente',
           })
-          this.$auth.redirect('administracion/usuarios', true)
+          this.$auth.redirect('/administracion/usuarios', false)
         }
         else{
            Toast.error({
@@ -436,7 +464,7 @@ export default {
       }
     },
     get_roles(roles_) {
-      console.log(roles_)
+      // console.log(roles_)
       this.roles = roles_
     },
   },
