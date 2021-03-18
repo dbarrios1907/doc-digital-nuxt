@@ -1,8 +1,5 @@
 import { isValidResponse } from '~/shared/utils/request'
 export const STRATEGY = "claveUnica"
-export const headers = {
-  'Authorization' : 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJNYXJpYSBDYXJtZW4gRGUgbG9zIGFuZ2VsZXMgRGVsIHJpbyBHb256YWxleiIsImN0eCI6eyJrZXkiOjMsInJ1biI6ODg4ODg4ODgsIm5vbWJyZSI6Ik1hcmlhIENhcm1lbiBEZSBsb3MgYW5nZWxlcyBEZWwgcmlvIEdvbnphbGV6IiwiY2FyZ28iOiJEZXZPcHMiLCJlbnRpZGFkSWQiOjEsImVudGlkYWROb21icmUiOiJFbnRpZGFkIFRlc3QgS0UiLCJjb250ZXh0VHlwZSI6IkNUWF9VU0VSIn0sImlkIjozLCJjdHhfdHlwZSI6InVzciIsImV4cCI6MTYxNTk5MzAwNCwiaWF0IjoxNjE1OTg5NDA0LCJhdXRob3JpdGllcyI6WyJST0xFX1VTVUFSSU8iLCJST0xFX09GSUNJTkFfUEFSVEVTIiwiUk9MRV9BRE1JTiJdfQ.nRHMM-34VZ5_jgWtUnleI9L4_Skncs-Qzw0jhOgCdGBbu2JQQg8edUeU1hyjs4nWTKOHCS1x_uNXlkc1ajUyaA'
-}
 export const state = () => ({  
   selectedUser: null,
   count: 0,
@@ -41,7 +38,7 @@ export const mutations = {
         correoInstitucional : listUsers[i].correoInstitucional,
         cargo : listUsers[i].cargo,
         subrogante : listUsers[i].subrogante,
-        roles:  listUsers[i].roles,
+        roles:  listUsers[i].roles ? listUsers[i].roles.filter((rol) => {return rol != 'ROLE_USUARIO'}) : [],
         isBloqueado : listUsers[i].isBloqueado,
         isDelete : listUsers[i].isDelete,
         nombreCompleto : listUsers[i].nombreCompleto
@@ -56,6 +53,15 @@ export const mutations = {
   deleteUser : (state, id) => {
     let newUsers =  state.users.filter(function(user) { return user.id != id; });
     state.users = newUsers
+  },
+  setUserStatus : (state, {id, status}) => {
+    try{
+      let newUsers =  state.users;
+      let objIndex = newUsers.findIndex((obj =>(obj.id == id))) 
+      newUsers[objIndex].isBloqueado = status
+      state.users = newUsers
+    }
+    catch(err){}
   }
 }
 
@@ -82,9 +88,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/',
-        // headers,
-        // params: params,
-        // data: body_,
       })
       const [valid, Toast] = isValidResponse(resp)
 
@@ -128,8 +131,6 @@ export const actions = {
       cargo: user.cargo,
       entidad: {},
       roles: user.roles
-      // seguidor: user.seguidor[0],
-      // subrogante: user.subrogante[0]
     }
     
     try {
@@ -160,6 +161,24 @@ export const actions = {
 
     if (valid) {
       commit('deleteUser', id)
+    }
+    return  resp    
+  },
+
+  async setUserStatus({ commit }, {id, status}){
+    let resp = null
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'POST',
+        url: '/usuarios/'+id+'/activar/'+status
+        // headers, 
+      })
+    } catch (err) {}
+
+    const [valid, Toast] = isValidResponse(resp)
+
+    if (valid) {
+      commit('setUserStatus', {id, status})
     }
     return  resp    
   },
