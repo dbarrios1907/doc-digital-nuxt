@@ -1,12 +1,11 @@
 <template>
   <div class="fill-height entidades" style="min-height: 780px">
     <dx-breadcrumbs v-if="!ismobil" :items="breadcrums" class="mb-10" />
-    <dx-bodytitle v-if="!ismobil" class="">
+    <dx-bodytitle class="">
       <template v-slot:title>
         <div class="weight-700 line-height-31 font-25">Entidades</div>
       </template>
     </dx-bodytitle>
-    <div v-else class="weight-700 line-height-31 font-25">Entidades</div>
     <div class="mt-10 weight-400">
       <span class="mr-2">Mostrando hasta</span>
       <v-select
@@ -26,7 +25,7 @@
       />
       <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>17 entidades</b></span>
     </div>
-    <v-row>
+    <v-row no-gutters>
       <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
         <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
         <!-- <dx-button class="line-height-24 weight-700" outlined>
@@ -38,7 +37,7 @@
         <NuxtLink to="/administracion/entidades/insertar" class="text-underline weight-700 font-title"> + Agregar Entidad</NuxtLink>
       </v-col>
     </v-row>
-    <v-row class="mt-6">
+    <v-row class="mt-6" no-gutters>
       <DataTable
         :headers="computedHeaders"
         :items="valuess"

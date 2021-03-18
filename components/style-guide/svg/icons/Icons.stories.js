@@ -19,6 +19,7 @@ const Template = (args, { argTypes }) => ({
       <doc-digital-icon color="primary"/>
       <vector color="primary"/>
       <cc-plus-icon />
+      <hambuarger-icon />
     </div>
   `,
 })

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12" class="mt-3 mb-7 d-none d-md-flex d-lg-flex d-xl-flex">
+      <v-col cols="12" class="mt-3 mb-7 d-md-flex d-lg-flex d-xl-flex">
         <dx-bodytitle />
       </v-col>
     </v-row>

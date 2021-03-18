@@ -1,7 +1,7 @@
 import Header from './Header'
 
 export default {
-  title: 'Style Guide/Header',
+  title: 'Style Guide/Layouts/Header',
   component: Header,
   argTypes: {
     colorlinea1: { control: { type: 'color' } },

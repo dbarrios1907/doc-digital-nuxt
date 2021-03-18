@@ -5,10 +5,10 @@
         <v-col cols="12" class="mt-3 mb-7 d-md-flex d-lg-flex d-xl-flex">
           <dx-bodytitle>
             <template v-slot:title>
-              <div class="weight-700 font-25 line-height-31">Estás en el Módulo de Documentos Recibidos</div>
+              <div class="weight-700 font-25 line-height-31">Estás en el Módulo de Visado</div>
             </template>
             <template v-slot:subtitle>
-              <div class="weight-400 mt-3 font-regular line-height-24">Revisa tus documentos recibidos.</div>
+              <div class="weight-400 mt-3 font-regular line-height-24">Revisa tus documentos a visar.</div>
             </template>
           </dx-bodytitle>
         </v-col>
@@ -16,7 +16,7 @@
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
             <dx-select class="d-inline-flex min-content" :items="options" :label="itempage" />
-            <span class="ml-3">resultados de un total de <b>3 documentos recibidos</b>.</span>
+            <span class="ml-3">resultados de un total de <b>3 documentos por visar</b>.</span>
           </div>
 
           <div v-if="emptyfilter && filtered">
@@ -270,7 +270,7 @@ export default {
         folio: '-',
         creacion: '10-09-2020 9:58',
         actualizacion: '10-09-2020 9:58',
-        href: '/documentos/firmar-documento/details/1',
+        href: '#',
       },
       {
         tema: 'Oficio ORD Permisos Administrativos',

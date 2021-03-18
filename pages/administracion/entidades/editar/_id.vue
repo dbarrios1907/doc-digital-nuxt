@@ -33,6 +33,11 @@ export default {
       ],
     }
   },
+  computed: {
+    ismobil() {
+      return this.$vuetify.breakpoint.xs
+    },
+  },
   created() {
     this.userid = this.$route.params.id
     console.log('REQUEST')

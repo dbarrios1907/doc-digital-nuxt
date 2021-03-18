@@ -7,7 +7,7 @@ export default {
   layout: 'empty',
   data() {
     return {
-      message: this.$auth.$storage.getUniversal('route.message'),
+      message: this.$auth.$storage.getUniversal('route.message') || 'Acceso no autorizado',
     }
   },
 }
