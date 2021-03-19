@@ -1,8 +1,10 @@
 **/*.svg.vue
+**/preview/**
 **/*.scss
 **/*.sass
 **/*.css
 src/assets
+**/plugin.js
 public
 dist
 **/ToastService.js

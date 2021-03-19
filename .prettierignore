@@ -1,4 +1,6 @@
 **/*.svg.vue
+**/preview/**
+**/plugin.js
 **/*.scss
 **/*.sass
 **/*.css

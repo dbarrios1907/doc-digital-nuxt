@@ -5,5 +5,8 @@ export const responsiveMixin = Vue.extend({
     _isMobile() {
       return this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs
     },
+    _isSmall() {
+      return this.$vuetify.breakpoint.xs
+    },
   },
 })

@@ -1,5 +1,5 @@
 <template>
-  <DocumentTableItem />
+  <DocumentDetail />
 </template>
 
 <script>
