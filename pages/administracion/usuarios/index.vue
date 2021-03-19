@@ -67,23 +67,6 @@
       </v-col>
     </v-row>
     <v-row class="mt-4">
-      <div class="actions-menu mt-7 d-none d-md-flex d-lg-flex d-xl-flex">
-        <v-menu offset-y>
-          <template v-slot:activator="{ attrs, on }">
-            <dx-button text class="pr-1 pl-2" v-bind="attrs" v-on="on">
-              <span class="text-underline line-height-24 weight-400" :class="actionColor">Acción masiva</span>
-              <dx-icon right regular class="ml-4"> mdi-chevron-down </dx-icon>
-            </dx-button>
-          </template>
-          <v-list>
-            <v-list-item v-for="item in actionitems" :key="item" link>
-              <v-list-item-title>
-                <span class="text-underline line-height-24 weight-400" :class="actionColor"> {{ item }} </span>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
       <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7" @getActiveTab="get_tab">
         <template v-slot:tab-item>
           <v-tab-item>
@@ -196,7 +179,7 @@
                   ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
                 >
                 <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
-                <v-icon dense @click="userid = id, dialog_confirmacion = true"> mdi-delete-outline </v-icon>
+                <v-icon dense @click="userid = id, isBloqueado = false, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
 
               <template v-slot:footer>
@@ -317,7 +300,7 @@
                   ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
                 >
                 <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
-                <v-icon dense @click="userid = id, dialog_confirmacion = true"> mdi-delete-outline </v-icon>
+                <v-icon dense @click="userid = id, isBloqueado = true, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
 
               <template v-slot:footer>
@@ -361,7 +344,7 @@
         <v-card-title class="headline">
           Confirmación
         </v-card-title>
-        <v-card-text>¿Realmente desea eliminar el usuario?</v-card-text>
+        <v-card-text>{{isBloqueado ? '¿Realmente desea activar el usuario?' : '¿Realmente desea inactivar el usuario?'}}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           
@@ -371,11 +354,11 @@
             v-bind="$props"
             :class="[{ 'ml-4': ismobil }]"
             class="text-none mr-2 primary"
-            @click="deleteUser(userid)"
+            @click="setUserStatus()"
           >
-            <span class="text-underline"> Eliminar </span>
+            <span class="text-underline"> {{isBloqueado ? 'Activar' : 'Inactivar'}} </span>
           </dx-button>
-          <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="dialog_confirmacion = false, userid = ''">
+          <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="dialog_confirmacion = false, userid = '', isBloqueado = false">
             <span class="text-underline"> Cancelar </span>
           </dx-button>
         </v-card-actions>
@@ -437,6 +420,7 @@ export default {
       loading: false,
       selectedUser: null,
       userid : '',
+      isBloqueado : false,
       userRoles:[
         {
           key : 'ROLE_USUARIO',
@@ -483,7 +467,7 @@ export default {
           search: true,
         },
         { text: 'Rut', value: 'rut', sortable: true, filter: this.rutFilter, search: true },
-        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Permisos Adicionales', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
         { text: 'Acciones', value: 'actions', sortable: false },
       ]
     },
@@ -573,10 +557,10 @@ export default {
     get_tab(activetab) {
       this.activeTab = activetab
     },
-    async deleteUser(id){
+    async setUserStatus(){
       let resp = null
       try{
-        resp = await this.$store.dispatch('usuarios/deleteUser', id)
+        resp = await this.$store.dispatch('usuarios/setUserStatus', {id: this.userid, status:!this.isBloqueado})
       }
       catch(err){ 
         Toast.error({
@@ -593,9 +577,10 @@ export default {
       }
       else{
         Toast.success({
-          message: 'Usuario eliminado',
+          message: this.isBloqueado ? 'Usuario activado' : 'Usuario inactivado',
         })
         this.userid = '' 
+        this.isBloqueado = false
         this.dialog_confirmacion = false
       }
     },
