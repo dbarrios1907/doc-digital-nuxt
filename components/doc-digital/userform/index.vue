@@ -337,10 +337,10 @@ export default {
         entidadrequired: [v => !!v || 'Campo requerido'],
       },
       roles_select:[
-        {
-          key : 'ROLE_USUARIO',
-          name : 'Operador'
-        },
+        // {
+        //   key : 'ROLE_USUARIO',
+        //   name : 'Operador'
+        // },
         {
           key : 'ROLE_VER_RESERVADOS',
           name : 'Ver reservados'
