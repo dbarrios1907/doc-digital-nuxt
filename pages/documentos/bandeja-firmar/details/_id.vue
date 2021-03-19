@@ -1,8 +1,8 @@
 <template>
   <div class="mt-7">
     <v-row>
-      <v-col cols="6" class="my-auto pl-0"><span class="font-title line-height-29 weight-700">Estado: Pendiente de firma</span></v-col>
-      <v-col cols="6 text-right pr-0">
+      <v-col class="my-auto pl-0 col-12 col-md-6"><span class="font-title line-height-29 weight-700">Estado: Pendiente de firma</span></v-col>
+      <v-col :class="['px-0 px-md-3 col-12 col-md-6 pr-0', { 'text-right': !ismobil }]">
         <dx-button color="primary" outlined>
           <dx-icon right regular> mdi-download </dx-icon>
           <span class="ml-2 text-underline">Descargar documento</span>
@@ -10,26 +10,26 @@
       </v-col>
     </v-row>
     <v-row class="mt-10">
-      <v-col cols="12" class="px-13 py-9 bg-grey1">
+      <v-col class="px-md-13 py-md-9 bg-grey1 col col-12">
         <v-row>
-          <v-col cols="6" class="my-auto">
+          <v-col class="my-auto col col-12 col-md-6">
             <div class="weight-700 font-25 line-height-31 font-robotoslab">Información general del documento</div>
           </v-col>
-          <v-col cols="6" class="text-right">
-            <dx-button class="white--text mr-5" color="darken1" @click="dialog1 = true">
+          <v-col :class="['my-auto col col-12 col-md-6', ismobil ? 'text-center' : 'text-right']">
+            <dx-button class="white--text mr-md-5" color="darken1" @click="dialog1 = true">
               <dx-icon right regular> mdi-close </dx-icon>
               <span class="ml-2 text-underline">Rechazar</span>
             </dx-button>
             <dx-button class="white--text" color="primary2">
               <pencil-write-icon />
-              <span class="ml-2 text-underline">Firmar documento</span>
+              <span class="ml-2 text-underline">Firmar</span>
             </dx-button>
           </v-col>
         </v-row>
 
         <div class="weight-700 font-regular line-height-20 mb-3 mt-6">Previsualizacion:</div>
         <v-row>
-          <v-col cols="4">
+          <v-col class="col-12 col-md-4">
             <Imagen1 @click="dialog = true" />
             <v-dialog v-model="dialog" overlay-opacity="0.55" overlay-color="#001C41" max-width="960px" :content-class="ismobil">
               <v-card>
@@ -57,7 +57,7 @@
               </v-card>
             </v-dialog>
           </v-col>
-          <v-col cols="8">
+          <v-col class="col col-12 col-md-8">
             <TableItem :items="tableitem" />
           </v-col>
         </v-row>

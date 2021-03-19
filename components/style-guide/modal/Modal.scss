@@ -31,7 +31,7 @@
 
     .v-card__title {
       line-height: rem-calc(30px);
-      padding: rem-calc(18px) rem-calc(26px) rem-calc(18px) rem-calc(26px) !important;
+      padding: rem-calc(18px) rem-calc(26px) rem-calc(18px) rem-calc(26px);
 
       .v-btn--icon {
         width: rem-calc(18px);
@@ -43,7 +43,7 @@
 
     .v-card__text {
       margin-top: 0;
-      padding: rem-calc(40px) !important;
+      padding: rem-calc(40px);
 
       &.formext {
         height: rem-calc(470px);

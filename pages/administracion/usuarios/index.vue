@@ -6,67 +6,66 @@
         <div class="weight-700 line-height-31 font-25">Usuarios</div>
       </template>
     </dx-bodytitle>
-    <div v-if="!isListEmpty" class="mt-10 weight-400" :class="[{ 'px-4': ismobil }]">
-      <span class="mr-2">Mostrando hasta</span>
-      <v-select
-        v-if="activeTab === 'Activos'"
-        v-model="itemsPerPageUA"
-        class="d-inline-flex min-content select"
-        style="width: 104px"
-        :items="options"
-        label="5"
-        value="5"
-        solo
-        flat
-        outlined
-        v-bind="$props"
-        ripple="false"
-        single-line
-        :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-        :class="ismobil"
-      />
-      <v-select
-        v-else
-        v-model="itemsPerPageUI"
-        class="d-inline-flex min-content select"
-        style="width: 104px"
-        :items="options"
-        label="5"
-        value="5"
-        solo
-        flat
-        outlined
-        v-bind="$props"
-        ripple="false"
-        single-line
-        :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-        :class="ismobil"
-      />
-      <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>{{countUsuarios + (countUsuarios > 1 ?  ' usuarios' : ' usuario')}}</b></span>
-    </div>
-    <dx-alert
-      v-else
-      class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0"
-      :class="[{ 'px-4': ismobil }]"
-      absolute
-      bottom
-      right
-      type="error"
-      outlined
-      :show-left-icon="false"
-      :show-right-icon="false"
-    >
-      No se han encontrado coincidencias.
-    </dx-alert>
-    <v-row :class="[{ 'px-4': ismobil }]">
-      <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
-        <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
-      </v-col>
-      <v-col sm="6" :class="[ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-5': ismobil }]">
-        <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
-      </v-col>
+    <v-row :class="" no-gutters>
+      <div class="col-sm-6 col-md-6">
+        <div v-if="!isListEmpty" class="mt-10 weight-400">
+          <span class="mr-2">Mostrando hasta</span>
+          <v-select
+            v-if="activeTab === 'Activos'"
+            v-model="itemsPerPageUA"
+            class="d-inline-flex min-content select"
+            style="width: 104px"
+            :items="options"
+            label="5"
+            value="5"
+            solo
+            flat
+            outlined
+            v-bind="$props"
+            ripple="false"
+            single-line
+            :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+            :class="ismobil"
+          />
+          <v-select
+            v-else
+            v-model="itemsPerPageUI"
+            class="d-inline-flex min-content select"
+            style="width: 104px"
+            :items="options"
+            label="5"
+            value="5"
+            solo
+            flat
+            outlined
+            v-bind="$props"
+            ripple="false"
+            single-line
+            :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+            :class="ismobil"
+          />
+          <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>{{countUsuarios + (countUsuarios > 1 ?  ' usuarios' : ' usuario')}}</b></span>
+        </div>
+        <dx-alert
+          v-else
+          class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0"
+          :class="[{ 'px-4': ismobil }]"
+          absolute
+          bottom
+          right
+          type="error"
+          outlined
+          :show-left-icon="false"
+          :show-right-icon="false"
+        >
+          No se han encontrado coincidencias.
+        </dx-alert>
+      </div>
+      <div :class="['col-sm-6 col-md-6', ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-7': ismobil }]">
+            <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
+      </div>
     </v-row>
-    <v-row class="mt-4">
+    <v-row class="mt-4" no-gutters>
       <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7" @getActiveTab="get_tab">
         <template v-slot:tab-item>
           <v-tab-item>
@@ -176,9 +175,9 @@
 
               <template v-slot:[`item.actions`]="{ item: { id } }">
                 <nuxt-link :to="'/administracion/usuarios/editar/' + id"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
+                  ><v-icon dense :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
                 >
-                <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
+                <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
                 <v-icon dense @click="userid = id, isBloqueado = false, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
 
@@ -214,14 +213,14 @@
                 >
                   mdi-magnify
                 </v-icon>
-                <v-icon
+                <!-- <v-icon
                   v-if="h.filterable"
                   :key="h.value"
                   :class="['float-right', { focus: actived === h.value }]"
                   @click="openFilter(header, $event)"
                 >
                   mdi-filter
-                </v-icon>
+                </v-icon> -->
               </template>
               <template v-if="searchname || searchrut || filtered" slot="body.prepend">
                 <tr class="body-prepend">
@@ -297,9 +296,9 @@
 
               <template v-slot:[`item.actions`]="{ item: { id } }">
                 <nuxt-link :to="'/administracion/usuarios/editar/' + id"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
+                  ><v-icon dense :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
                 >
-                <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
+                <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
                 <v-icon dense @click="userid = id, isBloqueado = true, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
 
@@ -467,7 +466,7 @@ export default {
           search: true,
         },
         { text: 'Rut', value: 'rut', sortable: true, filter: this.rutFilter, search: true },
-        { text: 'Permisos Adicionales', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Permisos adicionales', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
         { text: 'Acciones', value: 'actions', sortable: false },
       ]
     },
