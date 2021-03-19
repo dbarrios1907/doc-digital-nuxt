@@ -15,7 +15,7 @@
         <v-col cols="12" :class="['bg-grey1', 'pt-1', 'mb-10', { 'px-9': !ismobil }]">
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
-            <dx-select class="d-inline-flex min-content mb-md-3" v-model="itemsPerPage" :items="options" :label="itemsPerPage" />
+            <dx-select class="d-inline-flex min-content mb-md-3" v-model="itemsPerPage" :items="options" :label="itemsPerPage.toString()" />
             <span class="ml-3"
               >resultados de un total de <b>{{ documentos.length }} documentos</b>.</span
             >
