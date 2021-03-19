@@ -1,40 +1,44 @@
 <template>
-  <v-container>
-    <v-row :class="['mt-1 user-form']">
-      <dx-bodytitle v-if="!ismobil" class="px-3">
-        <template v-slot:title>
-          <div class="weight-700 line-height-31 font-25">{{ headtitle }}</div>
-        </template>
-      </dx-bodytitle>
-      <div class="weight-700 line-height-31 font-25 mb-10" v-else>{{ headtitle }}</div>
-      <v-col cols="12 d-none d-md-flex d-lg-flex d-xl-flex mt-9">
+  <v-container class="px-0" dx-userform>
+    <v-row no-gutters :class="['mt-1 user-form']">
+      <div class="col-sm-12">
+        <dx-bodytitle v-if="!ismobil">
+          <template v-slot:title>
+            <div class="weight-700 line-height-31 font-25">{{ headtitle }}</div>
+          </template>
+        </dx-bodytitle>
+        <div class="weight-700 line-height-31 font-25 mb-10" v-else>{{ headtitle }}</div>
+      </div>      
+      <v-col cols="12" class=" mt-9">
         <div class="weight-400 line-height-30 font-16">{{ headtext }}</div>
       </v-col>
-      <div class="mt-2" ref="form" style="min-height: 680px">
-        <v-col v-if="user" cols="12" style="max-height: 74px">
-          <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
+      <div class="mt-4" ref="form" style="min-height: 680px">
+        <div v-if="user" class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="[{ 'align-center': ismobil }]">
             <v-col
               cols="auto"
               style="max-height: 74px; min-width: 140px; max-width: 140px"
               :class="['weight-400 line-height-30 font-16 py-1', { 'mt-5': !ismobil }]"
               >Estado</v-col
             >
-            <v-col style="max-height: 72px">
-              <span style="min-width: 140px; max-width: 140px" class="flex weight-400 line-height-30 font-16 py-1">Activo</span>
+            <v-col style="max-height: 72px; line-height: 74px;">
+              Activo
               <v-switch class="d-inline-block mt-0 pt-0 success-switch ml-4" style="width: 40px" v-model="isBloqueado" inset :ripple="false" dense>
               </v-switch>
             </v-col>
           </v-row>
-        </v-col>
-        <v-col cols="12" style="max-height: 74px">
-          <v-row :class="['align-center', ismobil]">
+        </div>
+        <div class="col-md-12 col-sm-12 px-0 mr-10 d-none d-md-flex d-lg-flex d-xl-flex" v-if="!ismobil" style="min-height: 30px"> </div>
+
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >RUT*</v-col
             >
-            <v-col>
+            <v-col class="mh-72">
               <v-text-field
                 ref="run"
                 v-model="run"
@@ -65,17 +69,17 @@
               />
             </v-col>
           </v-row>
-        </v-col>
-
-        <v-col cols="5" :class="[ismobil, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        </div>
+        <div class="col-md-5 col-sm-12 px-0 mr-10 d-none d-md-flex d-lg-flex d-xl-flex" v-if="!ismobil" style="min-height: 74px"> </div>
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >Nombre(s)*</v-col
             >
-            <v-col>
+            <v-col class="mh-72">
               <v-text-field
                 ref="nombres"
                 v-model="nombres"
@@ -89,17 +93,17 @@
               />
             </v-col>
           </v-row>
-        </v-col>
+        </div>
 
-        <v-col cols="5" :class="[ismobil, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >Apellido(s)*</v-col
             >
-            <v-col>
+            <v-col class="mh-72">
               <v-text-field
                 ref="apellidos"
                 v-model="apellidos"
@@ -113,17 +117,17 @@
               />
             </v-col>
           </v-row>
-        </v-col>
+        </div>
 
-        <v-col cols="5" :class="[ismobil, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >Correo*</v-col
             >
-            <v-col>
+           <v-col class="mh-72">
               <v-text-field
                 ref="correoInstitucional"
                 v-model="correoInstitucional"
@@ -139,19 +143,19 @@
               />
             </v-col>
           </v-row>
-        </v-col>
+        </div>
 
-        <v-col cols="5" v-if="!ismobil" class="d-none d-md-flex d-lg-flex d-xl-flex" style="min-height: 74px"> </v-col>
+        <div class="col-md-5 col-sm-12 px-0 mr-10 d-none d-md-flex d-lg-flex d-xl-flex" v-if="!ismobil" style="min-height: 74px"> </div>
 
-        <v-col cols="5" :class="[ismobil, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >Entidad*</v-col
             >
-            <v-col>
+            <v-col class="mh-72">
               <v-select
                 :items="entidades"
                 v-model="entidad"
@@ -166,17 +170,17 @@
               />
             </v-col>
           </v-row>
-        </v-col>
+        </div>
 
-        <v-col cols="5" :class="[ismobil, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >Cargo*</v-col
             >
-            <v-col>
+           <v-col class="mh-72">
               <v-text-field
                 ref="cargo"
                 v-model="cargo"
@@ -189,15 +193,20 @@
               />
             </v-col>
           </v-row>
-        </v-col>
+        </div>
 
-        <v-col cols="5" :class="[ismobil, { 'mt-13': ismobil }, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col style="min-width: 140px" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28 col-4': !ismobil }]">
-              <div style="width: 70%; float: left">Permisos adicionales</div>
-              <v-icon color="warning" :class="['ml-2 mt-3', { 'd-none': ismobil }]" style="float: left">mdi-help-circle</v-icon>
+              <div style="width: 70%; float: left; max-width: 160px">Permisos adicionales</div>
+              <v-icon color="warning" :class="['ml-2', { 'mt-5': !ismobil }, { 'mt-1': ismobil }]" style="float: left">mdi-help-circle</v-icon>
             </v-col>
-            <v-col :class="[{ 'col-8': !ismobil }, { 'mt-6': ismobil }]">
+            <!-- <div :class="['label-width1 col col-auto flex weight-400 line-height-30 font-16 py-1' , { 'mt-minus-28': !ismobil }]">
+                Permisos adicionales
+                <v-icon color="warning" :class="[{'icon-margins' : !ismobil}]" style="">mdi-help-circle</v-icon>
+            </div > -->
+             <div class="col-md-5 col-sm-12 px-0 mr-10" v-if="ismobil" style="min-height: 30px"> </div>
+            <v-col>
               <dx-select
                 :items="roles_select"
                 @get-selected="get_roles"
@@ -212,12 +221,12 @@
               </dx-select>
             </v-col>
           </v-row>
-        </v-col>
-        <v-col cols="5" :class="[ismobil, { 'mt-14': ismobil }, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        </div>
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >Seguidor</v-col
             >
@@ -225,12 +234,12 @@
               <dx-select :items="seguidores" v-model="seguidor" solo flat outlined label="Seleccione seguidor" v-bind="$props" ripple="true" />
             </v-col>
           </v-row>
-        </v-col>
-        <v-col cols="5" :class="[ismobil, 'col-container']">
-          <v-row :class="['align-center', ismobil]">
+        </div>
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+          <v-row no-gutters :class="['align-center', ismobil]">
             <v-col
               cols="auto"
-              style="min-width: 140px; max-width: 140px"
+              class="label-width"
               :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]"
               >Subrogante</v-col
             >
@@ -238,14 +247,14 @@
               <v-select :items="subrogantes" v-model="subrogante" label="Seleccione subrogante" solo flat outlined v-bind="$props" ripple="true" />
             </v-col>
           </v-row>
-        </v-col>
+        </div>
 
-        <v-col cols="5" :class="[ismobil, { 'mt-3': !ismobil }, { 'mb-10': ismobil }, 'col-container']">
-          <v-row :class="[{ 'align-center': ismobil }]" style="max-height: 74px">
-            <v-col cols="auto" :class="['flex weight-400 line-height-30 font-16', { 'mt-3': !ismobil }]" sryle="height: 100%"
-              >Activar isSubroganteActivado</v-col
+        <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, { 'mb-10': ismobil }, 'col-container']">
+          <v-row no-gutters :class="[{ 'align-center': ismobil }]">
+            <v-col cols="auto" :class="['flex weight-400 line-height-30 font-16', { 'mt-3': !ismobil }, {'mt-minus-28': ismobil }]" sryle="height: 100%"
+              >Activar subrogancia</v-col
             >
-            <v-col style="max-height: 72px">
+            <v-col style="max-height: 72px" :class="[{ 'mt-1': !ismobil }]">
               <v-switch
                 class="d-inline-block mt-0 pt-0 success-switch"
                 style="width: 40px"
@@ -259,7 +268,7 @@
               <v-icon color="warning" style="margin-top: -4px">mdi-help-circle</v-icon>
             </v-col>
           </v-row>
-        </v-col>
+        </div>
         <div :class="['pr-2', { 'text-center': ismobil }, { 'align-right': !ismobil }, 'mt-12']">
           <dx-button color="primary" outlined v-bind="$props" class="text-none mr-2 bg-white" to="/administracion/usuarios">
             <span class="text-underline"> Cancelar </span>
@@ -472,6 +481,10 @@ export default {
 </script>
 <style lang="scss">
 .user-form {
+  .col{
+    flex-basis: 0;
+    flex-grow: 1;
+  }
   .row.ismobile {
     display: block;
   }
@@ -503,8 +516,9 @@ export default {
   }
 
   .col-container {
-    max-height: 74px;
+    min-height: 74px;
     float: left;
+    padding:0px !important
   }
   .help-icon {
     width: 18px !important;
@@ -515,6 +529,22 @@ export default {
   }
   .bg-white:before {
     background-color: transparent !important;
+  }
+  .label-width{
+    min-width: 140px;
+    max-width: 140px;
+    display: table-cell;
+  }
+   .label-width1{
+    min-width: 140px;
+    max-width: 140px;
+    display: table-cell;
+  }
+  .icon-margins{
+    margin: -31px 0px 0 13px;
+  }
+  .mh-72{
+    max-height: 72px;
   }
 }
 
