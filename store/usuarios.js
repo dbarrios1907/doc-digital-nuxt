@@ -1,8 +1,5 @@
 import { isValidResponse } from '~/shared/utils/request'
 export const STRATEGY = "claveUnica"
-export const headers = {
-  'Authorization' : 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJNYXJpYSBDYXJtZW4gRGUgbG9zIGFuZ2VsZXMgRGVsIHJpbyBHb256YWxleiIsImN0eCI6eyJrZXkiOjMsInJ1biI6ODg4ODg4ODgsIm5vbWJyZSI6Ik1hcmlhIENhcm1lbiBEZSBsb3MgYW5nZWxlcyBEZWwgcmlvIEdvbnphbGV6IiwiY2FyZ28iOiJEZXZPcHMiLCJlbnRpZGFkSWQiOjEsImVudGlkYWROb21icmUiOiJFbnRpZGFkIFRlc3QgS0UiLCJjb250ZXh0VHlwZSI6IkNUWF9VU0VSIn0sImlkIjozLCJjdHhfdHlwZSI6InVzciIsImV4cCI6MTYxNTk5MzAwNCwiaWF0IjoxNjE1OTg5NDA0LCJhdXRob3JpdGllcyI6WyJST0xFX1VTVUFSSU8iLCJST0xFX09GSUNJTkFfUEFSVEVTIiwiUk9MRV9BRE1JTiJdfQ.nRHMM-34VZ5_jgWtUnleI9L4_Skncs-Qzw0jhOgCdGBbu2JQQg8edUeU1hyjs4nWTKOHCS1x_uNXlkc1ajUyaA'
-}
 export const state = () => ({  
   selectedUser: null,
   count: 0,
@@ -20,6 +17,13 @@ export const getters = {
         return user.isBloqueado;
       })
     }, 
+    getByEntity: (state) => (entityid) => {
+      return state.users.filter(user => {
+        return user.entidad ? user.entidad.id === entityid : false
+      })
+    },
+
+    
     getSelectedUser(state){
         return state.selectedUser
     }    
@@ -41,10 +45,11 @@ export const mutations = {
         correoInstitucional : listUsers[i].correoInstitucional,
         cargo : listUsers[i].cargo,
         subrogante : listUsers[i].subrogante,
-        roles:  listUsers[i].roles,
+        roles:  listUsers[i].roles ? listUsers[i].roles.filter((rol) => {return rol != 'ROLE_USUARIO'}) : [],
         isBloqueado : listUsers[i].isBloqueado,
         isDelete : listUsers[i].isDelete,
-        nombreCompleto : listUsers[i].nombreCompleto
+        nombreCompleto : listUsers[i].nombreCompleto,
+        entidad: listUsers[i].entidad
       })
     }
     state.users = users
@@ -56,6 +61,15 @@ export const mutations = {
   deleteUser : (state, id) => {
     let newUsers =  state.users.filter(function(user) { return user.id != id; });
     state.users = newUsers
+  },
+  setUserStatus : (state, {id, status}) => {
+    try{
+      let newUsers =  state.users;
+      let objIndex = newUsers.findIndex((obj =>(obj.id == id))) 
+      newUsers[objIndex].isBloqueado = status
+      state.users = newUsers
+    }
+    catch(err){}
   }
 }
 
@@ -82,9 +96,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/',
-        // headers,
-        // params: params,
-        // data: body_,
       })
       const [valid, Toast] = isValidResponse(resp)
 
@@ -103,14 +114,22 @@ export const actions = {
   async getUser({ commit }, id){
     let resp = null
     try {
-      resp = this.$auth.requestWith(STRATEGY, {
+      resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/'+id,
         // headers,
       })
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      }
+      else{
+        commit('setSelecterUser', resp.result)
+      }
     } catch (err) {}
-    
-    commit('setSelecterUser', resp.result)
     return resp    
   },
 
@@ -126,12 +145,10 @@ export const actions = {
       apellidos: user.apellidos,
       correoInstitucional: user.correoInstitucional,
       cargo: user.cargo,
-      entidad: {},
+      entidad: user.entidad,
       roles: user.roles
-      // seguidor: user.seguidor[0],
-      // subrogante: user.subrogante[0]
-    }
-    
+      // subrogante : user.subrogante
+    }    
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
@@ -141,8 +158,7 @@ export const actions = {
       })
     } catch (err) {}
 
-    return resp
-    
+    return resp    
   },
 
   async deleteUser({ commit }, id){
@@ -156,10 +172,55 @@ export const actions = {
     } catch (err) {}
 
     const [valid, Toast] = isValidResponse(resp)
-    console.log(resp)
 
     if (valid) {
       commit('deleteUser', id)
+    }
+    return  resp    
+  },
+
+  async updateUser({ commit }, user){
+    let resp = null
+    const body_ = {
+      isSubroganteActivado: user.isSubroganteActivado,
+      isBloqueado: user.isBloqueado,
+      nombres: user.nombres,
+      run: parseInt(user.run),
+      dv: user.dv,
+      apellidos: user.apellidos,
+      correoInstitucional: user.correoInstitucional,
+      cargo: user.cargo,
+      entidad: user.entidad,
+      roles: user.roles,
+      id:parseInt(user.id),
+      // seguidor : user.seguidor
+      // subrogante : user.subrogante
+    }    
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'PUT',
+        url: '/usuarios/',
+        data: body_
+        // headers, 
+      })
+    } catch (err) {}
+    return  resp    
+  },
+  
+  async setUserStatus({ commit }, {id, status}){
+    let resp = null
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'POST',
+        url: '/usuarios/'+id+'/activar/'+status
+        // headers, 
+      })
+    } catch (err) {}
+
+    const [valid, Toast] = isValidResponse(resp)
+
+    if (valid) {
+      commit('setUserStatus', {id, status})
     }
     return  resp    
   },

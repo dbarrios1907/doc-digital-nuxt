@@ -64,7 +64,7 @@ export default {
   props: {
     dialog: {
       type: Boolean,
-      default: '-',
+      default: false,
     },
     user: {
       type: Object,

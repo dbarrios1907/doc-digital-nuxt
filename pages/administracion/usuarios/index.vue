@@ -6,84 +6,66 @@
         <div class="weight-700 line-height-31 font-25">Usuarios</div>
       </template>
     </dx-bodytitle>
-    <div v-if="!isListEmpty" class="mt-10 weight-400" :class="[{ 'px-4': ismobil }]">
-      <span class="mr-2">Mostrando hasta</span>
-      <v-select
-        v-if="activeTab === 'Activos'"
-        v-model="itemsPerPageUA"
-        class="d-inline-flex min-content select"
-        style="width: 104px"
-        :items="options"
-        label="5"
-        value="5"
-        solo
-        flat
-        outlined
-        v-bind="$props"
-        ripple="false"
-        single-line
-        :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-        :class="ismobil"
-      />
-      <v-select
-        v-else
-        v-model="itemsPerPageUI"
-        class="d-inline-flex min-content select"
-        style="width: 104px"
-        :items="options"
-        label="5"
-        value="5"
-        solo
-        flat
-        outlined
-        v-bind="$props"
-        ripple="false"
-        single-line
-        :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
-        :class="ismobil"
-      />
-      <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>{{countUsuarios + (countUsuarios > 1 ?  ' usuarios' : ' usuario')}}</b></span>
-    </div>
-    <dx-alert
-      v-else
-      class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0"
-      :class="[{ 'px-4': ismobil }]"
-      absolute
-      bottom
-      right
-      type="error"
-      outlined
-      :show-left-icon="false"
-      :show-right-icon="false"
-    >
-      No se han encontrado coincidencias.
-    </dx-alert>
-    <v-row :class="[{ 'px-4': ismobil }]">
-      <v-col sm="6" :class="[ismobil, { 'mt-8': ismobil }]">
-        <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
-      </v-col>
-      <v-col sm="6" :class="[ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-5': ismobil }]">
-        <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
-      </v-col>
-    </v-row>
-    <v-row class="mt-4">
-      <div class="actions-menu mt-7 d-none d-md-flex d-lg-flex d-xl-flex">
-        <v-menu offset-y>
-          <template v-slot:activator="{ attrs, on }">
-            <dx-button text class="pr-1 pl-2" v-bind="attrs" v-on="on">
-              <span class="text-underline line-height-24 weight-400" :class="actionColor">Acción masiva</span>
-              <dx-icon right regular class="ml-4"> mdi-chevron-down </dx-icon>
-            </dx-button>
-          </template>
-          <v-list>
-            <v-list-item v-for="item in actionitems" :key="item" link>
-              <v-list-item-title>
-                <span class="text-underline line-height-24 weight-400" :class="actionColor"> {{ item }} </span>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+    <v-row no-gutters>
+      <div class="col-sm-6 col-md-6">
+        <div v-if="!isListEmpty" class="mt-10 weight-400">
+          <span class="mr-2">Mostrando hasta</span>
+          <v-select
+            v-if="activeTab === 'Activos'"
+            v-model="itemsPerPageUA"
+            class="d-inline-flex min-content select"
+            style="width: 104px"
+            :items="options"
+            label="5"
+            value="5"
+            solo
+            flat
+            outlined
+            v-bind="$props"
+            ripple="false"
+            single-line
+            :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+            :class="ismobil"
+          />
+          <v-select
+            v-else
+            v-model="itemsPerPageUI"
+            class="d-inline-flex min-content select"
+            style="width: 104px"
+            :items="options"
+            label="5"
+            value="5"
+            solo
+            flat
+            outlined
+            v-bind="$props"
+            ripple="false"
+            single-line
+            :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
+            :class="ismobil"
+          />
+          <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>{{countUsuarios + (countUsuarios > 1 ?  ' usuarios' : ' usuario')}}</b></span>
+        </div>
+        <dx-alert
+          v-else
+          class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0"
+          :class="[{ 'px-4': ismobil }]"
+          absolute
+          bottom
+          right
+          type="error"
+          outlined
+          :show-left-icon="false"
+          :show-right-icon="false"
+        >
+          No se han encontrado coincidencias.
+        </dx-alert>
       </div>
+      <div :class="['col-sm-6 col-md-6', ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-7': ismobil }]">
+            <NuxtLink to="/administracion/usuarios/insertar" class="text-underline weight-700 font-title"> + Agregar Usuario</NuxtLink>
+      </div>
+    </v-row>
+    <v-row class="mt-4" no-gutters>
       <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7" @getActiveTab="get_tab">
         <template v-slot:tab-item>
           <v-tab-item>
@@ -94,7 +76,6 @@
               :items-per-page="getItemsPerPages(itemsPerPageUA)"
               :class="['table-check', 'table-sm', ismobil]"
               :mobile-breakpoint="0"
-              :show-select="!ismobil"
               dense
               :item-key="'nombres' + Math.random().toString()"
               @page-count="pageCountUA = $event"
@@ -120,7 +101,6 @@
               </template>
               <template slot="body.prepend" v-if="searchname || searchrut || filtered">
                 <tr class="body-prepend">
-                  <td />
                   <td>
                     <v-text-field
                       type="text"
@@ -147,7 +127,7 @@
                       v-if="searchrut"
                     />
                   </td>
-                  <td />
+                  <td v-if="!ismobil"></td>
                   <!-- <td v-if="!ismobil" class="filter">
                     <dx-select
                       :ripple="false"
@@ -173,7 +153,7 @@
                       </template>
                     </dx-select>
                   </td> -->
-                  <td />
+                  <td v-if="!ismobil"></td>
                 </tr>
               </template>
 
@@ -192,11 +172,9 @@
               </template>
 
               <template v-slot:[`item.actions`]="{ item: { id } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + id"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
-                >
-                <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
-                <v-icon dense @click="userid = id, dialog_confirmacion = true"> mdi-delete-outline </v-icon>
+                <v-icon dense  @click="get_user_details(id)" :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon>
+                <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
+                <v-icon dense @click="userid = id, isBloqueado = false, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
 
               <template v-slot:footer>
@@ -214,7 +192,6 @@
               :items-per-page="getItemsPerPages(itemsPerPageUI)"
               :class="['table-check', 'table-sm', ismobil]"
               :mobile-breakpoint="0"
-              show-select
               dense
               :item-key="'nombres' + Math.random().toString()"
               hide-default-footer
@@ -231,18 +208,17 @@
                 >
                   mdi-magnify
                 </v-icon>
-                <v-icon
+                <!-- <v-icon
                   v-if="h.filterable"
                   :key="h.value"
                   :class="['float-right', { focus: actived === h.value }]"
                   @click="openFilter(header, $event)"
                 >
                   mdi-filter
-                </v-icon>
+                </v-icon> -->
               </template>
               <template v-if="searchname || searchrut || filtered" slot="body.prepend">
                 <tr class="body-prepend">
-                  <td />
                   <td>
                     <v-text-field
                       v-model="filterValue"
@@ -253,7 +229,7 @@
                       flat
                       outlined
                       label="Nombre"
-                      @focus="actived = 'name'"
+                      @focus="actived = 'nombres'"
                     />
                   </td>
                   <td v-if="!ismobil">
@@ -269,7 +245,8 @@
                       @focus="actived = 'rut'"
                     />
                   </td>
-                  <td v-if="!ismobil" class="filter">
+                   <td v-if="!ismobil"></td>
+                  <!-- <td v-if="!ismobil" class="filter">
                     <dx-select
                       v-model="permiso"
                       v-if="filtered"
@@ -293,8 +270,8 @@
                         </Badge>
                       </template>
                     </dx-select>
-                  </td>
-                  <td />
+                  </td> -->
+                 <td v-if="!ismobil"></td>
                 </tr>
               </template>
 
@@ -313,11 +290,9 @@
               </template>
 
               <template v-slot:[`item.actions`]="{ item: { id } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + id"
-                  ><v-icon dense :class="[{ 'mr-4': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
-                >
-                <v-icon dense class="mr-4" @click="open_user_details(id)"> mdi-eye </v-icon>
-                <v-icon dense @click="userid = id, dialog_confirmacion = true"> mdi-delete-outline </v-icon>
+                <v-icon dense  @click="get_user_details(id)" :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon>
+                <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
+                <v-icon dense @click="userid = id, isBloqueado = true, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
 
               <template v-slot:footer>
@@ -361,7 +336,7 @@
         <v-card-title class="headline">
           Confirmación
         </v-card-title>
-        <v-card-text>¿Realmente desea eliminar el usuario?</v-card-text>
+        <v-card-text>{{isBloqueado ? '¿Realmente desea activar el usuario?' : '¿Realmente desea inactivar el usuario?'}}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           
@@ -371,11 +346,11 @@
             v-bind="$props"
             :class="[{ 'ml-4': ismobil }]"
             class="text-none mr-2 primary"
-            @click="deleteUser(userid)"
+            @click="setUserStatus()"
           >
-            <span class="text-underline"> Eliminar </span>
+            <span class="text-underline"> {{isBloqueado ? 'Activar' : 'Inactivar'}} </span>
           </dx-button>
-          <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="dialog_confirmacion = false, userid = ''">
+          <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="dialog_confirmacion = false, userid = '', isBloqueado = false">
             <span class="text-underline"> Cancelar </span>
           </dx-button>
         </v-card-actions>
@@ -437,6 +412,7 @@ export default {
       loading: false,
       selectedUser: null,
       userid : '',
+      isBloqueado : false,
       userRoles:[
         {
           key : 'ROLE_USUARIO',
@@ -483,7 +459,7 @@ export default {
           search: true,
         },
         { text: 'Rut', value: 'rut', sortable: true, filter: this.rutFilter, search: true },
-        { text: 'Permisos', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
+        { text: 'Permisos adicionales', value: 'access', filterable: true, sortable: false, filter: this.permisosFilter },
         { text: 'Acciones', value: 'actions', sortable: false },
       ]
     },
@@ -548,6 +524,23 @@ export default {
 
       return flag
     },
+    async get_user_details(id) {
+      let userid = id.toString()
+      let resp = null
+      try{ 
+        resp = await this.$store.dispatch('usuarios/getUser', userid)
+      }catch(error) {}
+      const [valid, Toast] = isValidResponse(resp)
+      
+      if (!valid) {
+        Toast.error({
+          message: 'Usuario no encontrado',
+        })
+      }
+      else{
+        this.$router.replace('/administracion/usuarios/editar/'+userid)
+      }
+    },
     async open_user_details(id) {
       this.selected_user = id.toString()
       let resp = null
@@ -573,10 +566,10 @@ export default {
     get_tab(activetab) {
       this.activeTab = activetab
     },
-    async deleteUser(id){
+    async setUserStatus(){
       let resp = null
       try{
-        resp = await this.$store.dispatch('usuarios/deleteUser', id)
+        resp = await this.$store.dispatch('usuarios/setUserStatus', {id: this.userid, status:!this.isBloqueado})
       }
       catch(err){ 
         Toast.error({
@@ -593,9 +586,10 @@ export default {
       }
       else{
         Toast.success({
-          message: 'Usuario eliminado',
+          message: this.isBloqueado ? 'Usuario activado' : 'Usuario inactivado',
         })
         this.userid = '' 
+        this.isBloqueado = false
         this.dialog_confirmacion = false
       }
     },
@@ -680,17 +674,24 @@ table a {
 // table > tbody > tr > td:nth-child(3) {
 //   max-width: 250px !important;
 // }
+
+.v-application .usuarios .theme--light.v-data-table.table-check thead > tr > th:first-child,
+.v-application .usuarios .theme--dark.v-data-table.table-check thead > tr > th:first-child,
+.usuarios .theme--dark.v-data-table.table-check thead > tr > th:first-child,
+.usuarios .theme--light.v-data-table.table-check thead > tr > th:first-child{
+      width: 30% !important;
+}
 .usuarios {
   table > tbody > tr > td {
       padding: 6px 10px !important;
   }
   :not(.ismobile){
-    table > thead > tr > th:nth-child(3){
+    table > thead > tr > th:nth-child(2){
       max-width: 250px !important;
       width: 17% !important;
     }
     
-    table > thead > tr > th:nth-child(4){
+    table > thead > tr > th:nth-child(3){
       width: 42% !important;
     }
     
@@ -699,9 +700,9 @@ table a {
     table > tbody > tr {
       height: 37px !important;
     }
-    table > tbody > tr > td:nth-child(2),
-    table > thead > tr > th:nth-child(2) {
-      text-align: center;
+    table > tbody > tr > td:nth-child(1),
+    table > thead > tr > th:nth-child(1) {
+      text-align: left;
     }
     .dx-pagination {
       margin: 0px auto !important;

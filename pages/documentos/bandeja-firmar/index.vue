@@ -5,18 +5,20 @@
         <v-col cols="12" class="mt-3 mb-7 d-md-flex d-lg-flex d-xl-flex">
           <dx-bodytitle>
             <template v-slot:title>
-              <div class="weight-700 font-25 line-height-31">Firmar</div>
+              <div class="weight-700 font-25 line-height-31">Firmar documentos</div>
             </template>
             <template v-slot:subtitle>
               <div class="weight-400 mt-3 font-regular line-height-24">Revisa tus documentos pendientes por firmar.</div>
             </template>
           </dx-bodytitle>
         </v-col>
-        <v-col cols="12" :class="['bg-grey1', 'pt-1', 'mb-10', { 'px-9': !ismobil }]">
+        <v-col cols="12" class="bg-grey1 px-md-9 pt-1 mb-10">
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
-            <dx-select class="d-inline-flex min-content" :items="options" :label="itempage" />
-            <span class="ml-3">resultados de un total de <b>3 documentos pendientes por firmar</b>.</span>
+            <dx-select class="d-inline-flex min-content mb-md-3" v-model="itemsPerPage" :items="options" :label="itemsPerPage.toString()" />
+            <span class="ml-md-3"
+              >resultados de un total de <b>{{ documentos.length }} documentos pendientes por firmar</b>.</span
+            >
           </div>
 
           <div v-if="emptyfilter && filtered">
@@ -102,7 +104,7 @@
             </v-row>
           </div>
           <v-row v-else class="pb-9">
-            <v-col cols="3">
+            <v-col class="col-md-3">
               <dx-text-field
                 v-model="search"
                 flat
@@ -113,51 +115,51 @@
                 @input="updatefield('search', $event)"
               />
             </v-col>
-            <v-col cols="3">
+            <v-col class="col-md-3">
               <dx-button color="darken3" outlined class="filter" @click="dialog = true">
                 <div class="text-underline float-left">Filtrar</div>
                 <dx-icon right regular class="text-right float-right"> mdi-filter </dx-icon>
               </dx-button>
             </v-col>
           </v-row>
-          <dx-tabs :items="tabs" tabtype="primary">
-            <template v-slot:tab-item>
-              <v-tab-item v-for="item in items" :key="item.tab">
-                <DataTable
-                  color="primary"
-                  :headers="computedHeaders"
-                  :items="valuess"
-                  :page.sync="page"
-                  :items-per-page="itemsPerPage"
-                  :class="['bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
-                  :mobile-breakpoint="0"
-                  hide-default-footer
-                  item-key="tema"
-                  @page-count="pageCount = $event"
-                >
-                  <template v-slot:[`item.tema`]="{ item: { tema, href } }" class="column">
-                    <a class="breaktext" :href="href">{{ tema }}</a>
-                  </template>
-
-                  <template v-slot:[`item.access`]="{ item: { access } }">
-                    <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
-                      {{ v }}
-                    </v-chip>
-                  </template>
-
-                  <template v-slot:[`item.actions`]>
-                    <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
-                  </template>
-
-                  <template v-slot:footer>
-                    <div class="py-7 v-data-footer bg-grey1">
-                      <dx-pagination v-model="page" :length="pageCount" />
-                    </div>
-                  </template>
-                </DataTable>
-              </v-tab-item>
+          <DataTable
+            color="primary"
+            :headers="computedHeaders"
+            :items="documentos"
+            :page.sync="page"
+            :items-per-page="itemsPerPage"
+            :class="['table-check', 'bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
+            :mobile-breakpoint="0"
+            hide-default-footer
+            item-key="tema"
+            show-select
+            @page-count="pageCount = $event"
+          >
+            <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
+              <a class="breaktext" :href="'/documentos/bandeja-firmar/details/' + id">{{ materia }}</a>
             </template>
-          </dx-tabs>
+
+            <template v-slot:[`item.createAt`]="{ item: { createAt } }" class="column">
+              {{ formatdate(createAt) }}
+            </template>
+
+            <template v-slot:[`item.access`]="{ item: { access } }">
+              <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
+                {{ v }}
+              </v-chip>
+            </template>
+
+            <template v-slot:[`item.actions`]>
+              <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+            </template>
+
+            <template v-slot:footer>
+              <div class="py-7 v-data-footer bg-grey1">
+                <dx-pagination v-model="page" :length="pageCount" />
+              </div>
+            </template>
+            <template v-slot:no-data> No tiene documentos pendientes para firmar </template>
+          </DataTable>
         </v-col>
       </perfect-scrollbar>
     </v-row>
@@ -172,49 +174,51 @@
         </v-card-title>
         <v-divider class="darken1" />
 
-        <v-card-text class="font-roboto weight-400 line-height-30 font-title darken3--text py-10 px-10">
-          <div class="font-title line-height-30 mb-10">
-            Complete <b>el o los campos necesarios</b> para realizar la búsqueda del documento que desea.
-          </div>
+        <v-card-text class="font-roboto weight-400 line-height-30 font-title darken3--text pt-10 px-10 pb-3">
+          <perfect-scrollbar :style="{ height: ismobil ? '300px' : '100%', width: '100%' }">
+            <div class="font-title line-height-30 mb-10">
+              Complete <b>el o los campos necesarios</b> para realizar la búsqueda del documento que desea.
+            </div>
 
-          <v-row class="mt-3">
-            <v-col cols="4">
-              <span>Tema o materia:</span>
-              <dx-text-field v-model="tema" flat solo outlined placeholder="Escriba el tema/materia" />
-            </v-col>
-            <v-col cols="4">
-              <span>Tipo: </span>
-              <dx-select v-model="tipo" :items="doctype" label="Selecciona el tipo" />
-            </v-col>
-            <v-col cols="4">
-              <span>Folio:</span>
-              <dx-text-field v-model="folio" flat solo outlined placeholder="Escriba el folio" />
-            </v-col>
-          </v-row>
+            <v-row class="mt-3">
+              <v-col class="col-md-4 col-12">
+                <span>Tema o materia:</span>
+                <dx-text-field v-model="tema" flat solo outlined placeholder="Escriba el tema/materia" />
+              </v-col>
+              <v-col class="col-md-4 col-12">
+                <span>Tipo: </span>
+                <dx-select v-model="tipo" :items="doctype" label="Selecciona el tipo" />
+              </v-col>
+              <v-col class="col-md-4 col-12">
+                <span>Folio:</span>
+                <dx-text-field v-model="folio" flat solo outlined placeholder="Escriba el folio" />
+              </v-col>
+            </v-row>
 
-          <div class="mt-8">
-            <div class="weight-700 darken3--text font-regular mb-3">Creación</div>
-            <div class="d-inline-block">Desde:</div>
-            <div class="d-inline-block mx-5 datepicker">
-              <dx-date-picker v-model="picker1" no-title color="primary" cleared />
+            <div class="mt-0 mt-md-8">
+              <div class="weight-700 darken3--text font-regular mb-3">Creación</div>
+              <div class="d-inline-block">Desde:</div>
+              <div class="d-inline-block px-0 datepicker col-12 col-md-4 px-md-3">
+                <dx-date-picker v-model="picker1" no-title color="primary" cleared />
+              </div>
+              <div class="d-inline-block">Hasta:</div>
+              <div class="d-inline-block px-0 datepicker col-12 col-md-4 px-md-3">
+                <dx-date-picker v-model="picker2" no-title color="primary" cleared />
+              </div>
             </div>
-            <div class="d-inline-block">Hasta:</div>
-            <div class="d-inline-block mx-5 datepicker">
-              <dx-date-picker v-model="picker2" no-title color="primary" cleared />
-            </div>
-          </div>
 
-          <div class="mt-8">
-            <div class="weight-700 darken3--text font-regular mb-3">Actualización</div>
-            <div class="d-inline-block">Desde:</div>
-            <div class="d-inline-block mx-5 datepicker">
-              <dx-date-picker v-model="picker3" no-title color="primary" cleared />
+            <div class="mt-0 mt-md-8">
+              <div class="weight-700 darken3--text font-regular mb-3">Actualización</div>
+              <div class="d-inline-block">Desde:</div>
+              <div class="d-inline-block px-0 datepicker col-12 col-md-4 px-md-3">
+                <dx-date-picker v-model="picker3" no-title color="primary" cleared />
+              </div>
+              <div class="d-inline-block">Hasta:</div>
+              <div class="d-inline-block px-0 datepicker col-12 col-md-4 px-md-3">
+                <dx-date-picker v-model="picker4" no-title color="primary" cleared />
+              </div>
             </div>
-            <div class="d-inline-block">Hasta:</div>
-            <div class="d-inline-block mx-5 datepicker">
-              <dx-date-picker v-model="picker4" no-title color="primary" cleared />
-            </div>
-          </div>
+          </perfect-scrollbar>
         </v-card-text>
 
         <v-card-actions class="px-10 pb-10">
@@ -240,7 +244,11 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
+  fetch() {
+    this.$store.dispatch('documentos/getDocuments')
+  },
   data: () => ({
     dialog: false,
     picker1: '',
@@ -250,8 +258,7 @@ export default {
     tema: '',
     tipo: '',
     folio: '',
-    options: ['10', '20', '30'],
-    itempage: '10',
+    options: [5, 10, 20, 30],
     doctype: ['Oficio', 'otro'],
     tabs: [{ tab: 'Pendientes', number: 5 }],
     items: ['Administrador', 'otro'],
@@ -261,82 +268,8 @@ export default {
     isleft: true,
     page: 1,
     pageCount: 0,
-    itemsPerPage: 6,
+    itemsPerPage: 10,
     filtered: false,
-    valuess: [
-      {
-        tema: 'Instructivo de Modernización',
-        tipo: 'Oficio',
-        folio: '-',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '/documentos/firmar-documento/details/1',
-      },
-      {
-        tema: 'Oficio ORD Permisos Administrativos',
-        tipo: 'Oficio',
-        folio: '178',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-      {
-        tema: 'Circular normativa de Teletrabajo1',
-        tipo: 'Oficio',
-        folio: '-',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-      {
-        tema: 'Instructivo de Modernización1',
-        tipo: 'Oficio',
-        folio: '-',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-      {
-        tema: 'Oficio ORD Permisos Administrativos2',
-        tipo: 'Oficio',
-        folio: '178',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-      {
-        tema: 'Circular normativa de Teletrabajo2',
-        tipo: 'Oficio',
-        folio: '-',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-      {
-        tema: 'Instructivo de Modernización3',
-        tipo: 'Oficio',
-        folio: '-',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-      {
-        tema: 'Oficio ORD Permisos Administrativos3',
-        tipo: 'Oficio',
-        folio: '178',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-      {
-        tema: 'Circular normativa de Teletrabajo3',
-        tipo: 'Oficio',
-        folio: '-',
-        creacion: '10-09-2020 9:58',
-        actualizacion: '10-09-2020 9:58',
-        href: '#',
-      },
-    ],
   }),
   computed: {
     emptyfilter() {
@@ -346,26 +279,32 @@ export default {
       return this.$vuetify.breakpoint.xs
     },
     computedHeaders() {
-      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'tema' || h.value == 'actions' : h.value))
+      return this.headers.filter(h => (this.$vuetify.breakpoint.xs ? h.value == 'materia' || h.value == 'actions' : h.value))
+    },
+    documentos() {
+      return this.$store.getters['documentos/getDocs']
     },
     headers() {
       return [
         {
           text: 'Tema',
           align: 'start',
-          value: 'tema',
+          value: 'materia',
           sortable: true,
           filter: this.temaFilter,
         },
-        { text: 'Tipo', value: 'tipo', sortable: true, filter: this.tipoFilter },
+        { text: 'Tipo', value: 'tipoDocumentoOficial', sortable: true, filter: this.tipoFilter },
         { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
-        { text: 'Creación', value: 'creacion', sortable: true, filter: this.creacionFilter },
-        { text: 'Actualización', value: 'actualizacion', sortable: true, filter: this.actualizacionFilter },
-        { text: 'Ver', value: 'actions', sortable: false },
+        { text: 'Creación', value: 'createAt', sortable: true, filter: this.creacionFilter },
+        { text: 'Actualización', value: 'updateAt', sortable: true, filter: this.actualizacionFilter },
+        { text: 'Ver', align: this.ismobil ? 'center' : 'start', value: 'actions', sortable: false },
       ]
     },
   },
   methods: {
+    formatdate(date) {
+      return moment(date).format('DD-MM-YYYY hh:mm')
+    },
     updatefield(key, data) {
       this[key] = data
     },

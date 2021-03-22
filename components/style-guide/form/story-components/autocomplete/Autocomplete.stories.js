@@ -180,6 +180,7 @@ const Template1 = (args, { argTypes }) => ({
         :ripple="false"  
         solo
         flat
+        multiple
         outlined
         v-model="model"
         :items="items"
