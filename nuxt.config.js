@@ -59,8 +59,8 @@ export default {
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    baseUrl: 'https://api-docv3.test.digital.gob.cl/api',
-    browserBaseURL: 'https://api-docv3.test.digital.gob.cl/api',
+    baseUrl: 'http://doc.digital.io/api',
+    browserBaseURL: 'http://doc.digital.io/api',
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
