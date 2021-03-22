@@ -1,5 +1,6 @@
 export { default as Select } from './select/Select'
 export { default as IconSelect } from './select/IconSelect'
+export { default as SelectAutocomplete } from './select/SelectAutocomplete'
 export { default as CcSelect } from './cc-select'
 export { default as Autocomplete } from './autocomplete'
 export { default as TextField } from './text-field'
