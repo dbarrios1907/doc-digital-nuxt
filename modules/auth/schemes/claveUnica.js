@@ -262,5 +262,6 @@ export default class ClaveUnicaScheme {
         name: 'unauthorized',
       })
     }
+    return Promise.reject()
   }
 }

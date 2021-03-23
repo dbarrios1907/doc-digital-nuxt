@@ -1,9 +1,8 @@
 import Storage from './storage'
 import { isSet, getProp } from './utilities'
 import { routeOption, isRelativeURL, isSameURL } from '~/shared/utils/router'
-import { getErrorResponse, isAuthErrorResponse, NotFoundError } from '~/shared/utils/request'
+import { getErrorResponse } from '~/shared/utils/request'
 import { isProdEnv } from '~/shared/utils/env'
-import get from 'lodash.get'
 
 export default class Auth {
   constructor(ctx, options) {
