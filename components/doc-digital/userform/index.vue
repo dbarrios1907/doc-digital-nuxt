@@ -50,7 +50,7 @@
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Apellido(s)*</v-col>
                     <v-col class="mh-72">
-                        <v-text-field  v-model="apellidos" solo flat outlined label="Apellido Apellido" :rules="[() => !!apellidos || 'Campo requerido']" required :disabled="disabled" />
+                        <v-text-field v-model="apellidos" solo flat outlined label="Apellido Apellido" :rules="[() => !!apellidos || 'Campo requerido']" required :disabled="disabled" />
                     </v-col>
                 </v-row>
             </div>
@@ -59,10 +59,10 @@
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Correo*</v-col>
                     <v-col class="mh-72">
-                        <v-text-field  v-model="correoInstitucional" solo flat outlined label="Escribe el correo institucional" :rules="[
-                  () => !!correoInstitucional || 'Campo requerido',
-                  () => !correoInstitucional || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(correoInstitucional) || 'Email inválido',
-                ]" required />
+                        <v-text-field v-model="correoInstitucional" solo flat outlined label="Escribe el correo institucional" :rules="[
+                        () => !!correoInstitucional || 'Campo requerido',
+                        () => !correoInstitucional || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(correoInstitucional) || 'Email inválido',
+                        ]" required />
                     </v-col>
                 </v-row>
             </div>
@@ -99,7 +99,7 @@
             </div > -->
                     <div class="col-md-5 col-sm-12 px-0 mr-10" v-if="ismobil" style="min-height: 30px"> </div>
                     <v-col>
-                        <dx-select :items="roles_select" @get-selected="get_roles" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :disabled="disabled" :ripple="false">
+                        <dx-select :items="roles_select" :selectedValues="roles" @get-selected="get_roles" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :disabled="disabled" :ripple="false">
                         </dx-select>
                     </v-col>
                 </v-row>
@@ -194,7 +194,7 @@ export default {
     mounted() {
         const user = this.$store.getters['usuarios/getSelectedUser']
         const activos = this.$store.getters['usuarios/getActivos']
-
+        // console.log(user.roles)
         if (user) {
             this.isSubroganteActivado = user.isSubroganteActivado
             this.isBloqueado = !user.isBloqueado
@@ -205,8 +205,12 @@ export default {
             this.correoInstitucional = user.correoInstitucional
             this.cargo = user.cargo
             this.entidad = user.entidad.id
-            this.roles = user.roles,
-                this.seguidor = user.seguidor
+            this.roles = user.roles
+            // [{
+            //     id: 'ROLE_OFICINA_PARTES',
+            //     name: 'Oficina de partes'
+            // }]
+            this.seguidor = user.seguidor
         }
         this.seguidores = activos.map(({
             id,
@@ -257,12 +261,11 @@ export default {
                 rutVerifier: [
                     (v) => !!v || !!this.dv || 'Campo requerido',
                     (v) => verifyRut(v + '-' + this.dv, false) || 'Rut inválido',
-                    ],                    
+                ],
                 dvVerifier: [
                     (v) => !!v || !!this.dv || '',
-                    // (v) => verifyRut(v + '-' + this.dv, false) || 'Rut inválido',
-                    ]
-                
+                ]
+
             },
             roles_select: [
                 // {
@@ -346,11 +349,17 @@ export default {
                 'Editar usuario' :
                 'Guardar'
         },
-        subrogantesByEntity(){
+        subrogantesByEntity() {
             let getByEntity = this.$store.getters['usuarios/getByEntity']
-            let usuarios =  getByEntity(this.entidad)
-            return usuarios.map(({id, nombres}) => {
-                return {id, name:nombres}
+            let usuarios = getByEntity(this.entidad)
+            return usuarios.map(({
+                id,
+                nombres
+            }) => {
+                return {
+                    id,
+                    name: nombres
+                }
             })
         }
     },
@@ -379,7 +388,7 @@ export default {
             let index = entlist.findIndex((obj => (obj.id == this.entidad)))
             const entidad = entlist[index]
 
-             if (this.$refs.form.validate()) {
+            if (this.$refs.form.validate()) {
                 let user = {
                     isSubroganteActivado: this.isSubroganteActivado,
                     isBloqueado: !this.isBloqueado,
@@ -436,7 +445,7 @@ export default {
                 return item !== val
             })
         },
-        
+
     },
 }
 </script>
@@ -519,13 +528,14 @@ export default {
 
     .mh-72 {
         max-height: 72px;
-    }    
-    .textbreak{
-      max-width: rem-calc(140px);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: inline-block;
+    }
+
+    .textbreak {
+        max-width: rem-calc(140px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
     }
 }
 
