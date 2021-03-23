@@ -2,7 +2,7 @@ import { getMatchedComponents, normalizePath, routeOption } from '~/shared/utils
 import jwt_decode from 'jwt-decode'
 import get from 'lodash.get'
 import { mapLoginUrl } from '~/shared/mappers/login.mappers'
-import { isUserErrorResponse, isValidResponse } from '~/shared/utils/request'
+import { isAuthErrorResponse, isUserErrorResponse, isValidResponse, NotFoundError } from '~/shared/utils/request'
 
 // const isHttps = process.server ? require('is-https') : null
 
@@ -197,7 +197,9 @@ export default class ClaveUnicaScheme {
       })
     } catch (e) {
       resp = get(e, `response.data`, null)
-      if (isUserErrorResponse(resp)) {
+      const authError = isAuthErrorResponse(resp)
+      if (authError) this.reset()
+      if (NotFoundError(resp) || authError) {
         const message = resp?.error || 'Acceso no autorizado'
         this.$auth.$storage.setUniversal('route.message', message)
       }
