@@ -136,7 +136,7 @@
             @page-count="pageCount = $event"
           >
             <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
-              <a class="breaktext" :href="'/documentos/bandeja-firmar/details/' + id">{{ materia }}</a>
+              <a class="breaktext" @click.prevent="gotDocumentDetails(id)">{{ materia }}</a>
             </template>
 
             <template v-slot:[`item.createAt`]="{ item: { createAt } }" class="column">
@@ -355,6 +355,9 @@ export default {
     actualizacionFilter(value) {
       return this.between(this.picker3, this.picker4, value)
     },
+    gotDocumentDetails(id){
+      this.$router.replace('/documentos/bandeja-firmar/details/' + id)
+    }
   },
 }
 </script>

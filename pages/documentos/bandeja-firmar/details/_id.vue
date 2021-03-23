@@ -57,8 +57,14 @@
                         </v-card>
                     </v-dialog>
                 </v-col>
-                <v-col class="col col-12 col-md-8">
-                    <TableItem :items="tableitem" />
+                <v-col :class="['col col-12 col-md-8', { 'text-center': requesting }]">
+                    <TableItem :items="tableitem" v-if="!requesting" />
+                    <v-progress-circular
+                        indeterminate
+                        color="primary"
+                        class="mt-10"
+                        v-else
+                        ></v-progress-circular>
                 </v-col>
             </v-row>
         </v-col>
@@ -114,41 +120,52 @@ export default {
         Imagen2,
         TableItem,
     },
+    async fetch(){
+        const id = this.$route.params.id
+        let resp = await this.$store.dispatch('documentos/getDocument', id)
+        if(resp){
+            console.log(resp)
+            const tieneAnexos = resp.anexos.length > 0
+            this.tableitem = [{
+                    title: 'Tema',
+                    description: resp.materia,
+                },
+                {
+                    title: 'Descripción',
+                    description: resp.descripcion,
+                },
+                {
+                    name: 'switch',
+                    title: 'Hacer seguimiento',
+                    status: resp.isFirmado,   ///Revisar en el payload si es el campo correcto para mostrar aqui
+                },
+                {
+                    title: 'Reservado',
+                    description: resp.isReservado ? 'Si' : 'No',
+                },
+                {
+                    title: 'Tipo de documento',
+                    description:  resp.tipoDocumentoOficial ? resp.tipoDocumentoOficial.descripcion : '',
+                },
+                {
+                    title: 'Anexos',
+                    description: tieneAnexos ? 'Si tiene' : 'No tiene',  ///Revisar si es asi como se quiere
+                },
+                {
+                    title: 'Página de firma',
+                    description: 'Primera', ///este dato no viene en el payload o por lo menos no lo encuentro
+                },
+            ]
+           this.requesting = false
+        }
+    },
     data: () => ({
         dialog: false,
         dialog1: false,
         rechazo: '',
         limitmaxCount: 255,
-        tableitem: [{
-                title: 'Tema',
-                description: 'Instructivo de Modernización',
-            },
-            {
-                title: 'Descripción',
-                description: 'Indica normas y restricciones en el uso de la plataforma DocDigital para el envío de comunicaciones oficiales.',
-            },
-            {
-                name: 'switch',
-                title: 'Hacer seguimiento',
-                status: true,
-            },
-            {
-                title: 'Reservado',
-                description: 'No',
-            },
-            {
-                title: 'Tipo de documento',
-                description: 'Oficio',
-            },
-            {
-                title: 'Anexos',
-                description: 'No tiene',
-            },
-            {
-                title: 'Página de firma',
-                description: 'Primera',
-            },
-        ],
+        requesting:true,
+        tableitem: [],
         items: [{
                 title: '1. Inicio de la tramitación',
                 done: true,
@@ -234,7 +251,7 @@ export default {
         },
     },
     created() {
-        console.log(this.$route.params.id)
+        // console.log(this.$route.params.id)
     },
     methods: {
         updatefield(key, data) {
