@@ -57,6 +57,22 @@ export default {
       type: Boolean,
       default: false,
     },
+    selectedValues:{
+      type: Array,
+      default: [],
+    }
+  },
+  beforeMount(){
+    console.log(this.selectedValues)
+    this.value = this.selectedValues
+  },
+  watch:{
+    'props.selectedValues': {
+        handler: function (after, before) {
+           this.value = this.selectedValues
+        },
+        deep: true
+    }
   },
   data() {
     return {
