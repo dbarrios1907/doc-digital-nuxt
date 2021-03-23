@@ -1,3 +1,4 @@
+export const STRATEGY = 'claveUnica'
 import { isValidResponse } from '~/shared/utils/request'
 export const state = () => ({
   documents: [],
@@ -16,9 +17,9 @@ export const mutations = {
 }
 
 export const actions = {
-  async getDocuments({ commit, rootState }) {
+  async getDocuments({ commit }) {
     try {
-      const resp = await this.$auth.requestWith(rootState.authStrategy, {
+      let resp = await this.$auth.requestWith('claveUnica', {
         method: 'GET',
         url: '/documentos/tareas',
       })
@@ -37,4 +38,28 @@ export const actions = {
       console.log('Error: ' + err)
     }
   },
+  async loadDocumentTask({commit}, {tipoTarea, usuario}){
+    try {
+      let resp = await this.$auth.requestWith('claveUnica', {
+        method: 'GET',
+        url: '/documentos/tareas',
+        params:{tipoEtapa: tipoTarea, usuario}
+      })
+      const [valid, Toast] = isValidResponse(resp)
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      } else {
+        console.log(resp.result)
+
+        // commit(
+        //   'setDocuments',
+        //   resp.result.map(({ documento }) => documento)
+        // )
+      }
+    } catch (err) {
+      console.log('Error: ' + err)
+    }
+  }
 }

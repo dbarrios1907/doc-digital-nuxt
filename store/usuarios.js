@@ -17,6 +17,13 @@ export const getters = {
         return user.isBloqueado;
       })
     }, 
+    getByEntity: (state) => (entityid) => {
+      return state.users.filter(user => {
+        return user.entidad ? user.entidad.id === entityid : false
+      })
+    },
+
+    
     getSelectedUser(state){
         return state.selectedUser
     }    
@@ -41,7 +48,8 @@ export const mutations = {
         roles:  listUsers[i].roles ? listUsers[i].roles.filter((rol) => {return rol != 'ROLE_USUARIO'}) : [],
         isBloqueado : listUsers[i].isBloqueado,
         isDelete : listUsers[i].isDelete,
-        nombreCompleto : listUsers[i].nombreCompleto
+        nombreCompleto : listUsers[i].nombreCompleto,
+        entidad: listUsers[i].entidad
       })
     }
     state.users = users
@@ -106,14 +114,22 @@ export const actions = {
   async getUser({ commit }, id){
     let resp = null
     try {
-      resp = this.$auth.requestWith(STRATEGY, {
+      resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/'+id,
         // headers,
       })
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      }
+      else{
+        commit('setSelecterUser', resp.result)
+      }
     } catch (err) {}
-    
-    commit('setSelecterUser', resp.result)
     return resp    
   },
 
@@ -129,10 +145,10 @@ export const actions = {
       apellidos: user.apellidos,
       correoInstitucional: user.correoInstitucional,
       cargo: user.cargo,
-      entidad: {},
+      entidad: user.entidad,
       roles: user.roles
-    }
-    
+      // subrogante : user.subrogante
+    }    
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
@@ -142,8 +158,7 @@ export const actions = {
       })
     } catch (err) {}
 
-    return resp
-    
+    return resp    
   },
 
   async deleteUser({ commit }, id){
@@ -157,7 +172,6 @@ export const actions = {
     } catch (err) {}
 
     const [valid, Toast] = isValidResponse(resp)
-    console.log(resp)
 
     if (valid) {
       commit('deleteUser', id)
@@ -165,6 +179,34 @@ export const actions = {
     return  resp    
   },
 
+  async updateUser({ commit }, user){
+    let resp = null
+    const body_ = {
+      isSubroganteActivado: user.isSubroganteActivado,
+      isBloqueado: user.isBloqueado,
+      nombres: user.nombres,
+      run: parseInt(user.run),
+      dv: user.dv,
+      apellidos: user.apellidos,
+      correoInstitucional: user.correoInstitucional,
+      cargo: user.cargo,
+      entidad: user.entidad,
+      roles: user.roles,
+      id:parseInt(user.id),
+      // seguidor : user.seguidor
+      // subrogante : user.subrogante
+    }    
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'PUT',
+        url: '/usuarios/',
+        data: body_
+        // headers, 
+      })
+    } catch (err) {}
+    return  resp    
+  },
+  
   async setUserStatus({ commit }, {id, status}){
     let resp = null
     try {

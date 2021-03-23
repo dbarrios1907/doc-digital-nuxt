@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels flat>
+  <v-expansion-panels flat v-model="panel">
     <v-expansion-panel v-for="(item, index) of items" :key="index" active-class="active-collapse-item">
       <v-expansion-panel-header v-if="item.disabled" class="v-expansion-panel-header__disabled" disable-icon-rotate>
         <div class="font-title weight-700">
@@ -36,6 +36,19 @@ export default {
   props: {
     items: Array,
   },
+  data(){
+    return {
+      panel: null,
+    }
+  },
+  watch:{
+    'panel': {
+        handler: function (after, before) {
+           this.$emit('currentPanel', this.panel)   
+        },
+        deep: true
+    }
+  }
 }
 </script>
 

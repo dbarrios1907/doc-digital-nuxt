@@ -6,7 +6,7 @@
         <div class="weight-700 line-height-31 font-25">Usuarios</div>
       </template>
     </dx-bodytitle>
-    <v-row :class="" no-gutters>
+    <v-row no-gutters>
       <div class="col-sm-6 col-md-6">
         <div v-if="!isListEmpty" class="mt-10 weight-400">
           <span class="mr-2">Mostrando hasta</span>
@@ -76,7 +76,6 @@
               :items-per-page="getItemsPerPages(itemsPerPageUA)"
               :class="['table-check', 'table-sm', ismobil]"
               :mobile-breakpoint="0"
-              :show-select="!ismobil"
               dense
               :item-key="'nombres' + Math.random().toString()"
               @page-count="pageCountUA = $event"
@@ -102,7 +101,6 @@
               </template>
               <template slot="body.prepend" v-if="searchname || searchrut || filtered">
                 <tr class="body-prepend">
-                  <td />
                   <td>
                     <v-text-field
                       type="text"
@@ -129,7 +127,7 @@
                       v-if="searchrut"
                     />
                   </td>
-                  <td />
+                  <td v-if="!ismobil"></td>
                   <!-- <td v-if="!ismobil" class="filter">
                     <dx-select
                       :ripple="false"
@@ -155,7 +153,7 @@
                       </template>
                     </dx-select>
                   </td> -->
-                  <td />
+                  <td v-if="!ismobil"></td>
                 </tr>
               </template>
 
@@ -174,9 +172,7 @@
               </template>
 
               <template v-slot:[`item.actions`]="{ item: { id } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + id"
-                  ><v-icon dense :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
-                >
+                <v-icon dense  @click="get_user_details(id)" :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon>
                 <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
                 <v-icon dense @click="userid = id, isBloqueado = false, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
@@ -196,7 +192,6 @@
               :items-per-page="getItemsPerPages(itemsPerPageUI)"
               :class="['table-check', 'table-sm', ismobil]"
               :mobile-breakpoint="0"
-              show-select
               dense
               :item-key="'nombres' + Math.random().toString()"
               hide-default-footer
@@ -224,7 +219,6 @@
               </template>
               <template v-if="searchname || searchrut || filtered" slot="body.prepend">
                 <tr class="body-prepend">
-                  <td />
                   <td>
                     <v-text-field
                       v-model="filterValue"
@@ -235,7 +229,7 @@
                       flat
                       outlined
                       label="Nombre"
-                      @focus="actived = 'name'"
+                      @focus="actived = 'nombres'"
                     />
                   </td>
                   <td v-if="!ismobil">
@@ -251,7 +245,8 @@
                       @focus="actived = 'rut'"
                     />
                   </td>
-                  <td v-if="!ismobil" class="filter">
+                   <td v-if="!ismobil"></td>
+                  <!-- <td v-if="!ismobil" class="filter">
                     <dx-select
                       v-model="permiso"
                       v-if="filtered"
@@ -275,8 +270,8 @@
                         </Badge>
                       </template>
                     </dx-select>
-                  </td>
-                  <td />
+                  </td> -->
+                 <td v-if="!ismobil"></td>
                 </tr>
               </template>
 
@@ -295,9 +290,7 @@
               </template>
 
               <template v-slot:[`item.actions`]="{ item: { id } }">
-                <nuxt-link :to="'/administracion/usuarios/editar/' + id"
-                  ><v-icon dense :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon></nuxt-link
-                >
+                <v-icon dense  @click="get_user_details(id)" :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon>
                 <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
                 <v-icon dense @click="userid = id, isBloqueado = true, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
               </template>
@@ -531,6 +524,23 @@ export default {
 
       return flag
     },
+    async get_user_details(id) {
+      let userid = id.toString()
+      let resp = null
+      try{ 
+        resp = await this.$store.dispatch('usuarios/getUser', userid)
+      }catch(error) {}
+      const [valid, Toast] = isValidResponse(resp)
+      
+      if (!valid) {
+        Toast.error({
+          message: 'Usuario no encontrado',
+        })
+      }
+      else{
+        this.$router.replace('/administracion/usuarios/editar/'+userid)
+      }
+    },
     async open_user_details(id) {
       this.selected_user = id.toString()
       let resp = null
@@ -664,17 +674,24 @@ table a {
 // table > tbody > tr > td:nth-child(3) {
 //   max-width: 250px !important;
 // }
+
+.v-application .usuarios .theme--light.v-data-table.table-check thead > tr > th:first-child,
+.v-application .usuarios .theme--dark.v-data-table.table-check thead > tr > th:first-child,
+.usuarios .theme--dark.v-data-table.table-check thead > tr > th:first-child,
+.usuarios .theme--light.v-data-table.table-check thead > tr > th:first-child{
+      width: 30% !important;
+}
 .usuarios {
   table > tbody > tr > td {
       padding: 6px 10px !important;
   }
   :not(.ismobile){
-    table > thead > tr > th:nth-child(3){
+    table > thead > tr > th:nth-child(2){
       max-width: 250px !important;
       width: 17% !important;
     }
     
-    table > thead > tr > th:nth-child(4){
+    table > thead > tr > th:nth-child(3){
       width: 42% !important;
     }
     
@@ -683,9 +700,9 @@ table a {
     table > tbody > tr {
       height: 37px !important;
     }
-    table > tbody > tr > td:nth-child(2),
-    table > thead > tr > th:nth-child(2) {
-      text-align: center;
+    table > tbody > tr > td:nth-child(1),
+    table > thead > tr > th:nth-child(1) {
+      text-align: left;
     }
     .dx-pagination {
       margin: 0px auto !important;
