@@ -112,7 +112,7 @@
                         <v-autocomplete append-icon="" :ripple="false" solo flat multiple outlined v-model="seguidor" :items="seguidores" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione seguidor" no-data-text="No existen coincidencias">
                             <template v-slot:selection="{ item }">
                                 <dx-badge type="tertiary" label outlined class="mx-1 my-1">
-                                    <div class="darken3--text font-16 line-height-22 weight-400">{{ item.name }}</div>
+                                    <div class="darken3--text font-16 line-height-22 weight-400 textbreak" :title=" item.name "> {{ item.name }}</div>
                                     <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
                                 </dx-badge>
                             </template>
@@ -120,6 +120,7 @@
                     </v-col>
                 </v-row>
             </div>
+            <div class="col-md-12 col-sm-12 px-0 py-0 mr-10 d-none d-md-flex d-lg-flex d-xl-flex" v-if="!ismobil" style="min-height: 1px"> </div>
             <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Subrogante</v-col>
@@ -129,7 +130,7 @@
                         <v-autocomplete append-icon="" :ripple="false" solo flat outlined v-model="subrogante" :items="subrogantesByEntity" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione subrogante" no-data-text="No existen coincidencias">
                             <template v-slot:selection="{ item }">
                                 <dx-badge type="tertiary" label outlined class="mx-1 my-1">
-                                    <div class="darken3--text font-16 line-height-22 weight-400">{{ item.name }}</div>
+                                    <div class="darken3--text font-16 line-height-22 weight-400 textbreak">{{ item.name }}</div>
                                     <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="subrogante=null"> mdi-close </dx-icon>
                                 </dx-badge>
                             </template>
@@ -518,6 +519,13 @@ export default {
 
     .mh-72 {
         max-height: 72px;
+    }    
+    .textbreak{
+      max-width: rem-calc(140px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
     }
 }
 

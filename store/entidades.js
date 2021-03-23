@@ -4,20 +4,7 @@ export const state = () => ({
   selectedEntity: null,
   count: 0,
   entities: [],
-  regions : [
-      {
-        id: 1,
-        nombre: "region1",
-      },
-      {
-        id: 2,
-        nombre: "region2",
-      },
-      {
-        id: 3,
-        nombre: "region3",
-      },
-    ],
+  regions : [],
   provinces: [
     {
       id: 1,
@@ -146,6 +133,11 @@ export const mutations = {
     },
     setEntitiesList: (state, entitiesList) => {
         state.entities = entitiesList
+    },
+    setRegionList: (state, regionList) => {
+      state.regions = regionList.map(({id, nombre}) => {
+          return {id, name:nombre}
+      })  
     }
   
 }
@@ -219,4 +211,71 @@ export const actions = {
     } catch (err) {}
     return resp    
   },
+  
+  async getRegions({ commit }){
+    try {
+      let resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'GET',
+        url: '/tipos/distgeografica/regiones/',
+      })
+
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error obteniendo las regiones',
+        })
+      }
+      else{
+        commit('setRegionList', resp.result)
+      }
+    } catch (err) {console.log(err)}     
+  },
+
+  async getProvincias({ commit }, region){
+    try {
+      let resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'GET',
+        url: '/tipos/distgeografica/regiones/'+region+'/provincias',
+      })
+
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error obteniendo las provincias',
+        })
+      }
+      else{
+        return resp.result.map(({id, nombre}) => {
+          return {id, name:nombre}
+        })  
+      }
+    } catch (err) {console.log(err)} 
+    return null    
+  },  
+
+  async getComunas({ commit }, provincia){
+    try {
+      let resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'GET',
+        url: '/tipos/distgeografica/regiones/provincias/'+provincia+'/comunas',
+      })
+
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error obteniendo las comunas',
+        })
+      }
+      else{
+        return resp.result.map(({id, nombre}) => {
+          return {id, name:nombre}
+        })  
+      }
+    } catch (err) {console.log(err)} 
+    return null    
+  },
+  
 }
