@@ -1,5 +1,5 @@
 <template>
-  <DocumentTray :documentos="documentos" />
+  <DocumentTray :documentos="documentos" title="Oficina de partes" subtitle="Revisa tu documentos" empty-results="no existen documentos archivados" />
 </template>
 
 <script>

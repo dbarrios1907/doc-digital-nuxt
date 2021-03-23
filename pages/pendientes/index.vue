@@ -1,5 +1,10 @@
 <template>
-  <DocumentTray :documentos="documentos" />
+  <DocumentTray
+    :documentos="documentos"
+    title="Documentos Pendientes"
+    subtitle="Revisa tus documentos pendientes"
+    empty-results="no existen documentos pendientes"
+  />
 </template>
 
 <script>

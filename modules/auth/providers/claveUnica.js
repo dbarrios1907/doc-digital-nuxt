@@ -5,7 +5,7 @@ module.exports = function claveUnica(strategy) {
     _scheme: 'claveUnica',
     redirectLogin: { url: '/api/auth/url', method: 'get' },
     login: { url: '/api/auth/login', method: 'post' },
-    refresh: { url: '/api//auth/login/refresh', method: 'post' },
+    refresh: { url: '/api/auth/login/refresh', method: 'post' },
     logout: { url: '/api/auth/logout', method: 'post' },
     unauthorizedPath: '/401',
     tokenName: 'Authorization',
