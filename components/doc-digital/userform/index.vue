@@ -45,7 +45,6 @@
                     </v-col>
                 </v-row>
             </div>
-
             <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Apellido(s)*</v-col>
@@ -54,7 +53,6 @@
                     </v-col>
                 </v-row>
             </div>
-
             <div class="col-md-5 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Correo*</v-col>
