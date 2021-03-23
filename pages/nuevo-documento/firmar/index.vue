@@ -60,6 +60,7 @@
                   <v-col cols="12" class="py-0 px-0">
                     <span>Descripción del documento *</span>
                     <v-textarea
+                      dx-textarea
                       v-model="description"
                       no-resize
                       rows="4"

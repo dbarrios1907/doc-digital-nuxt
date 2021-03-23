@@ -4,12 +4,12 @@
       Si debe distribuir este documento hacia otras instituciones agregue el nombre de las Oficinas de Partes aquí.
     </p>
     <v-row no-gutters>
-      <v-col cols="12" sm="" md="4" class="pr-sm-2">
-        <label>Ministerio u Organismo *</label>
+      <v-col cols="12" md="4" class="pr-sm-2">
+        <label class="text-truncate">Ministerio u Organismo *</label>
         <cc-select v-model="org" :items="orgOpts" :placeholder="placeholderMinister" :label="placeholderMinister" cc add />
       </v-col>
-      <v-col cols="12" sm="6" md="4" class="pl-sm-2">
-        <label>Subsecretaría *</label>
+      <v-col cols="12" md="4" class="pl-sm-2 flex-shrink-0">
+        <label class="text-truncate">Subsecretaría *</label>
         <cc-select v-model="secretaria" :items="orgOpts" :placeholder="placeholderSecretaria" :label="placeholderSecretaria" cc add />
       </v-col>
     </v-row>
