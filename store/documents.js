@@ -1,5 +1,6 @@
 export const STRATEGY = 'claveUnica'
 import { isValidResponse } from '~/shared/utils/request'
+
 export const state = () => ({
   documents: [],
   selectedDocument: null,
@@ -19,32 +20,28 @@ export const mutations = {
 
 export const actions = {
   async getDocuments({ commit }) {
-    try {
-      let resp = await this.$auth.requestWith('claveUnica', {
-        method: 'GET',
-        url: '/documentos/tareas',
+    const resp = await this.$auth.requestWith('claveUnica', {
+      method: 'GET',
+      url: '/documentos/tareas',
+    })
+    const [valid, Toast] = isValidResponse(resp)
+    if (!valid) {
+      Toast.error({
+        message: 'Ha ocurrido un error',
       })
-      const [valid, Toast] = isValidResponse(resp)
-      if (!valid) {
-        Toast.error({
-          message: 'Ha ocurrido un error',
-        })
-      } else {
-        commit(
-          'setDocuments',
-          resp.result.map(({ documento }) => documento)
-        )
-      }
-    } catch (err) {
-      console.log('Error: ' + err)
+    } else {
+      commit(
+        'setDocuments',
+        resp.result.map(({ documento }) => documento)
+      )
     }
   },
-  async loadDocumentTask({commit}, {tipoTarea, usuario}){
+  async loadDocumentTask({ commit }, { tipoTarea, usuario }) {
     try {
-      let resp = await this.$auth.requestWith('claveUnica', {
+      const resp = await this.$auth.requestWith('claveUnica', {
         method: 'GET',
         url: '/documentos/tareas',
-        params:{tipoEtapa: tipoTarea, usuario}
+        params: { tipoEtapa: tipoTarea, usuario },
       })
       const [valid, Toast] = isValidResponse(resp)
       if (!valid) {
@@ -60,9 +57,9 @@ export const actions = {
   },
   async getDocument({ commit }, id) {
     try {
-      let resp = await this.$auth.requestWith('claveUnica', {
+      const resp = await this.$auth.requestWith('claveUnica', {
         method: 'GET',
-        url: '/documentos/'+id,
+        url: '/documentos/' + id,
       })
       const [valid, Toast] = isValidResponse(resp)
       if (!valid) {

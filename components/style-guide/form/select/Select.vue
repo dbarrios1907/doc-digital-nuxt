@@ -12,11 +12,11 @@
     :multiple="multiple"
     :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
     :closable-iems="closableItems"
-    v-on="$listeners"
     :rules="rules"
     :required="required"
-    @change="emitSelected"
     :disabled="disabled"
+    v-on="$listeners"
+    @change="emitSelected"
   >
     <template v-if="multiple" v-slot:selection="{ item }">
       <dx-badge type="tertiary" label outlined class="mx-1 my-1">
@@ -26,10 +26,10 @@
     </template>
 
     <!-- Pass on all named slots -->
-    <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot" />
+    <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
 
     <!-- Pass on all scoped slots -->
-    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope"/></template>
+    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope" /></template>
   </v-select>
 </template>
 
@@ -57,27 +57,27 @@ export default {
       type: Boolean,
       default: false,
     },
-    selectedValues:{
+    selectedValues: {
       type: Array,
-      default: [],
-    }
-  },
-  beforeMount(){
-    console.log(this.selectedValues)
-    this.value = this.selectedValues
-  },
-  watch:{
-    'props.selectedValues': {
-        handler: function (after, before) {
-           this.value = this.selectedValues
-        },
-        deep: true
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
       value: [],
     }
+  },
+  watch: {
+    'props.selectedValues': {
+      handler(after, before) {
+        this.value = this.selectedValues
+      },
+      deep: true,
+    },
+  },
+  beforeMount() {
+    console.log(this.selectedValues)
+    this.value = this.selectedValues
   },
   methods: {
     emitSelected() {

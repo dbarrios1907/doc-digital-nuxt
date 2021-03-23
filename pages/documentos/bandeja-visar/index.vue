@@ -9,8 +9,10 @@
 
 <script>
 export default {
-  fetch() {
-    this.$store.dispatch('documents/getDocuments')
+  async fetch() {
+    console.log(this.$fetchState)
+    debugger
+    await this.$store.dispatch('documents/getDocuments')
   },
   computed: {
     documentos() {
