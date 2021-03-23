@@ -143,6 +143,10 @@
               {{ formatdate(createAt) }}
             </template>
 
+            <template v-slot:[`item.updateAt`]="{ item: { updateAt } }" class="column">
+              {{ formatdate(updateAt) }}
+            </template>
+
             <template v-slot:[`item.access`]="{ item: { access } }">
               <v-chip v-for="v in access" :key="v" class="ml-2" color="primary" small>
                 {{ v }}
@@ -150,7 +154,11 @@
             </template>
 
             <template v-slot:[`item.actions`]>
-              <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+              <div class="d-flex">
+                <v-icon> mdi-eye </v-icon>
+                <v-icon> mdi-pencil</v-icon>
+                <v-icon> mdi-close</v-icon>
+              </div>
             </template>
 
             <template v-slot:footer>
@@ -297,7 +305,7 @@ export default {
         { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
         { text: 'Creación', value: 'createAt', sortable: true, filter: this.creacionFilter },
         { text: 'Actualización', value: 'updateAt', sortable: true, filter: this.actualizacionFilter },
-        { text: 'Ver', align: this.ismobil ? 'center' : 'start', value: 'actions', sortable: false },
+        { text: 'Acciones', align: this.ismobil ? 'center' : 'start', value: 'actions', sortable: false },
       ]
     },
   },
@@ -355,9 +363,9 @@ export default {
     actualizacionFilter(value) {
       return this.between(this.picker3, this.picker4, value)
     },
-    gotDocumentDetails(id){
+    gotDocumentDetails(id) {
       this.$router.replace('/documentos/bandeja-firmar/details/' + id)
-    }
+    },
   },
 }
 </script>
