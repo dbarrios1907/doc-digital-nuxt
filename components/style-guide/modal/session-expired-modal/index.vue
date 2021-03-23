@@ -36,13 +36,11 @@
 </template>
 
 <script>
+import { closeableMixin } from '~/shared/mixins/closeableMixin'
+
 export default {
   name: 'DxSessionExpiredModal',
+  mixins: [closeableMixin],
   inheritAttrs: false,
-  methods: {
-    onClose() {
-      this.$emit('onClose', false)
-    },
-  },
 }
 </script>

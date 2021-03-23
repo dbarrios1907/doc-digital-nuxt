@@ -2,7 +2,7 @@ import { getMatchedComponents, normalizePath, routeOption } from '~/shared/utils
 import jwt_decode from 'jwt-decode'
 import get from 'lodash.get'
 import { mapLoginUrl } from '~/shared/mappers/login.mappers'
-import { isUserErrorResponse, isValidResponse } from '~/shared/utils/request'
+import { isAuthErrorResponse, isValidResponse, tokenExpiredError } from '~/shared/utils/request'
 
 // const isHttps = process.server ? require('is-https') : null
 
@@ -38,11 +38,33 @@ export default class ClaveUnicaScheme {
     // this.$auth.redirect(this._redirectURI, true)
   }
 
+  async refreshToken() {
+    const { url, method } = this.options.refresh
+    let resp = null
+    try {
+      resp = await this.$auth.requestWith(this.name, {
+        method,
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        baseURL: process.server ? undefined : false,
+      })
+      // eslint-disable-next-line no-empty
+    } catch (err) {
+      this.$auth.handleErrorResponse()
+    }
+
+    const [valid, Toast] = isValidResponse(resp)
+
+    await this.reset()
+  }
+
   async logout(idle) {
     const { url, method } = this.options.logout
     let resp = null
     try {
-      resp = await this.$auth.requestWith('claveUnica', {
+      resp = await this.$auth.requestWith(this.name, {
         method,
         url,
         headers: {
@@ -141,7 +163,7 @@ export default class ClaveUnicaScheme {
       // with `auth: false` to avoid an unnecessary redirect from callback to login)
       if (!pageIsInGuestMode && (!callback || !insidePage(callback))) {
         await this.reset()
-        this.$auth.redirect('home', true)
+        this.$auth.redirect('unauthorized', true)
         return false
       }
     }
@@ -154,9 +176,29 @@ export default class ClaveUnicaScheme {
 
     if (!token || !token.length) {
       await this.reset()
-      this.$auth.redirect('home', true)
+      this.$auth.redirect('unauthorized', true)
     }
 
+    this.setUserToken(token)
+  }
+
+  async validateAndPersistToken(resp, data) {
+    let token = get(resp, `result.${this.options.token_key}`, null)
+    this.options.expires = get(resp, `result.expires_in`, 3000)
+
+    if (!token || !token.length) {
+      // if token is null try to use persisted token
+      // only if resp for token request still valid
+      if (resp.status === 200 && resp.count === 1) {
+        token = this.$auth.getToken(this.name)
+      } else {
+        await this.reset()
+        this.$auth.redirect('unauthorized', true)
+      }
+    }
+
+    // if valid token save state params and userToken
+    this.$auth.$storage.setUniversal(this.name + '.state', data)
     this.setUserToken(token)
   }
 
@@ -196,37 +238,30 @@ export default class ClaveUnicaScheme {
         data,
       })
     } catch (e) {
-      resp = get(e, `response.data`, null)
-      if (isUserErrorResponse(resp)) {
-        const message = resp?.error || 'Acceso no autorizado'
-        this.$auth.$storage.setUniversal('route.message', message)
-      }
-      this.$auth.ctx.app.router.replace({
-        name: 'unauthorized',
-      })
+      await this.$auth.handleErrorResponse(e)
       return false
     }
 
-    let token = get(resp, `result.${this.options.token_key}`, null)
-    this.options.expires = get(resp, `result.expires_in`, 3000)
-
-    if (!token || !token.length) {
-      // if token is null try to use persisted token
-      // only if resp for token request still valid
-      if (resp.status === 200 && resp.count === 1) {
-        token = this.$auth.getToken(this.name)
-      } else {
-        await this.reset()
-        this.$auth.redirect('home', true)
-      }
-    }
-
-    // if valid token save state params and userToken
-    this.$auth.$storage.setUniversal(this.name + '.state', data)
-    this.setUserToken(token)
+    await this.validateAndPersistToken(resp, data)
 
     // Redirect to home
     this.$auth.redirect('home', true)
     return true // True means a redirect happened
+  }
+
+  async handleErrorResponse(resp) {
+    if (tokenExpiredError(resp)) {
+      return this.refreshToken()
+    }
+    if (isAuthErrorResponse(resp)) {
+      await this.reset()
+      const message = resp?.error || 'Acceso no autorizado'
+      this.$auth.$storage.setUniversal('route.message', message)
+
+      this.$auth.ctx.app.router.replace({
+        name: 'unauthorized',
+      })
+    }
+    return Promise.reject()
   }
 }

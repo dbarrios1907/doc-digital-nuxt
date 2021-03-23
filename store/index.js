@@ -108,6 +108,7 @@ export const state = () => ({
       ],
     },
   ],
+  authStrategy: 'claveUnica',
 })
 
 export const getters = {}

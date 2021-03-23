@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+require('./envconfig')
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
@@ -59,8 +60,8 @@ export default {
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    baseUrl: 'http://doc.digital.io/api',
-    browserBaseURL: 'http://doc.digital.io/api',
+    baseUrl: process.env.BASE_API,
+    browserBaseURL: process.env.BASE_API,
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
@@ -146,6 +147,11 @@ export default {
       //   path: '*',
       //   component: resolve(__dirname, 'pages/404.vue'),
       // })
+    },
+
+    transition: {
+      name: 'fade',
+      mode: 'out-in',
     },
   },
 }

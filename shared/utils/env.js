@@ -39,4 +39,6 @@ export const getEnv = (key, fallback = null) => {
   return env[key] || fallback
 }
 
+export const isProdEnv = process.env.NODE_ENV === 'production'
+
 export const getNoWarn = () => getEnv('BOOTSTRAP_VUE_NO_WARN')

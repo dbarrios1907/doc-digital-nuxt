@@ -1,9 +1,27 @@
 <template>
-  <svg width="761" height="1172" viewBox="0 0 761 1172" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <rect y="0.906006" width="761" height="1171.06" fill="url(#pattern0)" />
+  <svg
+    width="249"
+    v-bind="$props"
+    height="339"
+    viewBox="0 0 249 339"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    v-on="$listeners"
+  >
+    <rect x="-0.5" y="0.5" width="246.229" height="338" transform="matrix(-1 0 0 1 247.034 0)" fill="#092039" />
+    <rect x="-0.5" y="0.5" width="246.229" height="338" transform="matrix(-1 0 0 1 247.034 0)" fill="white" />
+    <rect x="-0.5" y="0.5" width="246.229" height="338" transform="matrix(-1 0 0 1 247.034 0)" stroke="#E3E3E3" />
+    <rect opacity="0.6" x="18.2568" y="1" width="213.295" height="337" fill="url(#pattern0)" />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M230.866 318.167H229.27L228.704 317.604C230.684 315.229 231.876 312.146 231.876 308.792C231.876 301.312 225.998 295.25 218.747 295.25C211.495 295.25 205.618 301.312 205.618 308.792C205.618 316.271 211.495 322.333 218.747 322.333C221.999 322.333 224.988 321.104 227.291 319.062L227.836 319.646V321.292L237.935 331.688L240.945 328.583L230.866 318.167ZM218.747 318.167C213.717 318.167 209.657 313.979 209.657 308.792C209.657 303.604 213.717 299.417 218.747 299.417C223.776 299.417 227.836 303.604 227.836 308.792C227.836 313.979 223.776 318.167 218.747 318.167ZM217.737 303.583H219.756V307.75H223.796V309.833H219.756V314H217.737V309.833H213.697V307.75H217.737V303.583Z"
+      fill="#0F69C4"
+    />
     <defs>
       <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-        <use xlink:href="#image0" transform="translate(-0.00123979) scale(0.0010642 0.000691563)" />
+        <use xlink:href="#image0" transform="translate(-0.0146374) scale(0.00109265 0.000691563)" />
       </pattern>
       <image
         id="image0"
@@ -16,6 +34,6 @@
 </template>
 <script>
 export default {
-  name: 'Imagen2',
+  name: 'PreviewThumbnail',
 }
 </script>

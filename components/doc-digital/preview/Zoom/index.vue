@@ -16,6 +16,6 @@
 </template>
 <script>
 export default {
-  name: 'Imagen2',
+  name: 'PreviewZoom',
 }
 </script>

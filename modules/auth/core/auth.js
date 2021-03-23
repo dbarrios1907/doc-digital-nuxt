@@ -1,6 +1,8 @@
 import Storage from './storage'
 import { isSet, getProp } from './utilities'
 import { routeOption, isRelativeURL, isSameURL } from '~/shared/utils/router'
+import { getErrorResponse } from '~/shared/utils/request'
+import { isProdEnv } from '~/shared/utils/env'
 
 export default class Auth {
   constructor(ctx, options) {
@@ -248,6 +250,39 @@ export default class Auth {
     return this.$storage.getState('busy')
   }
 
+  handleErrorResponse(error, retry) {
+    const resp = getErrorResponse(error)
+    if (!isProdEnv) {
+      console.log(resp)
+    }
+
+    // Call all error handlers
+    this.callOnError(error, { method: 'request' })
+
+    if (!this.strategy.handleErrorResponse) {
+      return Promise.reject(error)
+    }
+
+    return Promise.resolve(this.strategy.handleErrorResponse(resp))
+      .then(() => {
+        return retry()
+      })
+      .catch(error => {
+        return Promise.reject(error)
+      })
+  }
+
+  refreshToken(resp) {
+    if (!this.strategy.refreshToken) {
+      return Promise.resolve()
+    }
+
+    return Promise.resolve(this.strategy.refreshToken(...arguments)).catch(error => {
+      this.callOnError(error, { method: 'refreshToken' })
+      return Promise.reject(error)
+    })
+  }
+
   request(endpoint, defaults, withResponse) {
     const _endpoint = typeof defaults === 'object' ? Object.assign({}, defaults, endpoint) : endpoint
 
@@ -272,11 +307,7 @@ export default class Auth {
         }
       })
       .catch(error => {
-        // Call all error handlers
-        this.callOnError(error, { method: 'request' })
-
-        // Throw error
-        return Promise.reject(error)
+        return this.handleErrorResponse(error, () => this.request(endpoint))
       })
   }
 
@@ -333,6 +364,7 @@ export default class Auth {
 
     let to = this.options.redirect[name]
     if (!to) {
+      console.log('NOT DEFINED')
       return
     }
 
@@ -361,12 +393,14 @@ export default class Auth {
     }
 
     if (process.client) {
+      console.log('CLIENT REDIRECT')
       if (noRouter) {
         window.location.replace(to)
       } else {
         this.ctx.app.router.replace(to)
       }
     } else {
+      console.log('REDIRECT')
       this.ctx.redirect(302, to, this.ctx.query)
     }
   }

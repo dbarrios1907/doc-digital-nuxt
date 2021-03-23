@@ -38,7 +38,7 @@ export default {
     },
   },
   data: vm => ({
-    style: { width: 292 + 'px' },
+    style: { width: 292 + 'px', minWidth: 292 + 'px'  },
     date: vm.parseDate(vm.value) || new Date().toISOString(),
     dateFormatted: vm.formatDate(vm.parseDate(vm.value)) || (vm.cleared ? '' : vm.formatDate(new Date().toISOString().substr(0, 10))),
     showPicker: false,

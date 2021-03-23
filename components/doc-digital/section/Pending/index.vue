@@ -3,7 +3,7 @@
     <div class="d-flex justify-center">
       <p>Tus pendientes</p>
     </div>
-    <div class="d-flex justify-center">
+    <div class="d-flex justify-center flex-xs-column">
       <dx-button color="primary">
         Visar
         <div class="badge-number d-flex justify-center">
@@ -66,6 +66,12 @@ export default {
   span {
     position: relative;
     left: -1px;
+  }
+}
+
+@media #{map-get($display-breakpoints, 'xs-only')} {
+  .flex-xs-column {
+    flex-direction: column;
   }
 }
 </style>
