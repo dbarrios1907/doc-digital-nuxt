@@ -44,7 +44,7 @@
                         <v-row no-gutters :class="['align-center', ismobil]">
                             <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Región *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
-                                <v-select :items="regiones" v-model="region" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
+                                <v-select @change="getProvincias" :items="regiones" v-model="region" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
                             </v-col>
                         </v-row>
                     </div>
@@ -54,7 +54,7 @@
                         <v-row no-gutters :class="['align-center', ismobil]">
                             <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Provincia *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
-                                <v-select :items="provincias" v-model="provincia" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
+                                <v-select  @change="getComunas"  :items="provincias" v-model="provincia" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
                             </v-col>
                         </v-row>
                     </div>
@@ -108,7 +108,9 @@ export default {
             nombre: null,
             region: null,
             provincia: null,
+            provincias: [],
             comuna: null,
+            comunas: [],
             rules: {
                 selectRequired: [(v) => (v && !!v) || 'Campo requerido'],
                 correoRules: [
@@ -167,6 +169,19 @@ export default {
       resetValidation () {
         this.$refs.form.resetValidation()
       },
+      async getProvincias(region){
+          try{
+              let  resp = await this.$store.dispatch('entidades/getProvincias', region)
+              this.provincias = resp
+              this.comunas = []
+          }catch(err){console.log(err)}          
+      },      
+      async getComunas(provincia){
+          try{
+              let  resp = await this.$store.dispatch('entidades/getComunas', provincia)
+              this.comunas = resp
+          }catch(err){console.log(err)}          
+      }
     },
     computed: {    
         ismobil() {
@@ -201,43 +216,9 @@ export default {
         },
         regiones() {
             const regiones = this.$store.getters['entidades/getRegions']
-            return regiones.map(({
-                id,
-                nombre
-            }) => {
-                return {
-                    id,
-                    name: nombre
-                }
-            })
+            return regiones
         },
-        provincias() {
-            let provincias = this.$store.getters['entidades/getProvinces']
-            const provincias_ = provincias(this.region)
-            return provincias_.map(({
-                id,
-                nombre
-            }) => {
-                return {
-                    id,
-                    name: nombre
-                }
-            })
-        },
-        comunas() {
-            let comunas = this.$store.getters['entidades/getComunas']
-            const comunas_ = comunas(this.provincia)
-            return comunas_.map(({
-                id,
-                nombre
-            }) => {
-                return {
-                    id,
-                    name: nombre
-                }
-            })
-        }
-    }
+    },
 }
 </script>
 
