@@ -23,7 +23,7 @@
         </dx-button> -->
         </v-col>
         <v-col sm="6" :class="[ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-5': ismobil }]">
-            <a @click.prevent="entity_dialog = true" class="text-underline weight-700 font-title"> + Agregar Entidad</a>
+            <a @click.prevent="openEntityForm" class="text-underline weight-700 font-title"> + Agregar Entidad</a>
         </v-col>
     </v-row>
     <v-row class="mt-6" no-gutters>
@@ -229,6 +229,10 @@ export default {
             this.entity_dialog = false
             this.selected_entidad = null
         },
+        async openEntityForm(){
+            await this.$store.dispatch('entidades/getRegions')
+             this.entity_dialog = true
+        },
         async editEntity(id) {
           let resp =  await this.$store.dispatch('entidades/getEntity', id)
           const [valid, Toast] = isValidResponse(resp)
@@ -239,6 +243,7 @@ export default {
             })
           }
           else{
+              await this.$store.dispatch('entidades/getRegions')
               this.selected_entidad = resp.result
               this.entity_dialog = true
           }
