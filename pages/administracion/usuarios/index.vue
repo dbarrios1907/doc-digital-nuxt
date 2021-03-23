@@ -327,19 +327,9 @@
         </dx-button>
       </template>
     </userform-details>
-    <v-dialog
-      v-model="dialog_confirmacion"
-      persistent
-      max-width="290"
+    <AdminConfirmation :dialog="dialog_confirmacion" :headTitle="isBloqueado ? '¿Realmente desea activar el usuario?' : '¿Realmente desea inactivar el usuario?'"
     >
-       <v-card>
-        <v-card-title class="headline">
-          Confirmación
-        </v-card-title>
-        <v-card-text>{{isBloqueado ? '¿Realmente desea activar el usuario?' : '¿Realmente desea inactivar el usuario?'}}</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          
+        <template v-slot:actions>
           <dx-button
             color="white"
             outlined
@@ -353,9 +343,8 @@
           <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="dialog_confirmacion = false, userid = '', isBloqueado = false">
             <span class="text-underline"> Cancelar </span>
           </dx-button>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+        </template>
+    </AdminConfirmation>
   </div>
 </template>
 
@@ -524,40 +513,41 @@ export default {
 
       return flag
     },
-    async get_user_details(id) {
-      let userid = id.toString()
+    async getUser(id){
       let resp = null
+      this.selectedUser = null
       try{ 
-        resp = await this.$store.dispatch('usuarios/getUser', userid)
+        resp = await this.$store.dispatch('usuarios/getUser', id)
       }catch(error) {}
+
       const [valid, Toast] = isValidResponse(resp)
       
       if (!valid) {
         Toast.error({
           message: 'Usuario no encontrado',
         })
+        this.loading = false
       }
       else{
+        this.loading = false
+        return resp
+      }
+
+      return null
+    },
+    async get_user_details(id) {
+      let userid = id.toString()
+      const resp = await this.getUser(id)
+      if (resp) {
         this.$router.replace('/administracion/usuarios/editar/'+userid)
       }
     },
     async open_user_details(id) {
       this.selected_user = id.toString()
-      let resp = null
       this.selectedUser = null
       this.loading = true
-      try{ 
-        resp = await this.$store.dispatch('usuarios/getUser', this.selected_user)
-      }catch(error) {}
-
-      const [valid, Toast] = isValidResponse(resp)
-
-      if (!valid) {
-        Toast.error({
-          message: 'Usuario no encontrado',
-        })
-      }
-      else{
+      let resp = await this.getUser(this.selected_user)
+      if (resp) {
         this.selectedUser = resp.result        
         this.details_dialog = true
         this.loading = false

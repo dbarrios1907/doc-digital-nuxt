@@ -117,7 +117,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/'+id,
-        // headers,
       })
       const [valid, Toast] = isValidResponse(resp)
 
@@ -154,7 +153,6 @@ export const actions = {
         method: 'POST',
         url: '/usuarios/',
         data: body_,
-        // headers
       })
     } catch (err) {}
 
@@ -167,7 +165,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'DELETE',
         url: '/usuarios/'+id,
-        // headers, 
       })
     } catch (err) {}
 
@@ -201,7 +198,6 @@ export const actions = {
         method: 'PUT',
         url: '/usuarios/',
         data: body_
-        // headers, 
       })
     } catch (err) {}
     return  resp    
@@ -213,7 +209,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
         url: '/usuarios/'+id+'/activar/'+status
-        // headers, 
       })
     } catch (err) {}
 
@@ -223,5 +218,27 @@ export const actions = {
       commit('setUserStatus', {id, status})
     }
     return  resp    
+  },
+
+  
+  async getRoles({ commit }, id){
+    let resp = null
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'GET',
+        url: '/tipos/seguridad/roles',
+      })
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      }
+      else{
+        return resp.result
+      }
+    } catch (err) {}
+    return resp    
   },
 }
