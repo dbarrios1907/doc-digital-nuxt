@@ -141,14 +141,14 @@ export default {
         {
           name: 'block',
           title: '1. Inicio de la tramitación',
-          //description: this._filter('CREACION'),
-          description: [
-            {
-              fecha: '10-09-2020 9:58',
-              creador: 'Trinidad Swinburn Correa',
-              entidad: 'Subsecretaría General de la Presidencia',
-            },
-          ],
+          description: this._filter('CREACION'),
+          // description: [
+          //   {
+          //     fecha: '10-09-2020 9:58',
+          //     creador: 'Trinidad Swinburn Correa',
+          //     entidad: 'Subsecretaría General de la Presidencia',
+          //   },
+          // ],
         },
         {
           name: 'block',
@@ -159,22 +159,22 @@ export default {
         {
           name: 'card',
           title: '3. Firma',
-          //description: this._filter('FIRMA'),
-          description: [
-            {
-              title: 'Grupo 1 de firmas',
-              body: [
-                {
-                  title: 'Sebastian Piñera Echenique',
-                  description: 'Administrativa de Presidencia',
-                  status: {
-                    name: 'mdi-clock-time-three-outline',
-                    description: 'Firma pendiente',
-                  },
-                },
-              ],
-            },
-          ],
+          description: this._filter('FIRMA'),
+          // description: [
+          //   {
+          //     title: 'Grupo 1 de firmas',
+          //     body: [
+          //       {
+          //         title: 'Sebastian Piñera Echenique',
+          //         description: 'Administrativa de Presidencia',
+          //         status: {
+          //           name: 'mdi-clock-time-three-outline',
+          //           description: 'Firma pendiente',
+          //         },
+          //       },
+          //     ],
+          //   },
+          // ],
         },
         {
           name: 'block',

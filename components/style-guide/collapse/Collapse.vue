@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panels flat v-model="panel">
-    <v-expansion-panel v-for="(item, index) of items" :key="index" active-class="active-collapse-item">
+    <v-expansion-panel v-for="(item, index) of items" :key="index" active-class="active-collapse-item" :v-if="item.description.length > 0">
       <v-expansion-panel-header v-if="item.disabled" class="v-expansion-panel-header__disabled" disable-icon-rotate>
         <div class="font-title weight-700">
           {{ item.title }}
