@@ -4,6 +4,7 @@ export const state = () => ({
   selectedUser: null,
   count: 0,
   users: [],
+  roles: null,
 })
 
 export const getters = {
@@ -21,12 +22,13 @@ export const getters = {
       return state.users.filter(user => {
         return user.entidad ? user.entidad.id === entityid : false
       })
-    },
-
-    
+    },    
     getSelectedUser(state){
         return state.selectedUser
-    }    
+    },    
+    getRoles(state){
+      return state.roles
+  }    
 }
 
 export const mutations = {
@@ -40,7 +42,7 @@ export const mutations = {
       users.push({
         id : listUsers[i].id,
         rut : listUsers[i].run + '-' + listUsers[i].dv,
-        nombres : listUsers[i].nombreCompleto,
+        nombres : listUsers[i].nombres,
         apellidos : listUsers[i].apellidos,
         correoInstitucional : listUsers[i].correoInstitucional,
         cargo : listUsers[i].cargo,
@@ -70,6 +72,18 @@ export const mutations = {
       state.users = newUsers
     }
     catch(err){}
+  },
+  setUserRoles: (state, roles) => {
+    state.roles = roles.map(({valor, descripcion}) => {
+      return {
+        key: valor,
+        name: descripcion
+      }
+    })
+    state.roles.push( {
+      key: 'ROLE_USUARIO',
+      name: 'Operador'
+    })
   }
 }
 
@@ -236,7 +250,7 @@ export const actions = {
         })
       }
       else{
-        return resp.result
+        commit('setUserRoles', resp.result)
       }
     } catch (err) {}
     return resp    

@@ -93,13 +93,9 @@
                         <div style="width: 70%; float: left; max-width: 160px">Permisos adicionales</div>
                         <v-icon color="warning" :class="['ml-2', { 'mt-5': !ismobil }, { 'mt-1': ismobil }]" style="float: left">mdi-help-circle</v-icon>
                     </v-col>
-                    <!-- <div :class="['label-width1 col col-auto flex weight-400 line-height-30 font-16 py-1' , { 'mt-minus-28': !ismobil }]">
-                Permisos adicionales
-                <v-icon color="warning" :class="[{'icon-margins' : !ismobil}]" style="">mdi-help-circle</v-icon>
-            </div > -->
                     <div class="col-md-5 col-sm-12 px-0 mr-10" v-if="ismobil" style="min-height: 30px"> </div>
                     <v-col>
-                        <dx-select v-model="roles" :items="roles_select" @get-selected="get_roles" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :disabled="disabled" :ripple="false">
+                        <dx-select v-model="roles" :items="rolesSelect" @get-selected="get_roles" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :disabled="disabled" :ripple="false">
                         </dx-select>
                     </v-col>
                 </v-row>
@@ -187,7 +183,7 @@ export default {
     },
     async fetch() {
         this.$store.dispatch('entidades/getEntities')
-        this.$store.dispatch('usuarios/getRoles')
+        // this.$store.dispatch('usuarios/getRoles')
     },
     updated() {
 
@@ -264,36 +260,9 @@ export default {
                 ],
                 dvVerifier: [
                     (v) => !!v || !!this.dv || '',
-                    // (v) => verifyRut(v + '-' + this.dv, false) || 'Rut inválido',
                 ]
 
             },
-            roles_select: [
-                // {
-                //   key : 'ROLE_USUARIO',
-                //   name : 'Operador'
-                // },
-                {
-                    id: 'ROLE_VER_RESERVADOS',
-                    name: 'Ver reservados'
-                },
-                {
-                    id: 'ROLE_OFICINA_PARTES',
-                    name: 'Oficina de partes'
-                },
-                {
-                    id: 'ROLE_ADMIN',
-                    name: 'Administrador'
-                },
-                {
-                    id: 'ROLE_JEFE_SERVICIO',
-                    name: 'Jefe de servicio'
-                },
-                {
-                    id: 'ROLE_SUPERADMIN',
-                    name: 'Súper administrador'
-                }
-            ],
             isLoading: false,
             seguidores: [],
             seguidor: null,
@@ -318,17 +287,6 @@ export default {
                 }
             })
         },
-        // form() {
-        //     return {
-        //         nombres: this.nombres,
-        //         apellidos: this.apellidos,
-        //         run: this.run,
-        //         dv: this.dv,
-        //         correoInstitucional: this.correoInstitucional,
-        //         cargo: this.cargo,
-        //         entidad: this.entidad,
-        //     }
-        // },
         ismobil() {
             return this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs ? 'ismobile' : ''
         },
@@ -362,13 +320,11 @@ export default {
                     name: nombres
                 }
             })
+        },        
+        rolesSelect() {
+            return this.$store.getters['usuarios/getRoles']
         }
     },
-
-    watch: {
-        searchSeguidores(val) {},
-    },
-
     methods: {
         addressCheck() {
             this.errorMessages = !this.nombres ? `Campos requeridos vacíos` : ''
@@ -446,6 +402,7 @@ export default {
                 return item !== val
             })
         },
+
 
     },
 }

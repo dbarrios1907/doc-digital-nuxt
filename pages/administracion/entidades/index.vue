@@ -259,27 +259,27 @@ export default {
                 const e = resp.result
                 this.details = [{
                         label: 'Nombre:',
-                        value: e.nombre
+                        value: e.nombre ? e.nombre : '-'
                     },
                     {
                         label: 'Entidad dependiente:',
-                        value: e.entDep ? e.entDep.nombre : ''
+                        value: e.entDep ? e.entDep.nombre : '-'
                     },
                     {
                         label: 'Correo Oficina de Partes:',
-                        value: e.correoOficinaPartes
+                        value: e.correoOficinaPartes ?  e.correoOficinaPartes : '-'
                     },
                     {
                         label: 'Región:',
-                        value: e.region ? e.region.nombre : ''
+                        value: e.region ? e.region.nombre : '-'
                     },
                     {
                         label: 'Provincia:',
-                        value: e.provincia ? e.provincia.nombre : ''
+                        value: e.provincia ? e.provincia.nombre : '-'
                     },
                     {
                         label: 'Comuna:',
-                        value: e.comuna ? e.comuna.nombre : ''
+                        value: e.comuna ? e.comuna.nombre : '-'
                     },
                 ]
                 this.entity_detail_dialog = true
@@ -290,8 +290,11 @@ export default {
             this.entity_id = id
             this.dialog_confirmacion = true
         },
-        deleteEntity() {
+        async deleteEntity() {
             const id = this.entity_id
+            await this.$store.dispatch('entidades/deleteEntity', id)
+            this.entity_id = ''
+            this.dialog_confirmacion = false
         },
     },
 
