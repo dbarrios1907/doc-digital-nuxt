@@ -4,7 +4,7 @@ module.exports = function claveUnica(strategy) {
   assignDefaults(strategy, {
     _scheme: 'claveUnica',
     redirectLogin: { url: process.env.FETCH_AUTH_URL, method: 'get' },
-    login: { url: '/api/auth/login', method: 'post' },
+    login: { url: process.env.LOGIN_URL, method: 'post' },
     refresh: { url: '/api/auth/login/refresh', method: 'get' },
     logout: { url: '/api/auth/logout', method: 'post' },
     unauthorizedPath: '/401',

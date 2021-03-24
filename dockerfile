@@ -6,7 +6,6 @@ FROM node:${nodeVersion}-alpine as builder
 
 ARG appPath
 ENV HOME=/app
-ENV NODE_ENV=production
 # Set working directory
 WORKDIR ${HOME}
 # Copy all files from current directory to working dir in image
