@@ -51,7 +51,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    // '~/modules/auth',
+    '~/modules/auth',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     'nuxt-webfontloader',
