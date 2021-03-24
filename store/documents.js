@@ -18,11 +18,11 @@ export const mutations = {
 }
 
 export const actions = {
-  async getDocuments({ commit }) {
+  async getDocuments({ commit }, inbox) {
     try {
       let resp = await this.$auth.requestWith('claveUnica', {
         method: 'GET',
-        url: '/documentos/tareas',
+        url: '/documentos/tareas/' + inbox,
       })
       const [valid, Toast] = isValidResponse(resp)
       if (!valid) {
@@ -39,12 +39,30 @@ export const actions = {
       console.log('Error: ' + err)
     }
   },
-  async loadDocumentTask({commit}, {tipoTarea, usuario}){
+  async getSteps({ commit }, id) {
+    try {
+      let resp = await this.$auth.requestWith('claveUnica', {
+        method: 'GET',
+        url: '/documentos/' + id + '/tramitacion/etapas',
+      })
+      const [valid, Toast] = isValidResponse(resp)
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      } else {
+        return resp.result
+      }
+    } catch (err) {
+      console.log('Error: ' + err)
+    }
+  },
+  async loadDocumentTask({ commit }, { tipoTarea, usuario }) {
     try {
       let resp = await this.$auth.requestWith('claveUnica', {
         method: 'GET',
         url: '/documentos/tareas',
-        params:{tipoEtapa: tipoTarea, usuario}
+        params: { tipoEtapa: tipoTarea, usuario },
       })
       const [valid, Toast] = isValidResponse(resp)
       if (!valid) {
@@ -62,7 +80,25 @@ export const actions = {
     try {
       let resp = await this.$auth.requestWith('claveUnica', {
         method: 'GET',
-        url: '/documentos/'+id,
+        url: '/documentos/' + id,
+      })
+      const [valid, Toast] = isValidResponse(resp)
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      } else {
+        return resp.result
+      }
+    } catch (err) {
+      console.log('Error: ' + err)
+    }
+  },
+  async getTramitacion({ commit }, id) {
+    try {
+      let resp = await this.$auth.requestWith('claveUnica', {
+        method: 'GET',
+        url: '/documentos/' + id + '/tareas',
       })
       const [valid, Toast] = isValidResponse(resp)
       if (!valid) {

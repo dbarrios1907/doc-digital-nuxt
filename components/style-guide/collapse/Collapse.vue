@@ -16,7 +16,7 @@
         </div>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        <block-item v-if="item.name === 'block'" :item="item.description" />
+        <block-item v-if="item.name === 'block'" :items="item.description" />
         <card-item v-else-if="item.name === 'card'" :items="item.description" />
         <span v-else>{{ item.description }}</span>
       </v-expansion-panel-content>
@@ -36,19 +36,19 @@ export default {
   props: {
     items: Array,
   },
-  data(){
+  data() {
     return {
       panel: null,
     }
   },
-  watch:{
-    'panel': {
-        handler: function (after, before) {
-           this.$emit('currentPanel', this.panel)   
-        },
-        deep: true
-    }
-  }
+  watch: {
+    panel: {
+      handler: function (after, before) {
+        this.$emit('currentPanel', this.panel)
+      },
+      deep: true,
+    },
+  },
 }
 </script>
 
