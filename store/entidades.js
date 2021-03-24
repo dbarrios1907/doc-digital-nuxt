@@ -1,149 +1,148 @@
 import { isValidResponse } from '~/shared/utils/request'
-export const STRATEGY = "claveUnica"
-export const state = () => ({  
+export const STRATEGY = 'claveUnica'
+export const state = () => ({
   selectedEntity: null,
   count: 0,
   entities: [],
-  regions : [],
+  regions: [],
   provinces: [
     {
       id: 1,
-      nombre: "provincia1",
+      nombre: 'provincia1',
       region: {
         id: 1,
-        nombre: "region1",
+        nombre: 'region1',
       },
     },
     {
       id: 2,
-      nombre: "provincia2",
+      nombre: 'provincia2',
       region: {
         id: 1,
-        nombre: "region1",
+        nombre: 'region1',
       },
     },
     {
       id: 3,
-      nombre: "provincia3",
+      nombre: 'provincia3',
       region: {
         id: 1,
-        nombre: "region1",
+        nombre: 'region1',
       },
     },
     {
       id: 4,
-      nombre: "provincia4",
+      nombre: 'provincia4',
       region: {
         id: 2,
-        nombre: "region2",
+        nombre: 'region2',
       },
     },
     {
       id: 5,
-      nombre: "provincia5",
+      nombre: 'provincia5',
       region: {
         id: 3,
-        nombre: "region3",
+        nombre: 'region3',
       },
-    }
+    },
   ],
   comunas: [
     {
       id: 1,
-      nombre: "comuna1",
+      nombre: 'comuna1',
       provincia: {
         id: 1,
-        nombre: "provincia1",
+        nombre: 'provincia1',
         region: {
           id: 1,
-          nombre: "region1",
-        },    
-      }
+          nombre: 'region1',
+        },
+      },
     },
     {
       id: 2,
-      nombre: "comuna2",
-      provincia:{
-        id: 2,
-        nombre: "provincia2",
-        region: {
-          id: 1,
-          nombre: "region1",
-        },
-      },
-    },
-    {
-      id: 3,
-      nombre: "comuna3",
+      nombre: 'comuna2',
       provincia: {
         id: 2,
-        nombre: "provincia2",
+        nombre: 'provincia2',
         region: {
           id: 1,
-          nombre: "region1",
+          nombre: 'region1',
         },
       },
     },
     {
       id: 3,
-      nombre: "comuna3",
+      nombre: 'comuna3',
+      provincia: {
+        id: 2,
+        nombre: 'provincia2',
+        region: {
+          id: 1,
+          nombre: 'region1',
+        },
+      },
+    },
+    {
+      id: 3,
+      nombre: 'comuna3',
       provincia: {
         id: 1,
-        nombre: "provincia1",
+        nombre: 'provincia1',
         region: {
           id: 1,
-          nombre: "region1",
-        },    
-      }
+          nombre: 'region1',
+        },
+      },
     },
     {
       id: 4,
-      nombre: "comuna4",
-      provincia:{
+      nombre: 'comuna4',
+      provincia: {
         id: 5,
-        nombre: "provincia5",
+        nombre: 'provincia5',
         region: {
           id: 3,
-          nombre: "region3",
+          nombre: 'region3',
         },
-      }
-    }
+      },
+    },
   ],
 })
 
 export const getters = {
-    getEntities(state){
-      return state.entities
-    }, 
-    getRegions(state){
-      return state.regions
-    }, 
-    getProvinces: (state) => (regionid) => {
-      return state.provinces.filter(prov => prov.region.id === regionid)
-    },
-    getComunas: (state) => (provid) => {
-      return state.comunas.filter(com => com.provincia.id === provid)
-    },
+  getEntities(state) {
+    return state.entities
+  },
+  getRegions(state) {
+    return state.regions
+  },
+  getProvinces: state => regionid => {
+    return state.provinces.filter(prov => prov.region.id === regionid)
+  },
+  getComunas: state => provid => {
+    return state.comunas.filter(com => com.provincia.id === provid)
+  },
 }
 
 export const mutations = {
-    update: (state, id, newEntity) => {
-      entIndex = state.entities.findIndex(obj => obj.id == id)
-      state.entities[entIndex] = newEntity
-    },
-    setEntitiesList: (state, entitiesList) => {
-        state.entities = entitiesList
-    },
-    setRegionList: (state, regionList) => {
-      state.regions = regionList.map(({id, nombre}) => {
-          return {id, name:nombre}
-      })  
-    }
-  
+  update: (state, id, newEntity) => {
+    entIndex = state.entities.findIndex(obj => obj.id == id)
+    state.entities[entIndex] = newEntity
+  },
+  setEntitiesList: (state, entitiesList) => {
+    state.entities = entitiesList
+  },
+  setRegionList: (state, regionList) => {
+    state.regions = regionList.map(({ id, nombre }) => {
+      return { id, name: nombre }
+    })
+  },
 }
 
 export const actions = {
-  async getEntities({ commit }){
+  async getEntities({ commit }) {
     let resp = null
     const params = {
       entidad: 0,
@@ -153,10 +152,8 @@ export const actions = {
       ordertype: 'ASC',
       page_number: 0,
       page_size: 0,
-      roles: [
-       "ROLE_ADMIN"
-      ],
-      run: 0
+      roles: ['ROLE_ADMIN'],
+      run: 0,
     }
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
@@ -169,16 +166,14 @@ export const actions = {
         Toast.error({
           message: 'Ha ocurrido un error',
         })
-      }
-      else{
+      } else {
         commit('setEntitiesList', resp.result)
       }
-    } catch (err) {}   
-    
+    } catch (err) {}
   },
-  async insertEntity({ commit }, entity){
+  async insertEntity({ commit }, entity) {
     let resp = null
-    const body_ = entity   
+    const body_ = entity
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
@@ -186,22 +181,22 @@ export const actions = {
         data: body_,
       })
     } catch (err) {}
-    return resp    
+    return resp
   },
-  async getEntity({ commit }, id){
+  async getEntity({ commit }, id) {
     let resp = null
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
-        url: '/entidades/'+id,
-      })     
+        url: '/entidades/' + id,
+      })
     } catch (err) {}
-    return resp    
+    return resp
   },
-  
-  async updateEntity({ commit }, entity){
+
+  async updateEntity({ commit }, entity) {
     let resp = null
-    const body_ = entity   
+    const body_ = entity
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'PUT',
@@ -209,12 +204,12 @@ export const actions = {
         data: body_,
       })
     } catch (err) {}
-    return resp    
+    return resp
   },
-  
-  async getRegions({ commit }){
+
+  async getRegions({ commit }) {
     try {
-      let resp = await this.$auth.requestWith(STRATEGY, {
+      const resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/tipos/distgeografica/regiones/',
       })
@@ -225,18 +220,19 @@ export const actions = {
         Toast.error({
           message: 'Ha ocurrido un error obteniendo las regiones',
         })
-      }
-      else{
+      } else {
         commit('setRegionList', resp.result)
       }
-    } catch (err) {console.log(err)}     
+    } catch (err) {
+      console.log(err)
+    }
   },
 
-  async getProvincias({ commit }, region){
+  async getProvincias({ commit }, region) {
     try {
-      let resp = await this.$auth.requestWith(STRATEGY, {
+      const resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
-        url: '/tipos/distgeografica/regiones/'+region+'/provincias',
+        url: '/tipos/distgeografica/regiones/' + region + '/provincias',
       })
 
       const [valid, Toast] = isValidResponse(resp)
@@ -245,21 +241,22 @@ export const actions = {
         Toast.error({
           message: 'Ha ocurrido un error obteniendo las provincias',
         })
+      } else {
+        return resp.result.map(({ id, nombre }) => {
+          return { id, name: nombre }
+        })
       }
-      else{
-        return resp.result.map(({id, nombre}) => {
-          return {id, name:nombre}
-        })  
-      }
-    } catch (err) {console.log(err)} 
-    return null    
-  },  
+    } catch (err) {
+      console.log(err)
+    }
+    return null
+  },
 
-  async getComunas({ commit }, provincia){
+  async getComunas({ commit }, provincia) {
     try {
-      let resp = await this.$auth.requestWith(STRATEGY, {
+      const resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
-        url: '/tipos/distgeografica/regiones/provincias/'+provincia+'/comunas',
+        url: '/tipos/distgeografica/regiones/provincias/' + provincia + '/comunas',
       })
 
       const [valid, Toast] = isValidResponse(resp)
@@ -268,14 +265,14 @@ export const actions = {
         Toast.error({
           message: 'Ha ocurrido un error obteniendo las comunas',
         })
+      } else {
+        return resp.result.map(({ id, nombre }) => {
+          return { id, name: nombre }
+        })
       }
-      else{
-        return resp.result.map(({id, nombre}) => {
-          return {id, name:nombre}
-        })  
-      }
-    } catch (err) {console.log(err)} 
-    return null    
+    } catch (err) {
+      console.log(err)
+    }
+    return null
   },
-  
 }

@@ -38,26 +38,32 @@ export default class ClaveUnicaScheme {
     // this.$auth.redirect(this._redirectURI, true)
   }
 
-  async refreshToken() {
-    const { url, method } = this.options.refresh
-    let resp = null
-    try {
-      resp = await this.$auth.requestWith(this.name, {
-        method,
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        baseURL: process.server ? undefined : false,
-      })
-      // eslint-disable-next-line no-empty
-    } catch (err) {
-      this.$auth.handleErrorResponse()
+  async refreshToken(retry) {
+    if (this.$auth.$storage.getState('attemptTokenRefresh')) {
+      return Promise.reject()
     }
 
-    const [valid, Toast] = isValidResponse(resp)
+    const { url, method } = this.options.refresh
+    let resp = null
+    this.$auth.$storage.setState('attemptTokenRefresh', true)
+
+    resp = await this.$auth.requestWith(this.name, {
+      method,
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      baseURL: process.server ? undefined : false,
+    })
+
+    const [valid] = isValidResponse(resp)
+
+    if (valid) {
+      return retry()
+    }
 
     await this.reset()
+    return Promise.reject()
   }
 
   async logout(idle) {
@@ -249,19 +255,16 @@ export default class ClaveUnicaScheme {
     return true // True means a redirect happened
   }
 
-  async handleErrorResponse(resp) {
+  async handleErrorResponse(resp, retry) {
     if (tokenExpiredError(resp)) {
-      return this.refreshToken()
+      return this.refreshToken(retry)
     }
+    const message = resp?.error
+    this.$auth.$storage.setUniversal('route.message', message)
     if (isAuthErrorResponse(resp)) {
       await this.reset()
-      const message = resp?.error || 'Acceso no autorizado'
-      this.$auth.$storage.setUniversal('route.message', message)
-
-      this.$auth.ctx.app.router.replace({
-        name: 'unauthorized',
-      })
+      return Promise.reject()
     }
-    return Promise.reject()
+    return false
   }
 }

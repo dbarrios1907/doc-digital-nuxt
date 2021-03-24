@@ -26,15 +26,16 @@ export const actions = {
     })
     const [valid, Toast] = isValidResponse(resp)
     if (!valid) {
-      Toast.error({
-        message: 'Ha ocurrido un error',
-      })
-    } else {
-      commit(
-        'setDocuments',
-        resp.result.map(({ documento }) => documento)
-      )
+      console.error(resp)
+      return false
+      // Toast.error({
+      //   message: 'Ha ocurrido un error',
+      // })
     }
+    commit(
+      'setDocuments',
+      resp.result.map(({ documento }) => documento)
+    )
   },
   async loadDocumentTask({ commit }, { tipoTarea, usuario }) {
     try {
@@ -56,21 +57,12 @@ export const actions = {
     }
   },
   async getDocument({ commit }, id) {
-    try {
-      const resp = await this.$auth.requestWith('claveUnica', {
-        method: 'GET',
-        url: '/documentos/' + id,
-      })
-      const [valid, Toast] = isValidResponse(resp)
-      if (!valid) {
-        Toast.error({
-          message: 'Ha ocurrido un error',
-        })
-      } else {
-        return resp.result
-      }
-    } catch (err) {
-      console.log('Error: ' + err)
-    }
+    const resp = await this.$auth.requestWith('claveUnica', {
+      method: 'GET',
+      url: '/documentos/' + id,
+    })
+    const [valid, Toast] = isValidResponse(resp)
+
+    return resp.result
   },
 }

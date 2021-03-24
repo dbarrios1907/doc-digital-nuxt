@@ -9,7 +9,7 @@
         <cc-select v-model="org" :items="orgOpts" :placeholder="placeholderMinister" :label="placeholderMinister" cc add />
       </v-col>
       <v-col cols="12" md="4" class="pl-sm-2 flex-shrink-0">
-        <label class="text-truncate">Subsecretaría *</label>
+        <label class="text-truncate">Oficina de Partes *</label>
         <cc-select v-model="secretaria" :items="orgOpts" :placeholder="placeholderSecretaria" :label="placeholderSecretaria" cc add />
       </v-col>
     </v-row>

@@ -1,11 +1,11 @@
 <template>
   <div v-bind="$attrs" class="d-flex flex-fill justify-center align-center fill-height" v-on="$listeners">
-    <div class="errorpage">
+    <div :class="_rootClasses">
       <Error class="error-frame" />
       <div class="content">
         <div class="subcontent">
           <div class="mb-3 span darken3--text font-robotoslab">{{ title }}</div>
-          <div class="span darken3--text font-robotoslab">{{ subTitle }}</div>
+          <div class="subtitle span darken3--text font-robotoslab d-flex align-end justify-center">{{ subTitle }}</div>
           <dx-button color="primary" class="text-underline" :to="linkTarget"> {{ linkText }}</dx-button>
         </div>
       </div>
@@ -51,8 +51,18 @@ export default {
       default: 40,
     },
   },
+  computed: {
+    _rootClasses() {
+      let base = 'dx-error-page'
+      if (this.title === '') {
+        base += ' no-title'
+      }
+
+      return base
+    },
+  },
   mounted() {
-    console.log(this.$router)
+    console.log(this.title)
   },
 }
 </script>
@@ -63,14 +73,14 @@ export default {
     position: relative;
   }
 
-  .errorpage .content {
+  .dx-error-page .content {
     top: -20rem !important;
     position: relative !important;
     right: auto !important;
     margin-left: 1rem !important;
   }
 
-  .errorpage {
+  .dx-error-page {
     height: 250px;
     position: relative;
     width: auto !important;
@@ -89,37 +99,48 @@ export default {
   }
 }
 
-.errorpage {
+.dx-error-page {
   width: 799px;
   position: relative;
 }
 
-.errorpage .content {
+.dx-error-page .content {
   text-align: center;
   top: 8rem;
   position: absolute;
   right: 12rem;
 }
 
-.errorpage .link {
+.dx-error-page .link {
   position: absolute;
   bottom: 6rem;
   left: 15rem;
 }
 
-.errorpage .content > div.subcontent {
+.dx-error-page .content > div.subcontent {
   width: 316px;
   margin: 0 auto;
 }
 
-.errorpage .content .span {
+.dx-error-page .content .span {
   display: block;
   font-size: 25px;
   font-weight: 700;
   line-height: 32px;
 }
 
-.errorpage .content .v-btn {
+.dx-error-page .content .v-btn {
   margin: 35px 0 30px;
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-up')} {
+  .dx-error-page.no-title .content > div.subcontent {
+    position: relative;
+    top: -50px;
+  }
+
+  .dx-error-page.no-title .content > div.subcontent .subtitle {
+    height: 95px;
+  }
 }
 </style>

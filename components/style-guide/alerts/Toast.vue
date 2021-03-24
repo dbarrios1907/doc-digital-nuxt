@@ -57,10 +57,10 @@ export default {
   },
   mounted() {
     this.startTimer()
-    document.addEventListener('keydown', this.keydown)
+    window && window.document && document.addEventListener('keydown', this.keydown)
   },
   beforeDestroy() {
-    document.removeEventListener('keydown', this.keydown)
+    window && window.document && document.removeEventListener('keydown', this.keydown)
   },
   methods: {
     handleAfterLeave() {

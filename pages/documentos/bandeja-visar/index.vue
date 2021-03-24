@@ -10,8 +10,6 @@
 <script>
 export default {
   async fetch() {
-    console.log(this.$fetchState)
-    debugger
     await this.$store.dispatch('documents/getDocuments')
   },
   computed: {

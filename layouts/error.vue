@@ -6,6 +6,11 @@
 <script>
 export default {
   auth: false,
+  props: ['error'],
   layout: 'empty',
+  mounted() {
+    console.log(this)
+    console.log(this.error)
+  },
 }
 </script>

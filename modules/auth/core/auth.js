@@ -250,7 +250,7 @@ export default class Auth {
     return this.$storage.getState('busy')
   }
 
-  handleErrorResponse(error, retry) {
+  handleErrorResponse(error, retry = () => {}) {
     const resp = getErrorResponse(error)
     if (!isProdEnv) {
       console.log(resp)
@@ -263,13 +263,9 @@ export default class Auth {
       return Promise.reject(error)
     }
 
-    return Promise.resolve(this.strategy.handleErrorResponse(resp))
-      .then(() => {
-        return retry()
-      })
-      .catch(error => {
-        return Promise.reject(error)
-      })
+    return Promise.resolve(this.strategy.handleErrorResponse(resp, retry)).catch(error => {
+      return Promise.reject(error)
+    })
   }
 
   refreshToken(resp) {
@@ -307,7 +303,7 @@ export default class Auth {
         }
       })
       .catch(error => {
-        return this.handleErrorResponse(error, () => this.request(endpoint))
+        // return this.handleErrorResponse(error, () => this.request(endpoint, defaults, withResponse))
       })
   }
 

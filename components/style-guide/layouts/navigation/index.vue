@@ -21,7 +21,7 @@
           <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
         </v-list>
       </slot>
-      <template v-if="_isMobile">
+      <template v-if="_isTablet">
         <v-divider class="light my-2 mx-6" />
 
         <NavListItem>

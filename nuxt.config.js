@@ -77,9 +77,9 @@ export default {
         loader: 'file-loader',
       })
       // Sets webpack's mode to development if `isDev` is true.
-      if (isDev) {
-        config.mode = 'development'
-      }
+      // if (isDev) {
+      //   config.mode = 'development'
+      // }
       // Inject vuetify css variables before sass loader
       // hack to solve integration isues with vuetify
 
@@ -141,17 +141,6 @@ export default {
         auth: false,
         component: resolve(__dirname, 'pages/401.vue'),
       })
-
-      // routes.push({
-      //   name: 'not-found',
-      //   path: '*',
-      //   component: resolve(__dirname, 'pages/404.vue'),
-      // })
-    },
-
-    transition: {
-      name: 'fade',
-      mode: 'out-in',
     },
   },
 }
