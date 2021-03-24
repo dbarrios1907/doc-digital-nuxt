@@ -10,9 +10,9 @@
         <v-form ref="form" v-model="valid" lazy-validation>
             <v-card-text class="mt-6 py-6">
                 <v-row no-gutters :class="['mt-1 entity-form']">
-                    <div class="col-md-12 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+                    <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
                         <v-row no-gutters :class="['align-center', ismobil]">
-                            <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Nombre *</v-col>
+                            <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Nombre *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
                                 <v-text-field v-model="nombre" solo flat outlined :rules="[() => !!nombre || 'Campo requerido']" label="Nombre" required />
                             </v-col>
@@ -20,9 +20,9 @@
                     </div>
                 </v-row>
                 <v-row no-gutters :class="['mt-1 entity-form']">
-                    <div class="col-md-12 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+                    <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
                         <v-row no-gutters :class="['align-center', ismobil]">
-                            <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Entidad dependiente *</v-col>
+                            <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Entidad dependiente *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
                                 <v-select :items="entidades" v-model="entidadDependencia" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
                             </v-col>
@@ -30,9 +30,9 @@
                     </div>
                 </v-row>
                 <v-row no-gutters :class="['mt-1 entity-form']">
-                    <div class="col-md-12 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+                    <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
                         <v-row no-gutters :class="['align-center', ismobil]">
-                            <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Correo Oficina de Partes *</v-col>
+                            <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Correo Oficina de Partes *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
                                 <v-text-field  v-model="correoOficinaPartes" solo flat outlined label="Escribe el correo" :rules="rules.correoRules" required />
                             </v-col>
@@ -40,9 +40,9 @@
                     </div>
                 </v-row>
                 <v-row no-gutters :class="['mt-1 entity-form']">
-                    <div class="col-md-12 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+                    <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
                         <v-row no-gutters :class="['align-center', ismobil]">
-                            <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Región *</v-col>
+                            <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Región *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
                                 <v-select @change="getProvincias" :items="regiones" v-model="region" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
                             </v-col>
@@ -50,9 +50,9 @@
                     </div>
                 </v-row>
                 <v-row no-gutters :class="['mt-1 entity-form']">
-                    <div class="col-md-12 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+                    <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
                         <v-row no-gutters :class="['align-center', ismobil]">
-                            <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Provincia *</v-col>
+                            <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Provincia *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
                                 <v-select  @change="getComunas"  :items="provincias" v-model="provincia" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
                             </v-col>
@@ -60,9 +60,9 @@
                     </div>
                 </v-row>
                 <v-row no-gutters :class="['mt-1 entity-form']">
-                    <div class="col-md-12 col-sm-12 px-0 mr-10" :class="[ismobil, 'col-container']">
+                    <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
                         <v-row no-gutters :class="['align-center', ismobil]">
-                            <v-col cols="auto" class="label-width col-md-5 col-sm-5" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Comuna *</v-col>
+                            <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Comuna *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
                                 <v-select :items="comunas" v-model="comuna" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
                             </v-col>
@@ -225,7 +225,7 @@ export default {
 <style lang="scss" scoped>
 .entity-dialog {
     .mh-72{
-        max-height: 72px;
+        min-height: 72px;
     }
     .mt-minus-50 {
         margin-top: -50px;
