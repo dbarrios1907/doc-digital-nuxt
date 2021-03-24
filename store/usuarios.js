@@ -4,6 +4,7 @@ export const state = () => ({
   selectedUser: null,
   count: 0,
   users: [],
+  roles: null,
 })
 
 export const getters = {
@@ -21,12 +22,13 @@ export const getters = {
       return state.users.filter(user => {
         return user.entidad ? user.entidad.id === entityid : false
       })
-    },
-
-    
+    },    
     getSelectedUser(state){
         return state.selectedUser
-    }    
+    },    
+    getRoles(state){
+      return state.roles
+  }    
 }
 
 export const mutations = {
@@ -40,7 +42,7 @@ export const mutations = {
       users.push({
         id : listUsers[i].id,
         rut : listUsers[i].run + '-' + listUsers[i].dv,
-        nombres : listUsers[i].nombreCompleto,
+        nombres : listUsers[i].nombres,
         apellidos : listUsers[i].apellidos,
         correoInstitucional : listUsers[i].correoInstitucional,
         cargo : listUsers[i].cargo,
@@ -70,6 +72,18 @@ export const mutations = {
       state.users = newUsers
     }
     catch(err){}
+  },
+  setUserRoles: (state, roles) => {
+    state.roles = roles.map(({valor, descripcion}) => {
+      return {
+        key: valor,
+        name: descripcion
+      }
+    })
+    state.roles.push( {
+      key: 'ROLE_USUARIO',
+      name: 'Operador'
+    })
   }
 }
 
@@ -117,7 +131,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
         url: '/usuarios/'+id,
-        // headers,
       })
       const [valid, Toast] = isValidResponse(resp)
 
@@ -154,7 +167,6 @@ export const actions = {
         method: 'POST',
         url: '/usuarios/',
         data: body_,
-        // headers
       })
     } catch (err) {}
 
@@ -167,7 +179,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'DELETE',
         url: '/usuarios/'+id,
-        // headers, 
       })
     } catch (err) {}
 
@@ -201,7 +212,6 @@ export const actions = {
         method: 'PUT',
         url: '/usuarios/',
         data: body_
-        // headers, 
       })
     } catch (err) {}
     return  resp    
@@ -213,7 +223,6 @@ export const actions = {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
         url: '/usuarios/'+id+'/activar/'+status
-        // headers, 
       })
     } catch (err) {}
 
@@ -223,5 +232,27 @@ export const actions = {
       commit('setUserStatus', {id, status})
     }
     return  resp    
+  },
+
+  
+  async getRoles({ commit }, id){
+    let resp = null
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'GET',
+        url: '/tipos/seguridad/roles',
+      })
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      }
+      else{
+        commit('setUserRoles', resp.result)
+      }
+    } catch (err) {}
+    return resp    
   },
 }

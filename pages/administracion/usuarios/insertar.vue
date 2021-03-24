@@ -11,7 +11,6 @@
 export default {
   name: 'InsertarUsuario',
   fetch() {
-    console.log('FETCH ON USERS')
   },
   data() {
     return {
@@ -41,10 +40,7 @@ export default {
   },
 }
 </script>
-<style>
-.v-select .v-input__slot {
-  min-height: 48px !important;
-}
+<style scoped>
 .px-custom-6 {
   padding-right: 6px !important;
   padding-left: 6px !important;

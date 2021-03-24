@@ -5,110 +5,8 @@ export const state = () => ({
   count: 0,
   entities: [],
   regions : [],
-  provinces: [
-    {
-      id: 1,
-      nombre: "provincia1",
-      region: {
-        id: 1,
-        nombre: "region1",
-      },
-    },
-    {
-      id: 2,
-      nombre: "provincia2",
-      region: {
-        id: 1,
-        nombre: "region1",
-      },
-    },
-    {
-      id: 3,
-      nombre: "provincia3",
-      region: {
-        id: 1,
-        nombre: "region1",
-      },
-    },
-    {
-      id: 4,
-      nombre: "provincia4",
-      region: {
-        id: 2,
-        nombre: "region2",
-      },
-    },
-    {
-      id: 5,
-      nombre: "provincia5",
-      region: {
-        id: 3,
-        nombre: "region3",
-      },
-    }
-  ],
-  comunas: [
-    {
-      id: 1,
-      nombre: "comuna1",
-      provincia: {
-        id: 1,
-        nombre: "provincia1",
-        region: {
-          id: 1,
-          nombre: "region1",
-        },    
-      }
-    },
-    {
-      id: 2,
-      nombre: "comuna2",
-      provincia:{
-        id: 2,
-        nombre: "provincia2",
-        region: {
-          id: 1,
-          nombre: "region1",
-        },
-      },
-    },
-    {
-      id: 3,
-      nombre: "comuna3",
-      provincia: {
-        id: 2,
-        nombre: "provincia2",
-        region: {
-          id: 1,
-          nombre: "region1",
-        },
-      },
-    },
-    {
-      id: 3,
-      nombre: "comuna3",
-      provincia: {
-        id: 1,
-        nombre: "provincia1",
-        region: {
-          id: 1,
-          nombre: "region1",
-        },    
-      }
-    },
-    {
-      id: 4,
-      nombre: "comuna4",
-      provincia:{
-        id: 5,
-        nombre: "provincia5",
-        region: {
-          id: 3,
-          nombre: "region3",
-        },
-      }
-    }
-  ],
+  provinces: [],
+  comunas: [],
 })
 
 export const getters = {
@@ -138,7 +36,11 @@ export const mutations = {
       state.regions = regionList.map(({id, nombre}) => {
           return {id, name:nombre}
       })  
-    }
+    },
+    deleteEntity: (state, id) => {
+      let entities =  state.entities.filter(function(entity) { return entity.id != id; });
+      state.entities = entities
+    },
   
 }
 
@@ -276,6 +178,28 @@ export const actions = {
       }
     } catch (err) {console.log(err)} 
     return null    
+  },
+  async deleteEntity({ commit }, id){
+    let resp = null
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'DELETE',
+        url: '/entidades/'+id,
+      })     
+      const [valid, Toast] = isValidResponse(resp)
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      }
+      else{
+        Toast.success({
+          message: 'Entidad eliminada',
+        })
+        commit('deleteEntity', id)
+      }
+    } catch (err) {}
+    return resp    
   },
   
 }
