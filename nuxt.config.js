@@ -1,4 +1,3 @@
-import colors from 'vuetify/es5/util/colors'
 require('./envconfig')
 
 export default {
