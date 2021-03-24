@@ -15,6 +15,10 @@ export const mutations = {
   setDocuments: (state, docs) => {
     state.documents = docs
   },
+  deleteDocument: (state, id) => {
+    let documents =  state.documents.filter(function(doc) { return doc.id != id; });
+    state.documents = documents
+  },
 }
 
 export const actions = {
@@ -93,6 +97,7 @@ export const actions = {
     } catch (err) {
       console.log('Error: ' + err)
     }
+    return null
   },
   async getTramitacion({ commit }, id) {
     try {
@@ -111,5 +116,30 @@ export const actions = {
     } catch (err) {
       console.log('Error: ' + err)
     }
+  },
+  async deleteDocument({ commit }, id) {
+    try {
+      let resp = await this.$auth.requestWith('claveUnica', {
+        method: 'DELETE',
+        url: '/documentos/' + id,
+      })
+      const [valid, Toast] = isValidResponse(resp)
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      } else {
+        commit('deleteDocument', id)
+        Toast.success({
+          message: 'Documento eliminado',
+        })
+        return true
+      }
+    } catch (err) {
+      Toast.error({
+        message: 'Ha ocurrido un error',
+      })
+    }
+    return false
   },
 }

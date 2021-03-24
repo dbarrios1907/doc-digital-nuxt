@@ -121,7 +121,7 @@
             </template>
         </dx-tabs>
     </v-row>
-    <AdminDetail :dialog="details_dialog" :items="details" headTitle="Entidad">
+    <DialogDetail :dialog="details_dialog" :items="details" headTitle="Entidad">
         <template v-slot:actions>
             <dx-button color="primary" outlined v-bind="$props" class="text-none" :to="'/administracion/usuarios/editar/' + selected_user">
                 <span class="text-underline"> Editar </span>
@@ -130,9 +130,9 @@
                 <span class="text-underline"> Cerrar </span>
             </dx-button>
         </template>
-    </AdminDetail>
+    </DialogDetail>
 
-    <AdminConfirmation :dialog="dialog_confirmacion" :headTitle="isBloqueado ? '¿Realmente desea activar el usuario?' : '¿Realmente desea inactivar el usuario?'">
+    <DialogConfirmation :dialog="dialog_confirmacion" :headTitle="isBloqueado ? '¿Realmente desea activar el usuario?' : '¿Realmente desea inactivar el usuario?'">
         <template v-slot:actions>
             <dx-button color="white" outlined v-bind="$props" :class="[{ 'ml-4': ismobil }]" class="text-none mr-2 primary" @click="setUserStatus()">
                 <span class="text-underline"> {{isBloqueado ? 'Activar' : 'Inactivar'}} </span>
@@ -141,7 +141,7 @@
                 <span class="text-underline"> Cancelar </span>
             </dx-button>
         </template>
-    </AdminConfirmation>
+    </DialogConfirmation>
 </div>
 </template>
 

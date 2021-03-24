@@ -153,9 +153,9 @@
               </v-chip>
             </template>
 
-            <template v-slot:[`item.actions`]>
+            <template v-slot:[`item.actions`]="{ item: { id } }">
               <div class="d-flex">
-                <slot name="actions" />
+                <slot name="actions" :docid="id"/>
               </div>
             </template>
 

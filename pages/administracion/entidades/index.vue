@@ -75,7 +75,7 @@
 
         </template>
     </EntityDialog>
-    <AdminDetail :dialog="entity_detail_dialog" :items="details" headTitle="Entidad">
+    <DialogDetail :dialog="entity_detail_dialog" :items="details" headTitle="Entidad">
         <template v-slot:actions>
             <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="editEntity(selected_entidad.id)">
                 <span class="text-underline"> Editar </span>
@@ -84,8 +84,8 @@
                 <span class="text-underline"> Cerrar </span>
             </dx-button>
         </template>
-    </AdminDetail>
-    <AdminConfirmation :dialog="dialog_confirmacion" headTitle="¿Realmente desea eliminar esta entidad?">
+    </DialogDetail>
+    <DialogConfirmation :dialog="dialog_confirmacion" headTitle="¿Realmente desea eliminar esta entidad?">
         <template v-slot:actions>
             <dx-button color="white" outlined v-bind="$props" :class="[{ 'ml-4': ismobil }]" class="text-none mr-2 primary" @click="deleteEntity">
                 <span class="text-underline"> Aceptar </span>
@@ -94,7 +94,7 @@
                 <span class="text-underline"> Cancelar </span>
             </dx-button>
         </template>
-    </AdminConfirmation>
+    </DialogConfirmation>
 </div>
 </template>
 
