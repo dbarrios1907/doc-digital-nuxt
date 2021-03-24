@@ -21,7 +21,7 @@ export default {
   },
 
   styleResources: {
-    scss: ['~/assets/styles/vuetify-overrides.scss'],
+    scss: ['~/assets/styles/mixins.scss'],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
@@ -51,7 +51,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '~/modules/auth',
+    // '~/modules/auth',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     'nuxt-webfontloader',

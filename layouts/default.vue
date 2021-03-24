@@ -22,10 +22,9 @@
     <dx-footer :absolute="!fixed" class="mt-8 px-0 py-0" app />
 
     <dx-session-closed-modal v-model="sessionClosed" />
-    <template v-if="sessionIdleExpire">
-      <dx-session-expired-modal v-model="sessionExpired" @onClose="onExpirationModalClose" />
-      <v-idle :loop="true" :wait="0" :duration="60 * 30" @idle="onIdle" />
-    </template>
+
+    <dx-session-expired-modal v-model="sessionExpired" @onClose="onExpirationModalClose" />
+    <v-idle :loop="true" :wait="0" :duration="60 * 30" @idle="onIdle" />
   </v-app>
 </template>
 
@@ -42,7 +41,7 @@ export default {
       miniVariant: false,
       right: true,
       lockBodyScroll: false,
-      sessionIdleExpire: settings.sessionIdleExpire,
+      // sessionIdleExpire: settings.sessionIdleExpire,
     }
   },
 
@@ -84,10 +83,6 @@ export default {
     onExpirationModalClose() {
       this.$auth.redirect('unauthorized', true)
     },
-  },
-  onCreate() {
-    console.log(this.sessionExpired)
-    console.log(this.sessionIdleExpire)
   },
 }
 </script>

@@ -1,6 +1,5 @@
-@import "tools/_rem-calc";
-@import "tools/_theme";
-
-@import "themes/_themes";
-@import "variables/_defaults";
+@import "themes/light/_colors";
+@import "themes/dark/_colors";
 @import "variables/_overrides";
+
+@import '~vuetify/src/styles/styles.sass';

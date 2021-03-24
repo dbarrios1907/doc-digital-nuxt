@@ -37,7 +37,6 @@ Vue.use(Vuetify, {
 
 export default new Vuetify({
   treeShake: true,
-  customVariables: ['@/assets/styles/main.scss'],
   global: {
     ripple: false,
   },

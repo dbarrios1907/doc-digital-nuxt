@@ -303,7 +303,7 @@ export default class Auth {
         }
       })
       .catch(error => {
-        // return this.handleErrorResponse(error, () => this.request(endpoint, defaults, withResponse))
+        return this.handleErrorResponse(error, () => this.request(endpoint, defaults, withResponse))
       })
   }
 
