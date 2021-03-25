@@ -114,13 +114,12 @@ export default {
     createdEnd: String,
     updatedStart: String,
     updatedEnd: String,
-    documentOptions: Array,
+    documentOptions: { type: Array, default: [] },
     iscancel: Boolean,
   },
   data() {
     return {
       valid: true,
-      iscancel: false,
       d_tema: this.tema,
       d_tipo: this.tipo,
       d_folio: this.folio,

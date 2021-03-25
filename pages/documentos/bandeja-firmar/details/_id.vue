@@ -6,7 +6,7 @@
 export default {
   fetch() {
     this.fetch_('timeline', 'documents/getSteps')
-    this.fetch_('tableitem', 'documents/getDocument')
+    this.fetch_('tableitem', 'documents/fetchDocument')
     this.fetch_('tramitacion', 'documents/getTramitacion')
   },
   data: () => ({

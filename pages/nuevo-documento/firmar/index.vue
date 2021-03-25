@@ -8,7 +8,7 @@
           </template>
           <template v-slot:subtitle>
             <p class="weight-400 mt-3 font-regular line-height-24">
-              Complete los campos solicitados para ingresar un nuevo documento a distribuir. <br >
+              Complete los campos solicitados para ingresar un nuevo documento a distribuir. <br />
               (*) campos obligatorios.
             </p>
           </template>
@@ -107,7 +107,7 @@
                   <v-col cols="6" class="py-0 pl-0">
                     <div>Documento a distribuir *</div>
                     <div class="font-small line-height-24 weight-400 darken2--text mt-2 mb-5">
-                      Cargue solo un archivo en formato PDF de máximo 20 MB<br >El sistema reconocerá si éste viene firmado.
+                      Cargue solo un archivo en formato PDF de máximo 20 MB<br />El sistema reconocerá si éste viene firmado.
                       <dx-icon left size="18" color="warning">mdi-help-circle</dx-icon>
                     </div>
                     <Upload multiple v-bind="$props" />
@@ -119,7 +119,7 @@
                     </div>
                     <Upload multiple v-bind="$props" class="d-inline-block mr-2" />
                     o
-                    <Upload multiple v-bind="$props" class="ml-2 d-inline-block" />
+                    <Loadurl :dialog="dialogurl" class="ml-2 d-inline-block" />
                   </v-col>
                 </v-row>
               </v-card>
@@ -200,6 +200,7 @@
 export default {
   data() {
     return {
+      dialogurl: false,
       files: [],
       tipo: '',
       tema: '',

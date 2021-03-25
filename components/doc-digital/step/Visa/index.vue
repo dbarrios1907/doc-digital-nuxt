@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      tipo: '',
       visaType: undefined,
       visaTypeOpts: ['Visación obligatoria', 'Visación opcional', 'otro'],
     }

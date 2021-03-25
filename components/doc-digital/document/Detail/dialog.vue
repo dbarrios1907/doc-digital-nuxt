@@ -1,15 +1,8 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    overlay-opacity="0.55"
-    rlay-color="#001C41"
-    max-width="603px"
-    :content-class="ismobil"
-    class="v-dialog-details"
-  >
+  <v-dialog v-model="dialog" overlay-opacity="0.55" rlay-color="#001C41" max-width="603px" :content-class="ismobil" class="v-dialog-details">
     <v-card>
       <v-card-title>
-        <h5 class="font-title weight-700 darken3--text font-roboto">{{headTitle}}</h5>
+        <h5 class="font-title weight-700 darken3--text font-roboto">{{ headTitle }}</h5>
         <v-spacer />
         <slot name="actionclose" />
       </v-card-title>
@@ -17,7 +10,9 @@
 
       <v-card-text class="mt-6">
         <v-row>
-          <DocumentTableItem :items="items" />
+          <v-col>
+            <DocumentTableItem :items="items" />
+          </v-col>
         </v-row>
       </v-card-text>
 
@@ -42,7 +37,7 @@ export default {
       type: Array,
       default: [],
     },
-    headTitle: String, 
+    headTitle: String,
   },
   data() {
     return {}
@@ -71,7 +66,7 @@ export default {
   text-align: right;
   margin-right: 10px;
 }
-.table--details{
+.table--details {
   width: 100% !important;
 }
 </style>

@@ -56,40 +56,40 @@ export default {
   },
   methods: {
     async openDetails(id) {
-      let doc = await this.$store.dispatch('documents/getDocument', id)
+      let doc = await this.$store.dispatch('documents/fetchDocument', id)
       if (doc) {
         this.dialog_d = true
         this.details = [
-              {
-                title: 'Tema',
-                description: doc.materia,
-              },
-              {
-                title: 'Descripción',
-                description: doc.descripcion,
-              },
-              {
-                name: 'switch',
-                title: 'Hacer seguimiento',
-                status: doc.isFirmado,
-              },
-              {
-                title: 'Reservado',
-                description: doc.isReservado ? 'Si' : 'No',
-              },
-              {
-                title: 'Tipo de documento',
-                description: doc.tipoDocumentoOficial ? doc.tipoDocumentoOficial.descripcion : '',
-              },
-              {
-                title: 'Anexos',
-                description: (doc.anexos ? doc.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
-              },
-              {
-                title: 'Página de firma',
-                description: 'Primera',
-              },
-            ]
+          {
+            title: 'Tema',
+            description: doc.materia,
+          },
+          {
+            title: 'Descripción',
+            description: doc.descripcion,
+          },
+          {
+            name: 'switch',
+            title: 'Hacer seguimiento',
+            status: doc.isFirmado,
+          },
+          {
+            title: 'Reservado',
+            description: doc.isReservado ? 'Si' : 'No',
+          },
+          {
+            title: 'Tipo de documento',
+            description: doc.tipoDocumentoOficial ? doc.tipoDocumentoOficial.descripcion : '',
+          },
+          {
+            title: 'Anexos',
+            description: (doc.anexos ? doc.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
+          },
+          {
+            title: 'Página de firma',
+            description: 'Primera',
+          },
+        ]
         // [
         //   {
         //     label: 'Tema: ',
