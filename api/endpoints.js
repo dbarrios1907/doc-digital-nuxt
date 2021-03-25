@@ -8,7 +8,7 @@ export default {
   provinces: id => ({ url: `/tipos/distgeografica/regiones/${id}/provincias`, method: 'GET' }),
   comunas: id => ({ url: `/tipos/distgeografica/regiones/provincias/{id}/comunas`, method: 'GET' }),
 
-  fetchTasks: query => ({ url: '/documentos/tareas', method: 'GET', query }),
+  fetchTasks: params => ({ url: '/documentos/tareas', method: 'GET', params }),
   fetchTasksVisa: '/documentos/tareas/visar',
   fetchTasksSign: '/documentos/tareas/firmar',
   fetchTasksRejected: '/documentos/tareas/creacion/rechazadas',
@@ -40,7 +40,7 @@ export default {
   documentTramiteProgress: docId => ({ url: `/documentos/${docId}/tramitacion/etapas`, method: 'GET' }),
 
   // models used same endpoint with different method to exec operations (delete, get, create, save)
-  entitiesFetchAll: query => ({ url: `/entidades/${id}`, method: 'GET', query }),
+  entitiesFetchAll: params => ({ url: `/entidades/`, method: 'GET', params }),
   entitiesFetch: id => ({ url: `/entidades/${id}`, method: 'GET' }),
   entitiesCreate: params => ({ url: `/entidades/`, method: 'POST', params }),
   entitiesUpdate: params => ({ url: `/entidades/`, method: 'PUT', params }),

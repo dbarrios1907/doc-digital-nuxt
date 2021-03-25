@@ -109,18 +109,17 @@ export const state = () => ({
     },
   ],
   authStrategy: 'claveUnica',
+  selectedEntity: null,
 })
 
-export const getters = {}
+export const mutations = {
+  setSelectedEntity: (state, entity) => {
+    state.selectedEntity = entity
+  },
+}
 
-// export const mutations = {
-//   update: (state, payload) => {
-//     state.value = payload;
-//   }
-// }
-
-// export const actions = {
-//   action({ commit }) {
-//     commit('update', payload)
-//   },
-// }
+export const actions = {
+  setSelectedEntity({ commit }, entity) {
+    commit('update', entity)
+  },
+}
