@@ -17,7 +17,5 @@ services:
       - ./dist:/app/dist
     ports:
       - "4000:80"
-    environment:
-      BASE_API: 'https://test-docv3.test.digital.gob.cl/api'
     env_file:
       - ./.env.production
