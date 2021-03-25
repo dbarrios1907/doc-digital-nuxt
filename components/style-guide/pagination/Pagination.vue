@@ -23,6 +23,10 @@ export default {
     font-weight: 400;
   }
 
+  .v-pagination__navigation {
+    background-color: transparent !important;
+  }
+
   .v-pagination__item:not(.v-pagination__item--active) {
     border-bottom: 1px solid #0f69c4;
     color: #0f69c4;
@@ -42,7 +46,7 @@ export default {
   }
 
   .v-pagination__navigation--disabled i {
-    color: map-deep-get($material, 'colors', 'darken1') !important;
+    color: darken(map-deep-get($material, 'colors', 'darken1'), 20%) !important;
   }
 
   li:first-child .v-pagination__navigation,
