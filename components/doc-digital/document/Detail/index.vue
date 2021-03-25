@@ -164,13 +164,13 @@ export default {
             {
               title: 'Grupo 1 de firmas',
               body: {
-                  title: 'Sebastian Piñera Echenique',
-                  description: 'Administrativa de Presidencia',
-                  status: {
-                    name: 'mdi-clock-time-three-outline',
-                    description: 'Firma pendiente',
-                  },
+                title: 'Sebastian Piñera Echenique',
+                description: 'Administrativa de Presidencia',
+                status: {
+                  name: 'mdi-clock-time-three-outline',
+                  description: 'Firma pendiente',
                 },
+              },
             },
           ],
         },
@@ -236,30 +236,9 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .bg-grey1 {
   background-color: #f5f5f5;
-}
-
-@include theme(v-input) using($material) {
-  margin: 0;
-  &.v-input--switch {
-    .v-input__control {
-      height: 24px;
-      .v-input__slot {
-        min-height: auto !important;
-      }
-    }
-  }
-
-  &.v-textarea {
-    border-radius: 0;
-    .count {
-      position: absolute;
-      bottom: rem-calc(8px);
-      right: rem-calc(8px);
-    }
-  }
 }
 
 @include theme(v-dialog) using($material) {
