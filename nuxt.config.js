@@ -124,7 +124,7 @@ export default {
   auth: {
     defaultStrategy: 'claveUnica',
     redirect: {
-      home: '/ingreso',
+      home: '/',
       login: '/login', // redirect user when not connected
       callback: '/callback',
       unauthorized: '/401',
