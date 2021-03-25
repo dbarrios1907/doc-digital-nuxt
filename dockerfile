@@ -3,7 +3,6 @@ ARG nodeOptions=""
 ARG appPath="."
 
 FROM node:${nodeVersion}-alpine as builder
-
 ARG appPath
 ENV HOME=/app
 # Set working directory
@@ -15,7 +14,7 @@ ENV NODE_OPTIONS=${nodeOptions}
 WORKDIR ${HOME}
 RUN chown node:node ${HOME} && chown node:node ${HOME}/
 # install node modules and build assets
-RUN yarn && yarn build && yarn generate
+RUN yarn && NODE_ENV=production yarn build && yarn generate
 
 
 # nginx state for serving content

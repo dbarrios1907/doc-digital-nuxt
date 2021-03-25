@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     complete() {
-      console.log('Reached Final Step')
       alert('Reached Final Step')
     },
     next() {
