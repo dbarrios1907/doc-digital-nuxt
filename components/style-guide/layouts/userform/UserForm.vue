@@ -302,13 +302,10 @@ export default {
 
       Object.keys(this.form).forEach(f => {
         if (!this.form[f]) this.formHasErrors = true
-        console.log(f)
-        console.log(this.$refs[f])
         // this.$refs[f].validate(true)
       })
     },
     get_permisos(permisos_) {
-      console.log(permisos_)
       this.permisos = permisos_
     },
   },

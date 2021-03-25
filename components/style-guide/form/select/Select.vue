@@ -76,7 +76,6 @@ export default {
     },
   },
   beforeMount() {
-    console.log(this.selectedValues)
     this.value = this.selectedValues
   },
   methods: {

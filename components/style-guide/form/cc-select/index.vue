@@ -78,7 +78,6 @@ export default {
     },
     removeItem(e, item) {
       e.stopPropagation()
-      console.log(this.$refs.wrapped)
       this.$refs.wrapped.removeItem(item.id)
     },
     preventDefault(e) {

@@ -29,7 +29,6 @@ const Template = (args, { argTypes }) => ({
   methods: {
     get_selected(sel) {
       this.valueSelected = sel
-      console.log(this.valueSelected)
     },
   },
   template: `

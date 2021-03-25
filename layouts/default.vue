@@ -22,9 +22,12 @@
     <dx-footer :absolute="!fixed" class="mt-8 px-0 py-0" app />
 
     <dx-session-closed-modal v-model="sessionClosed" />
-
-    <dx-session-expired-modal v-model="sessionExpired" @onClose="onExpirationModalClose" />
-    <v-idle :loop="true" :wait="0" :duration="60 * 30" @idle="onIdle" />
+    <keep-alive>
+      <template v-if="sessionIdleExpire">
+        <dx-session-expired-modal v-model="sessionExpired" @onClose="onExpirationModalClose" />
+        <v-idle :loop="true" :wait="0" :duration="60 * 30" @idle="onIdle" />
+      </template>
+    </keep-alive>
   </v-app>
 </template>
 
@@ -33,15 +36,15 @@ import { mapState, mapActions } from 'vuex'
 import settings from '~/shared/settings'
 
 export default {
-  data() {
+  data: vm => {
     return {
       clipped: true, // toggles nav full height
       fixed: false,
-      drawer: this.$vuetify.breakpoint.lg,
+      drawer: vm.$vuetify.breakpoint.lg,
       miniVariant: false,
       right: true,
       lockBodyScroll: false,
-      // sessionIdleExpire: settings.sessionIdleExpire,
+      sessionIdleExpire: settings.sessionIdleExpire,
     }
   },
 

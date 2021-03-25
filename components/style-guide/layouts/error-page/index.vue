@@ -61,9 +61,6 @@ export default {
       return base
     },
   },
-  mounted() {
-    console.log(this.title)
-  },
 }
 </script>
 

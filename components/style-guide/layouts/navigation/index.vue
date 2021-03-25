@@ -77,17 +77,14 @@ export default {
   },
   watch: {
     '$refs.navbar.scrollHeight'() {
-      console.log(this.$refs.navbar)
       this.scrollHeight = this.$refs.navbar.$el.scrollHeight + 'px'
     },
   },
   mounted() {
-    console.log(this.$refs.navbar)
     this.scrollHeight = this.$refs.navbar.$el.scrollHeight + 'px'
   },
   methods: {
     onScroll(e) {
-      console.log(e)
       e.preventDefault()
     },
   },

@@ -245,9 +245,6 @@ export default {
       ]
     },
   },
-  mounted() {
-    console.log(this.documentos)
-  },
   methods: {
     formatdate(date) {
       return moment(date).format('DD-MM-YYYY hh:mm')

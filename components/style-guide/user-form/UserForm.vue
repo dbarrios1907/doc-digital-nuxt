@@ -308,7 +308,6 @@ export default {
       })
     },
     get_permisos(permisos_) {
-      console.log(permisos_)
       this.permisos = permisos_
     },
   },

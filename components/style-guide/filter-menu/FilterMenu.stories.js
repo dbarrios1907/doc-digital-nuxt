@@ -12,7 +12,7 @@ export default {
       </v-row>
     `,
   }
-  
+
   const Template = (args, { argTypes }) => ({
     components:{
       wrapper
@@ -27,16 +27,15 @@ export default {
     methods: {
         get_selected(sel){
             this.selected = sel;
-            console.log(this.selected);
         }
     },
     template: `
         <wrapper>
-            <dx-icons-actions /> 
-            <dx-filtermenu :items="items" @get-selected="get_selected"></dx-filtermenu>         
+            <dx-icons-actions />
+            <dx-filtermenu :items="items" @get-selected="get_selected"></dx-filtermenu>
         </wrapper>
     `,
   })
-  
+
   export const Default = Template.bind({})
   Default.args = {}

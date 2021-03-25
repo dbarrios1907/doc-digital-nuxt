@@ -14,7 +14,6 @@ const Template = (args, { argTypes }) => ({
   methods: {
     onToggleMenu() {
       this.active = !this.active
-      console.log(this.active)
     },
   },
   template: `

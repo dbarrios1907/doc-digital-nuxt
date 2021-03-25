@@ -24,23 +24,23 @@ const Template = (args, { argTypes }) => ({
     return {
       valueSelected: [],
       items: [
-        { 
+        {
           key: "1",
           name: "Option 1"
         },
-        { 
+        {
           key: "2",
           name: "Option 2"
         },
-        { 
+        {
           key: "3",
           name: "Option 3"
         },
-        { 
+        {
           key: "4",
           name: "Option 4"
         },
-        { 
+        {
           key: "5",
           name: "Option 5"
         }
@@ -50,7 +50,6 @@ const Template = (args, { argTypes }) => ({
   methods: {
     get_selected(sel) {
       this.valueSelected = sel
-      console.log(this.valueSelected)
     },
   },
   template: `
