@@ -1,4 +1,6 @@
 require('./envconfig')
+import { themes } from './shared/theme/color-palette'
+import es from 'vuetify/lib/locale/es'
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
@@ -19,9 +21,9 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
-  styleResources: {
-    scss: ['~/assets/styles/mixins.scss'],
-  },
+  // styleResources: {
+  //   scss: ['~/assets/styles/mixins.scss'],
+  // },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: ['~/assets/styles/main.scss'],
@@ -44,6 +46,20 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
+    [
+      '@nuxtjs/vuetify',
+      {
+        treeShake: true,
+        customVariables: ['~/assets/styles/vuetify-overrides.scss'],
+        theme: {
+          themes,
+        },
+        lang: {
+          locales: { es },
+          current: 'es',
+        },
+      },
+    ],
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -54,7 +70,6 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     'nuxt-webfontloader',
-    '@nuxtjs/vuetify',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -64,9 +79,9 @@ export default {
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
-  vuetify: {
-    optionsPath: './vuetify.options.js',
-  },
+  // vuetify: {
+  //   optionsPath: './vuetify.options.js',
+  // },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
