@@ -4,6 +4,8 @@
     v-bind="$attrs"
     :items="items"
     :label="label"
+    :item-text="itemText"
+    :item-value="itemValue"
     persistent-hint
     outlined
     solo
@@ -19,7 +21,7 @@
   >
     <template v-if="multiple" v-slot:selection="{ item }">
       <dx-badge type="tertiary" label outlined class="mx-1 my-1">
-        <div class="darken3--text font-16 line-height-22 weight-400">{{ item.name || item }}</div>
+        <div class="darken3--text font-16 line-height-22 weight-400">{{ item[itemText] || item }}</div>
         <dx-icon v-if="closableItems" left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
       </dx-badge>
     </template>
@@ -32,7 +34,7 @@
           </v-list-item-action>
 
           <v-list-item-content>
-            <v-list-item-title :id="attrs['aria-labelledby']" :title="item.name || item" v-text="item.name || item" />
+            <v-list-item-title :id="attrs['aria-labelledby']" :title="item[itemText] || item" v-text="item[itemText] || item" />
           </v-list-item-content>
         </template>
       </v-list-item>
@@ -57,6 +59,14 @@ export default {
     },
     label: String,
     items: Array,
+    itemText: {
+      type: String,
+      default: 'name',
+    },
+    itemValue: {
+      type: String,
+      default: 'id',
+    },
     rules: Array,
     multiple: {
       type: Boolean,

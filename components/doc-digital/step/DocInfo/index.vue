@@ -6,7 +6,8 @@
         <span>Tipo de documento *</span>
         <dx-select
           v-model="tipo"
-          :items="doctype"
+          item-text="descripcion"
+          :items="documentTypeOptions"
           :rules="[() => !!tipo || 'Campo requerido']"
           label="Selecciona una opción"
           @change="updatefield('tipo', $event)"
@@ -16,10 +17,10 @@
         <span>Materia o Tema del documento *</span>
         <dx-select
           v-model="tema"
-          :items="doctype"
+          item-text="descripcion"
+          :items="documentSubjectOptions"
           :rules="[() => !!tema || 'Campo requerido']"
           label="Selecciona una opción"
-          append-icon=""
           @change="updatefield('tema', $event)"
         />
       </v-col>
@@ -72,7 +73,7 @@
       <v-col cols="6" class="py-0 pl-0 pr-4">
         <div>Documento a distribuir *</div>
         <div class="font-small line-height-24 weight-400 darken2--text mt-2 mb-5">
-          Cargue solo un archivo en formato PDF de máximo 20 MB<br />El sistema reconocerá si éste viene firmado.
+          Cargue solo un archivo en formato PDF de máximo 20 MB<br>El sistema reconocerá si éste viene firmado.
           <dx-icon left size="18" color="warning">mdi-help-circle</dx-icon>
         </div>
         <Upload multiple v-bind="$props" />
@@ -90,7 +91,19 @@
   </dx-step-body>
 </template>
 <script>
+import DxTextField from '~/components/style-guide/form/text-field'
 export default {
+  components: { DxTextField },
+  props: {
+    documentTypeOptions: {
+      type: Array,
+      default: () => [],
+    },
+    documentSubjectOptions: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
       files: [],
@@ -102,7 +115,6 @@ export default {
       hiddedesc: true,
       hiddefolio: true,
       limitmaxCount: 255,
-      doctype: ['Oficio', 'otro'],
       e1: 1,
       rules: [value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!'],
     }
@@ -140,22 +152,4 @@ export default {
 @include theme(v-text-field) using($material) {
   border-radius: 0 !important;
 }
-
-//@include theme(v-input) using($material) {
-//  .v-label {
-//    color: map-deep-get($material, 'colors', 'darken3') !important;
-//  }
-//}
-//
-//@include theme(v-btn) using($material) {
-//  &.success {
-//    background-color: map-deep-get($material, 'colors', 'success');
-//    height: 44px !important;
-//    margin-top: -2px !important;
-//  }
-//
-//  &:not(:first-child) {
-//    margin-left: -5px !important;
-//  }
-//}
 </style>

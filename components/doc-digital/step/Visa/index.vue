@@ -6,7 +6,9 @@
         <label>Tipo de visación *</label>
         <dx-select
           v-model="visaType"
-          :items="visaTypeOpts"
+          item-text="descripcion"
+          item-value="valor"
+          :items="visaOptions"
           placeholder="Selecione el tipo de visación"
           :rules="[() => !!tipo || 'Campo requerido']"
           label="Selecciona una opción"
@@ -18,7 +20,7 @@
       <v-col cols="12">
         <label>Visadores y orden de visación *</label>
       </v-col>
-      <dx-box centered bordered elevation add-class='py-4'>
+      <dx-box centered bordered elevation add-class="py-4">
         <dx-button small outlined color="primary" v-bind="$props">
           <dx-icon left chevron regular> mdi-plus-circle-outline </dx-icon>
           <span class="underline-text">Agregar lista de visación</span>
@@ -29,6 +31,12 @@
 </template>
 <script>
 export default {
+  props: {
+    visaOptions: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
       visaType: undefined,
