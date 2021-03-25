@@ -44,10 +44,9 @@ export default class ClaveUnicaScheme {
     }
 
     const { url, method } = this.options.refresh
-    let resp = null
     this.$auth.$storage.setState('attemptTokenRefresh', true)
 
-    resp = await this.$auth.requestWith(this.name, {
+    const resp = await this.$auth.requestWith(this.name, {
       method,
       url,
       headers: {
@@ -59,6 +58,8 @@ export default class ClaveUnicaScheme {
     const [valid] = isValidResponse(resp)
 
     if (valid) {
+      debugger
+      await this.validateAndPersistToken(resp)
       return retry()
     }
 
@@ -204,7 +205,7 @@ export default class ClaveUnicaScheme {
     }
 
     // if valid token save state params and userToken
-    this.$auth.$storage.setUniversal(this.name + '.state', data)
+    if (data) this.$auth.$storage.setUniversal(this.name + '.state', data)
     this.setUserToken(token)
   }
 
@@ -263,8 +264,7 @@ export default class ClaveUnicaScheme {
     this.$auth.$storage.setUniversal('route.message', message)
     if (isAuthErrorResponse(resp)) {
       await this.reset()
-      return Promise.reject()
     }
-    return false
+    return Promise.reject(resp)
   }
 }

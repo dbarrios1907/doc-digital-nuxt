@@ -3,6 +3,7 @@ const { assignDefaults } = require('./_utils')
 module.exports = function claveUnica(strategy) {
   assignDefaults(strategy, {
     _scheme: 'claveUnica',
+    genericErrorMessage: 'Lo sentimos, hemos tenido un problema',
     redirectLogin: { url: process.env.FETCH_AUTH_URL, method: 'get' },
     login: { url: process.env.LOGIN_URL, method: 'post' },
     refresh: { url: '/api/auth/login/refresh', method: 'get' },

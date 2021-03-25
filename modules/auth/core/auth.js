@@ -1,7 +1,7 @@
 import Storage from './storage'
 import { isSet, getProp } from './utilities'
 import { routeOption, isRelativeURL, isSameURL } from '~/shared/utils/router'
-import { getErrorResponse } from '~/shared/utils/request'
+import { getErrorResponse, isAuthErrorResponse } from '~/shared/utils/request'
 import { isProdEnv } from '~/shared/utils/env'
 
 export default class Auth {
@@ -251,7 +251,7 @@ export default class Auth {
   }
 
   handleErrorResponse(error, retry = () => {}) {
-    const resp = getErrorResponse(error)
+    const [resp, Toast] = getErrorResponse(error)
     if (!isProdEnv) {
       console.log(resp)
     }
@@ -263,8 +263,14 @@ export default class Auth {
       return Promise.reject(error)
     }
 
-    return Promise.resolve(this.strategy.handleErrorResponse(resp, retry)).catch(error => {
-      return Promise.reject(error)
+    return Promise.resolve(this.strategy.handleErrorResponse(resp, retry)).catch(resp => {
+      if (isAuthErrorResponse(resp)) {
+        return Promise.reject(error)
+      }
+      Toast.error({
+        message: resp?.error || this.strategy.options?.genericErrorMessage,
+      })
+      return false
     })
   }
 
