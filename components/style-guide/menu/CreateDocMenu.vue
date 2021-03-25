@@ -9,7 +9,7 @@
     <v-list>
       <v-list-item v-for="(item, index) in items" :key="index" link :ripple="false">
         <v-list-item-title>
-          <span class="text-underline line-height-24 weight-400 text--primary" :class="actionColor">
+          <span dx-link class="text-underline line-height-24 weight-400 text--primary">
             <NuxtLink :to="item.route">{{ item.name }}</NuxtLink>
           </span>
         </v-list-item-title>
@@ -34,11 +34,10 @@ export default {
     ],
     label: 'Nuevo documento',
   }),
-  computed: {
-    actionColor() {
-      const isDark = this.$vuetify.theme.dark
-      return isDark ? '' : 'deepblue'
-    },
-  },
 }
 </script>
+<style scoped>
+[dx-link] a {
+  color: inherit !important;
+}
+</style>
