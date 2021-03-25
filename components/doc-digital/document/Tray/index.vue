@@ -71,27 +71,11 @@
 
             <v-row class="mb-5">
               <v-col>
-                <dx-button
-                  color="primary"
-                  outlined
-                  class="text-none mr-3"
-                  @click="
-                    dialog = false
-                    cancelar()
-                  "
-                >
+                <dx-button color="primary" outlined class="text-none mr-3" @click="dialogCancel">
                   <span class="text-underline"> Limpiar </span>
                 </dx-button>
 
-                <dx-button
-                  color="primary"
-                  outlined
-                  class="text-none"
-                  @click="
-                    dialog = true
-                    cancelar()
-                  "
-                >
+                <dx-button color="primary" outlined class="text-none" @click="dialog = true">
                   <span class="text-underline"> Buscar otro documento </span>
                 </dx-button>
               </v-col>
@@ -155,7 +139,7 @@
 
             <template v-slot:[`item.actions`]="{ item: { id } }">
               <div class="d-flex">
-                <slot name="actions" :docid="id"/>
+                <slot name="actions" :docid="id" />
               </div>
             </template>
 
@@ -183,6 +167,7 @@
         @onCancel="dialogCancel"
         @onFilter="dialogFilter"
         @onClose="dialog = false"
+        :iscancel="iscancel"
       />
     </slot>
   </div>
@@ -210,6 +195,7 @@ export default {
   },
   data: () => ({
     dialog: false,
+    iscancel: false,
     picker1: '',
     picker2: '',
     picker3: '',
@@ -265,7 +251,8 @@ export default {
       this[key] = data
     },
     dialogCancel() {
-      this.cancelar()
+      this.iscancel = true
+      this.filtered = false
       this.dialog = false
     },
     dialogFilter(filters) {

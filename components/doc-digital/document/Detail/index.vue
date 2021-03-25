@@ -159,22 +159,22 @@ export default {
         {
           name: 'card',
           title: '3. Firma',
-          description: this._filter('FIRMA'),
-          // description: [
-          //   {
-          //     title: 'Grupo 1 de firmas',
-          //     body: [
-          //       {
-          //         title: 'Sebastian Piñera Echenique',
-          //         description: 'Administrativa de Presidencia',
-          //         status: {
-          //           name: 'mdi-clock-time-three-outline',
-          //           description: 'Firma pendiente',
-          //         },
-          //       },
-          //     ],
-          //   },
-          // ],
+          //description: this._filter('FIRMA'),
+          description: [
+            {
+              title: 'Grupo 1 de firmas',
+              body: [
+                {
+                  title: 'Sebastian Piñera Echenique',
+                  description: 'Administrativa de Presidencia',
+                  status: {
+                    name: 'mdi-clock-time-three-outline',
+                    description: 'Firma pendiente',
+                  },
+                },
+              ],
+            },
+          ],
         },
         {
           name: 'block',
