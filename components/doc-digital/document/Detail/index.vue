@@ -57,16 +57,17 @@
               </v-card>
             </v-dialog>
           </v-col>
-          <v-col class="col col-12 col-md-8">
-            <DocumentTableItem :items="tableitem" />
+          <v-col :class="['col col-12 col-md-8', { 'text-center': requesting }]">
+            <DocumentTableItem :items="tableitems" v-if="!requesting" />
+            <v-progress-circular indeterminate color="primary" class="mt-10" v-else></v-progress-circular>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
     <div class="weight-700 font-25 line-height-31 font-robotoslab mt-13">Información general del documento</div>
     <div class="weight-700 font-title line-height-29 mt-8">Barra de avance de la tramitación</div>
-    <dx-docprogress :items="items" class="mt-7" />
-    <dx-collapse :items="itemscollapse" />
+    <dx-docprogress :items="timeline" class="mt-7" />
+    <dx-collapse :items="collapseitems" />
     <v-dialog v-model="dialog1" overlay-opacity="0.55" overlay-color="#001C41" max-width="600px" :content-class="ismobil">
       <v-card>
         <v-card-title>
@@ -122,127 +123,117 @@ export default {
     PreviewZoom,
     DocumentTableItem,
   },
+  props: {
+    timeline: Array,
+    tableitem: Object,
+    steps: Array,
+    requesting: { type: Boolean, default: true },
+  },
   data: () => ({
     dialog: false,
     dialog1: false,
     rechazo: '',
     limitmaxCount: 255,
-    tableitem: [
-      {
-        title: 'Tema',
-        description: 'Instructivo de Modernización',
-      },
-      {
-        title: 'Descripción',
-        description: 'Indica normas y restricciones en el uso de la plataforma DocDigital para el envío de comunicaciones oficiales.',
-      },
-      {
-        name: 'switch',
-        title: 'Hacer seguimiento',
-        status: true,
-      },
-      {
-        title: 'Reservado',
-        description: 'No',
-      },
-      {
-        title: 'Tipo de documento',
-        description: 'Oficio',
-      },
-      {
-        title: 'Anexos',
-        description: 'No tiene',
-      },
-      {
-        title: 'Página de firma',
-        description: 'Primera',
-      },
-    ],
-    items: [
-      {
-        title: '1. Inicio de la tramitación',
-        done: true,
-        disable: false,
-      },
-      {
-        title: '2. Visación (no requiere)',
-        done: true,
-        disable: true,
-      },
-      {
-        title: '3. Firma',
-        done: false,
-        disable: false,
-      },
-      {
-        title: '4. Folio y despacho',
-        done: false,
-        disable: false,
-      },
-      {
-        title: '5. Destinatarios',
-        done: false,
-        disable: false,
-      },
-    ],
-    itemscollapse: [
-      {
-        name: 'block',
-        title: '1. Inicio de la tramitación',
-        description: {
-          fecha: '10-09-2020 9:58',
-          creador: 'Trinidad Swinburn Correa',
-          entidad: 'Subsecretaría General de la Presidencia',
-        },
-      },
-      {
-        title: '2. Visación',
-        disabled: true,
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore         magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      },
-      {
-        name: 'card',
-        title: '3. Firma',
-        description: [
-          {
-            title: 'Grupo 1 de firmas',
-            body: [
-              {
-                title: 'Sebastian Piñera Echenique',
-                description: 'Administrativa de Presidencia',
-                status: {
-                  name: 'mdi-clock-time-three-outline',
-                  description: 'Firma pendiente',
-                },
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: '4. Folio y despacho',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      },
-      {
-        title: '5. Destinatarios',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      },
-    ],
   }),
   computed: {
+    collapseitems() {
+      return [
+        {
+          name: 'block',
+          title: '1. Inicio de la tramitación',
+          description: this._filter('CREACION'),
+          // description: [
+          //   {
+          //     fecha: '10-09-2020 9:58',
+          //     creador: 'Trinidad Swinburn Correa',
+          //     entidad: 'Subsecretaría General de la Presidencia',
+          //   },
+          // ],
+        },
+        {
+          name: 'block',
+          title: '2. Visación',
+          disabled: true,
+          description: this._filter('VISACION'),
+        },
+        {
+          name: 'card',
+          title: '3. Firma',
+          description: this._filter('FIRMA'),
+          // description: [
+          //   {
+          //     title: 'Grupo 1 de firmas',
+          //     body: [
+          //       {
+          //         title: 'Sebastian Piñera Echenique',
+          //         description: 'Administrativa de Presidencia',
+          //         status: {
+          //           name: 'mdi-clock-time-three-outline',
+          //           description: 'Firma pendiente',
+          //         },
+          //       },
+          //     ],
+          //   },
+          // ],
+        },
+        {
+          name: 'block',
+          title: '4. Folio y despacho',
+          description: this._filter('FOLIO_DESPACHO'),
+        },
+        {
+          name: 'block',
+          title: '5. Destinatarios',
+          description: this._filter('DESTINATARIOS'),
+        },
+      ]
+    },
     ismobil() {
       return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
     },
     desclength() {
       return this.rechazo.length
     },
+    tableitems() {
+      return [
+        {
+          title: 'Tema',
+          description: this.tableitem.materia,
+        },
+        {
+          title: 'Descripción',
+          description: this.tableitem.descripcion,
+        },
+        {
+          name: 'switch',
+          title: 'Hacer seguimiento',
+          status: this.tableitem.isFirmado,
+        },
+        {
+          title: 'Reservado',
+          description: this.tableitem.isReservado ? 'Si' : 'No',
+        },
+        {
+          title: 'Tipo de documento',
+          description: this.tableitem.tipoDocumentoOficial ? this.tableitem.tipoDocumentoOficial.descripcion : '',
+        },
+        {
+          title: 'Anexos',
+          description: (this.tableitem.anexos ? this.tableitem.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
+        },
+        {
+          title: 'Página de firma',
+          description: 'Primera',
+        },
+      ]
+    },
   },
   methods: {
     updatefield(key, data) {
       this[key] = data
+    },
+    _filter(item) {
+      return this.steps.filter(({ tipoEtapa }) => tipoEtapa == item)
     },
   },
 }

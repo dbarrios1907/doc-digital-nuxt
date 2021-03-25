@@ -1,86 +1,97 @@
 import { isValidResponse } from '~/shared/utils/request'
-
-export const STRATEGY = 'claveUnica'
-export const state = () => ({
+export const STRATEGY = "claveUnica"
+export const state = () => ({  
   selectedUser: null,
   count: 0,
   users: [],
+  roles: null,
 })
 
 export const getters = {
-  getActivos(state) {
-    return state.users.filter(function (user) {
-      return !user.isBloqueado
-    })
-  },
-  getInctivos(state) {
-    return state.users.filter(function (user) {
-      return user.isBloqueado
-    })
-  },
-  getByEntity: state => entityid => {
-    return state.users.filter(user => {
-      return user.entidad ? user.entidad.id === entityid : false
-    })
-  },
-
-  getSelectedUser(state) {
-    return state.selectedUser
-  },
+    getActivos(state){
+      return state.users.filter(function(user) {
+        return !user.isBloqueado;
+      })
+    },
+    getInctivos(state){
+      return state.users.filter(function(user) {
+        return user.isBloqueado;
+      })
+    }, 
+    getByEntity: (state) => (entityid) => {
+      return state.users.filter(user => {
+        return user.entidad ? user.entidad.id === entityid : false
+      })
+    },    
+    getSelectedUser(state){
+        return state.selectedUser
+    },    
+    getRoles(state){
+      return state.roles
+  }    
 }
 
 export const mutations = {
   update: (state, id, newuser) => {
-    const userIndex = state.users.findIndex(obj => obj.userid == id)
+    userIndex = state.users.findIndex(obj => obj.userid == id)
     state.users[userIndex] = newuser
   },
   setUserList: (state, listUsers, count) => {
-    const users = []
-    for (let i = 0; i < listUsers.length; i++) {
+    let users = [];
+    for(let i = 0; i < listUsers.length; i++){
       users.push({
-        id: listUsers[i].id,
-        rut: listUsers[i].run + '-' + listUsers[i].dv,
-        nombres: listUsers[i].nombreCompleto,
-        apellidos: listUsers[i].apellidos,
-        correoInstitucional: listUsers[i].correoInstitucional,
-        cargo: listUsers[i].cargo,
-        subrogante: listUsers[i].subrogante,
-        roles: listUsers[i].roles
-          ? listUsers[i].roles.filter(rol => {
-              return rol != 'ROLE_USUARIO'
-            })
-          : [],
-        isBloqueado: listUsers[i].isBloqueado,
-        isDelete: listUsers[i].isDelete,
-        nombreCompleto: listUsers[i].nombreCompleto,
-        entidad: listUsers[i].entidad,
+        id : listUsers[i].id,
+        rut : listUsers[i].run + '-' + listUsers[i].dv,
+        nombres : listUsers[i].nombres,
+        apellidos : listUsers[i].apellidos,
+        correoInstitucional : listUsers[i].correoInstitucional,
+        cargo : listUsers[i].cargo,
+        subrogante : listUsers[i].subrogante,
+        roles:  listUsers[i].roles ? listUsers[i].roles.filter((rol) => {return rol != 'ROLE_USUARIO'}) : [],
+        isBloqueado : listUsers[i].isBloqueado,
+        isDelete : listUsers[i].isDelete,
+        nombreCompleto : listUsers[i].nombreCompleto,
+        entidad: listUsers[i].entidad
       })
     }
     state.users = users
-    state.count = count
+    state.count = count     
   },
-  setSelecterUser: (state, user) => {
+  setSelecterUser : (state, user) => {
     state.selectedUser = user
-  },
-  deleteUser: (state, id) => {
-    const newUsers = state.users.filter(function (user) {
-      return user.id != id
-    })
+  }, 
+  deleteUser : (state, id) => {
+    let newUsers =  state.users.filter(function(user) { return user.id != id; });
     state.users = newUsers
   },
-  setUserStatus: (state, { id, status }) => {
-    try {
-      const newUsers = state.users
-      const objIndex = newUsers.findIndex(obj => obj.id == id)
+  setUserStatus : (state, {id, status}) => {
+    try{
+      let newUsers =  state.users;
+      let objIndex = newUsers.findIndex((obj =>(obj.id == id))) 
       newUsers[objIndex].isBloqueado = status
       state.users = newUsers
-      // eslint-disable-next-line no-empty
-    } catch (err) {}
+    }
+    catch(err){}
   },
+  setUserRoles: (state, roles) => {
+    state.roles = roles.map(({valor, descripcion}) => {
+      return {
+        key: valor,
+        name: descripcion
+      }
+    })
+    state.roles.push( {
+      key: 'ROLE_USUARIO',
+      name: 'Operador'
+    })
+  }
 }
 
 export const actions = {
-  async getUsers({ commit }) {
+  updateUser({ commit }, id, newuser) {
+    commit('update', id, newuser)
+  },
+  async getUsers({ commit }){
     let resp = null
     const params = {
       entidad: 0,
@@ -90,8 +101,10 @@ export const actions = {
       ordertype: 'ASC',
       page_number: 0,
       page_size: 0,
-      roles: ['ROLE_ADMIN'],
-      run: 0,
+      roles: [
+       "ROLE_ADMIN"
+      ],
+      run: 0
     }
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
@@ -104,19 +117,20 @@ export const actions = {
         Toast.error({
           message: 'Ha ocurrido un error',
         })
-      } else {
+      }
+      else{
         commit('setUserList', resp.result, resp.count)
       }
-    } catch (err) {}
+    } catch (err) {}   
+    
   },
 
-  async getUser({ commit }, id) {
+  async getUser({ commit }, id){
     let resp = null
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'GET',
-        url: '/usuarios/' + id,
-        // headers,
+        url: '/usuarios/'+id,
       })
       const [valid, Toast] = isValidResponse(resp)
 
@@ -124,14 +138,16 @@ export const actions = {
         Toast.error({
           message: 'Ha ocurrido un error',
         })
-      } else {
+      }
+      else{
         commit('setSelecterUser', resp.result)
       }
     } catch (err) {}
-    return resp
+    return resp    
   },
 
-  async insertUser({ commit }, user) {
+  
+  async insertUser({ commit }, user){
     let resp = null
     const body_ = {
       isSubroganteActivado: user.isSubroganteActivado,
@@ -143,28 +159,26 @@ export const actions = {
       correoInstitucional: user.correoInstitucional,
       cargo: user.cargo,
       entidad: user.entidad,
-      roles: user.roles,
+      roles: user.roles
       // subrogante : user.subrogante
-    }
+    }    
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
         url: '/usuarios/',
         data: body_,
-        // headers
       })
     } catch (err) {}
 
-    return resp
+    return resp    
   },
 
-  async deleteUser({ commit }, id) {
+  async deleteUser({ commit }, id){
     let resp = null
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'DELETE',
-        url: '/usuarios/' + id,
-        // headers,
+        url: '/usuarios/'+id,
       })
     } catch (err) {}
 
@@ -173,10 +187,10 @@ export const actions = {
     if (valid) {
       commit('deleteUser', id)
     }
-    return resp
+    return  resp    
   },
 
-  async updateUser({ commit }, user) {
+  async updateUser({ commit }, user){
     let resp = null
     const body_ = {
       isSubroganteActivado: user.isSubroganteActivado,
@@ -189,37 +203,56 @@ export const actions = {
       cargo: user.cargo,
       entidad: user.entidad,
       roles: user.roles,
-      id: parseInt(user.id),
+      id:parseInt(user.id),
       // seguidor : user.seguidor
       // subrogante : user.subrogante
-    }
+    }    
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'PUT',
         url: '/usuarios/',
-        data: body_,
-        // headers,
+        data: body_
       })
     } catch (err) {}
-    return resp
+    return  resp    
   },
-
-  async setUserStatus({ commit }, { id, status }) {
+  
+  async setUserStatus({ commit }, {id, status}){
     let resp = null
     try {
       resp = await this.$auth.requestWith(STRATEGY, {
         method: 'POST',
-        url: '/usuarios/' + id + '/activar/' + status,
-        // headers,
+        url: '/usuarios/'+id+'/activar/'+status
       })
-      // eslint-disable-next-line no-empty
     } catch (err) {}
 
     const [valid, Toast] = isValidResponse(resp)
 
     if (valid) {
-      commit('setUserStatus', { id, status })
+      commit('setUserStatus', {id, status})
     }
-    return resp
+    return  resp    
+  },
+
+  
+  async getRoles({ commit }, id){
+    let resp = null
+    try {
+      resp = await this.$auth.requestWith(STRATEGY, {
+        method: 'GET',
+        url: '/tipos/seguridad/roles',
+      })
+      const [valid, Toast] = isValidResponse(resp)
+
+      if (!valid) {
+        Toast.error({
+          message: 'Ha ocurrido un error',
+        })
+      }
+      else{
+        commit('setUserRoles', resp.result)
+      }
+    } catch (err) {}
+    return resp    
   },
 }

@@ -16,7 +16,9 @@
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
             <dx-select v-model="itemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
-            <span class="ml-md-3">resultados de un total de <b>{{ documentos.length }} documentos pendientes</b>.</span>
+            <span class="ml-md-3"
+              >resultados de un total de <b>{{ documentos.length }} documentos pendientes</b>.</span
+            >
           </div>
 
           <div v-if="emptyfilter && filtered">
@@ -129,16 +131,20 @@
             :class="['table-check', 'bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
             :mobile-breakpoint="0"
             hide-default-footer
-            item-key="tema"
+            item-key="materia"
             show-select
             @page-count="pageCount = $event"
           >
             <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
-              <NuxtLink class="breaktext" :to="'/documentos/bandeja-firmar/details/' + id">{{ materia }}</NuxtLink>
+              <NuxtLink class="breaktext" :to="inboxurl + id">{{ materia }}</NuxtLink>
             </template>
 
             <template v-slot:[`item.createAt`]="{ item: { createAt } }" class="column">
               {{ formatdate(createAt) }}
+            </template>
+
+            <template v-slot:[`item.updateAt`]="{ item: { updateAt } }" class="column">
+              {{ formatdate(updateAt) }}
             </template>
 
             <template v-slot:[`item.access`]="{ item: { access } }">
@@ -147,8 +153,10 @@
               </v-chip>
             </template>
 
-            <template v-slot:[`item.actions`]>
-              <v-icon dense :class="[{ 'mr-4': !ismobil }]"> mdi-eye </v-icon>
+            <template v-slot:[`item.actions`]="{ item: { id } }">
+              <div class="d-flex">
+                <slot name="actions" :docid="id"/>
+              </div>
             </template>
 
             <template v-slot:footer>
@@ -188,6 +196,10 @@ export default {
     ModalDocumentFilters,
   },
   props: {
+    inboxurl: {
+      type: String,
+      default: '',
+    },
     documentos: {
       type: Array,
       default: () => [],
@@ -237,11 +249,11 @@ export default {
           sortable: true,
           filter: this.temaFilter,
         },
-        { text: 'Tipo', value: 'tipoDocumentoOficial', sortable: true, filter: this.tipoFilter },
+        { text: 'Tipo', value: 'tipoDocumentoOficial.descripcion', sortable: true, filter: this.tipoFilter },
         { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
         { text: 'Creación', value: 'createAt', sortable: true, filter: this.creacionFilter },
         { text: 'Actualización', value: 'updateAt', sortable: true, filter: this.actualizacionFilter },
-        { text: 'Ver', align: this.ismobil ? 'center' : 'start', value: 'actions', sortable: false },
+        { text: 'Acciones', align: this.ismobil ? 'center' : 'start', value: 'actions', sortable: false },
       ]
     },
   },

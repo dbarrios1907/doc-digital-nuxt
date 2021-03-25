@@ -1,15 +1,18 @@
 <template>
   <v-container class="dx-docprogress">
     <v-row>
-      <v-col class="text-center" v-for="item in items" :key="item.title">
-        <div :class="['icon-container py-2', { done: item.done }, { pending: !item.done }, { dissabled: item.disable }]">
-          <Pending v-if="!item.done" />
-          <div v-else-if="item.done" :class="['mx-auto', { 'done-icon': item.done && !item.disable }, { 'disable-icon': item.done && item.disable }]">
-            <dx-icon v-if="item.done && !item.disable">mdi-check</dx-icon>
+      <v-col class="text-center" v-for="item in items" :key="item.etapa">
+        <div :class="['icon-container py-2', { done: item.isCompletada }, { pending: !item.isCompletada }, { dissabled: item.disable }]">
+          <Pending v-if="!item.isCompletada" />
+          <div
+            v-else-if="item.isCompletada"
+            :class="['mx-auto', { 'done-icon': item.isCompletada && !item.disable }, { 'disable-icon': item.isCompletada && item.disable }]"
+          >
+            <dx-icon v-if="item.isCompletada && !item.disable">mdi-check</dx-icon>
             <dx-icon v-else>mdi-minus</dx-icon>
           </div>
         </div>
-        <div :class="['text-container font-15 line-height-20 weight-400 py-3', { dissabled: item.disable }]">{{ item.title }}</div>
+        <div :class="['text-container font-15 line-height-20 weight-400 py-3', { dissabled: item.disable }]">{{ translate(item.etapa) }}</div>
       </v-col>
     </v-row>
   </v-container>
@@ -21,6 +24,17 @@ export default {
   inheritAttrs: false,
   props: {
     items: Array,
+  },
+  methods: {
+    translate(item) {
+      return {
+        CREACION: '1. Inicio de la tramitación',
+        VISACION: '2. Visación',
+        FIRMA: '3. Firma',
+        FOLIO_DESPACHO: '4. Folio y despacho',
+        DESTINATARIOS: '5. Destinatarios',
+      }[item]
+    },
   },
 }
 </script>
