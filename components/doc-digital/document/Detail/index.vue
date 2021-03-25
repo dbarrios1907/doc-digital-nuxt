@@ -163,8 +163,7 @@ export default {
           description: [
             {
               title: 'Grupo 1 de firmas',
-              body: [
-                {
+              body: {
                   title: 'Sebastian Piñera Echenique',
                   description: 'Administrativa de Presidencia',
                   status: {
@@ -172,7 +171,6 @@ export default {
                     description: 'Firma pendiente',
                   },
                 },
-              ],
             },
           ],
         },

@@ -13,7 +13,7 @@
         <v-icon dense @click="confirmDeleteDoc(docid)"> mdi-close </v-icon>
       </template>
     </DocumentTray>
-    <DialogDetail :dialog="dialog_d" :items="details" headTitle="Documento">
+    <DocumentDetailDialog :dialog="dialog_d" :items="details" headTitle="Documento">
       <template v-slot:actions>
         <dx-button color="primary" outlined v-bind="$props" class="text-none">
           <span class="text-underline"> Editar </span>
@@ -22,7 +22,7 @@
           <span class="text-underline"> Cerrar </span>
         </dx-button>
       </template>
-    </DialogDetail>
+    </DocumentDetailDialog>
     <DialogConfirmation :dialog="dialog_c" headTitle="¿Realmente desea eliminar este documento?">
       <template v-slot:actions>
         <dx-button color="white" outlined v-bind="$props" class="text-none ml-4 mr-2 primary" @click="deleteDocument">
@@ -60,35 +60,66 @@ export default {
       if (doc) {
         this.dialog_d = true
         this.details = [
-          {
-            label: 'Tema: ',
-            value: doc.materia,
-          },
-          {
-            label: 'Descripción: ',
-            value: doc.descripcion,
-          },
-          {
-            label: 'Hacer seguimiento: ',
-            value: doc.isFirmado ? 'Activo' : 'No activo',
-          },
-          {
-            label: 'Reservado: ',
-            value: doc.isReservado ? 'Si' : 'No: ',
-          },
-          {
-            label: 'Tipo de documento: ',
-            value: doc.tipoDocumentoOficial ? doc.tipoDocumentoOficial.descripcion : '',
-          },
-          {
-            label: 'Anexos: ',
-            value: (doc.anexos ? doc.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
-          },
-          {
-            label: 'Página de firma: ',
-            value: 'Primera',
-          },
-        ]
+              {
+                title: 'Tema',
+                description: doc.materia,
+              },
+              {
+                title: 'Descripción',
+                description: doc.descripcion,
+              },
+              {
+                name: 'switch',
+                title: 'Hacer seguimiento',
+                status: doc.isFirmado,
+              },
+              {
+                title: 'Reservado',
+                description: doc.isReservado ? 'Si' : 'No',
+              },
+              {
+                title: 'Tipo de documento',
+                description: doc.tipoDocumentoOficial ? doc.tipoDocumentoOficial.descripcion : '',
+              },
+              {
+                title: 'Anexos',
+                description: (doc.anexos ? doc.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
+              },
+              {
+                title: 'Página de firma',
+                description: 'Primera',
+              },
+            ]
+        // [
+        //   {
+        //     label: 'Tema: ',
+        //     value: doc.materia,
+        //   },
+        //   {
+        //     label: 'Descripción: ',
+        //     value: doc.descripcion,
+        //   },
+        //   {
+        //     label: 'Hacer seguimiento: ',
+        //     value: doc.isFirmado ? 'Activo' : 'No activo',
+        //   },
+        //   {
+        //     label: 'Reservado: ',
+        //     value: doc.isReservado ? 'Si' : 'No: ',
+        //   },
+        //   {
+        //     label: 'Tipo de documento: ',
+        //     value: doc.tipoDocumentoOficial ? doc.tipoDocumentoOficial.descripcion : '',
+        //   },
+        //   {
+        //     label: 'Anexos: ',
+        //     value: (doc.anexos ? doc.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
+        //   },
+        //   {
+        //     label: 'Página de firma: ',
+        //     value: 'Primera',
+        //   },
+        // ]
       }
     },
     confirmDeleteDoc(docid) {
