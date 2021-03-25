@@ -11,24 +11,38 @@
     :multiple="multiple"
     :menu-props="{ bottom: true, offsetY: true, openOnClick: false }"
     :closable-iems="closableItems"
-    v-on="$listeners"
     :rules="rules"
     :required="required"
-    @change="emitSelected"
     :disabled="disabled"
+    v-on="$listeners"
+    @change="emitSelected"
   >
     <template v-if="multiple" v-slot:selection="{ item }">
       <dx-badge type="tertiary" label outlined class="mx-1 my-1">
-        <div class="darken3--text font-16 line-height-22 weight-400">{{ item.name }}</div>
+        <div class="darken3--text font-16 line-height-22 weight-400">{{ item.name || item }}</div>
         <dx-icon v-if="closableItems" left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
       </dx-badge>
     </template>
 
+    <template v-slot:item="{ item, on, attrs }">
+      <v-list-item :ripple="false" v-bind="attrs" v-on="on">
+        <template v-slot:default="{ active }">
+          <v-list-item-action v-if="multiple" class="my-1">
+            <v-checkbox :dark="active" :input-value="active" />
+          </v-list-item-action>
+
+          <v-list-item-content>
+            <v-list-item-title :id="attrs['aria-labelledby']" :title="item.name || item" v-text="item.name || item" />
+          </v-list-item-content>
+        </template>
+      </v-list-item>
+    </template>
+
     <!-- Pass on all named slots -->
-    <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot" />
+    <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
 
     <!-- Pass on all scoped slots -->
-    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope"/></template>
+    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope" /></template>
   </v-select>
 </template>
 

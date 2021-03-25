@@ -1,5 +1,5 @@
   @include theme(v-select) using($material) {
-    border-radius: 0px !important;
+    border-radius: 0 !important;
     $darken3: map-deep-get($material, 'colors', 'darken3');
     &.v-text-field--outlined {
       & > .v-input__control {
@@ -25,7 +25,7 @@
   }
   @include theme(v-menu__content) using($material) {
     $primarycolor: map-get($material, 'primary');
-    $text-color: map-get($material, 'darken3');
+    $text-color: map-get($material, 'light');
     .v-list-item__action .v-icon.v-icon {
       font-size: rem-calc(32px) !important;
     }
@@ -37,7 +37,7 @@
     }
     .v-list-item {
       padding: 0 5px !important;
-      margin: 0px 8px !important;
+      margin: 0 8px !important;
     }
 
     .v-list-item--active {
@@ -49,17 +49,14 @@
         z-index: 1;
       }
       &:before {
-        // background-color: $primarycolor !important;
-        // opacity: 1;
-      }
-      &:hover:before {
-        opacity: .8;
+         background-color: $primarycolor !important;
+         opacity: 1;
       }
     }
 
     &.v-menu__content {
       border: 1px solid $primarycolor !important;
-      border-radius: 0px !important;
+      border-radius: 0 !important;
       margin-top: 10px !important;
     }
     &.v-menu__content .v-list-item__content {
