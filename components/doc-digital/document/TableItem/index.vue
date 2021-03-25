@@ -33,6 +33,18 @@ export default {
         padding: rem-calc(10px) 0;
       }
     }
+
+    .v-input {
+      margin: 0;
+      &.v-input--switch {
+        .v-input__control {
+          height: 24px;
+          .v-input__slot {
+            min-height: auto !important;
+          }
+        }
+      }
+    }
   }
 }
 </style>
