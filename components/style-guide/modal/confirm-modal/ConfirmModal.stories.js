@@ -9,8 +9,9 @@ const Template = (args, { argTypes }) => ({
     dialog: false,
   }),
   methods: {
-    openModal() {
-      this.$refs.$confirm.open('Some title', 'Some text')
+    async openModal() {
+      const value = await this.$refs.$confirm.open('Some title', 'Some text that is very large a descriptive for the users ?')
+      console.log(value)
     },
   },
   template: `
@@ -21,5 +22,5 @@ const Template = (args, { argTypes }) => ({
   `,
 })
 
-export const ConfirmModal54345Story = Template.bind({})
-ConfirmModal54345Story.args = {}
+export const ConfirmModalStory = Template.bind({})
+ConfirmModalStory.args = {}

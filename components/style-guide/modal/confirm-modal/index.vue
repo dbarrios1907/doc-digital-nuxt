@@ -12,17 +12,15 @@
       <v-card-title>
         <h5 class="font-title weight-700 darken3--text">{{ title }}</h5>
         <v-spacer />
-        <dx-button color="darken3" icon @click.native="cancel">
+        <v-btn color="darken3" icon @click.native="cancel">
           <v-icon>mdi-close</v-icon>
-        </dx-button>
+        </v-btn>
       </v-card-title>
       <v-divider class="darken1" />
 
       <v-card-text v-show="!!message" class="font-roboto weight-400 line-height-30 font-20 darken3--text"> {{ message }} </v-card-text>
 
-      <v-card-actions>
-        <v-spacer />
-
+      <v-card-actions class="px-5 justify-center">
         <dx-button color="primary" outlined @click.native="cancel">
           <dx-icon left regular> mdi-close</dx-icon>
           <span class="text-underline">
@@ -31,7 +29,7 @@
         </dx-button>
 
         <dx-button color="primary" @click.native="agree">
-          <dx-icon left regular> mdi-content-save</dx-icon>
+          <dx-icon left regular> mdi-check </dx-icon>
           <span class="text-underline">
             <span class="underline-text">{{ options.agreeText }}</span>
           </span>
@@ -53,7 +51,7 @@ export default {
     options: {
       agreeText: 'Aceptar',
       cancelText: 'Cancelar',
-      width: 300,
+      width: 320,
       zIndex: 200,
     },
   }),

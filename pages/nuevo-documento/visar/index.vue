@@ -133,7 +133,7 @@
               <div class="text-right mt-8 mb-9">
                 <dx-button color="primary" small text @click="e1 = 2">
                   <dx-icon right chevron> mdi-close</dx-icon>
-                  <span class="underline-text ml-1">Descartar documento</span>
+                  <span class="underline-text ml-1">Descartar borrador</span>
                 </dx-button>
                 <dx-button color="primary" small text @click="e1 = 2">
                   <dx-icon right chevron> mdi-content-save</dx-icon>

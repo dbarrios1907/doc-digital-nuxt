@@ -28,6 +28,7 @@
         <v-idle :loop="true" :wait="0" :duration="60 * 30" @idle="onIdle" />
       </template>
     </keep-alive>
+    <dx-confirm-modal ref="$confirm" />
   </v-app>
 </template>
 
@@ -36,6 +37,7 @@ import { mapState, mapActions } from 'vuex'
 import settings from '~/shared/settings'
 
 export default {
+  name: 'RootLayout',
   data: vm => {
     return {
       clipped: true, // toggles nav full height

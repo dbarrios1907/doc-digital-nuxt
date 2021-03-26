@@ -35,6 +35,8 @@ export default {
     '~/plugins/perfect-scrollbar.js',
     '~/plugins/style-guide.js',
     '~/plugins/scroll-lock.js',
+    '~/plugins/confirm.client.js',
+    '~/plugins/vee-validate.js',
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -112,7 +114,7 @@ export default {
       //   }
       // })
     },
-    transpile: ['vuetify'],
+    transpile: ['vuetify', 'vee-validate/dist/rules'],
   },
 
   webfontloader: {

@@ -59,6 +59,17 @@
           </v-stepper-content>
         </v-stepper-items>
       </dx-stepper>
+
+      <div class="text-right mt-8 mb-9">
+        <dx-button color="primary" small text>
+          <dx-icon right chevron> mdi-close</dx-icon>
+          <span class="underline-text ml-1">Descartar borrador</span>
+        </dx-button>
+        <dx-button color="primary" small text>
+          <dx-icon right chevron> mdi-content-save</dx-icon>
+          <span class="underline-text ml-1">Guardar borrador</span>
+        </dx-button>
+      </div>
     </v-col>
   </v-row>
 </template>

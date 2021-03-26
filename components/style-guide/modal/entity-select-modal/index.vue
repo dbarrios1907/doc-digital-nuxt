@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  name: 'DxConfirmModal',
+  name: 'DxEntitySelectModal',
   inheritAttrs: false,
   data: () => ({
     dialog: false,
@@ -44,7 +44,7 @@ export default {
     options: {
       agreeText: 'Aceptar',
       cancelText: 'Cancelar',
-      width: 290,
+      width: 320,
       zIndex: 200,
     },
   }),

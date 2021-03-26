@@ -109,7 +109,6 @@ export const actions = {
   // document creation actions
 
   async fetchDocumentTypeOptions({ commit, state, rootState }) {
-    console.log(state)
     if (state.documentTypeOptions.length > 0) return false
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentTypeOptions)
     const [valid] = isValidResponse(resp)
