@@ -294,16 +294,10 @@ export default {
       this.entity_dialog = true
     },
     async editEntity(id) {
-      let resp = await this.$store.dispatch('entidades/getEntity', id)
-      const [valid, Toast] = isValidResponse(resp)
-
-      if (!valid) {
-        Toast.error({
-          message: 'Ha ocurrido un error',
-        })
-      } else {
+      const resp = await this.$store.dispatch('entidades/getEntity', id)
+      if (resp) {
         await this.$store.dispatch('entidades/getRegions')
-        this.selected_entidad = resp.result
+        this.selected_entidad = resp
         this.entity_detail_dialog = false
         this.entity_dialog = true
       }
