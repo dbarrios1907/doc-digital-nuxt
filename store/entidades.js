@@ -1,7 +1,6 @@
 import { isValidResponse } from '~/shared/utils/request'
 import endpoints from '~/api/endpoints'
 
-export const STRATEGY = 'claveUnica'
 export const state = () => ({
   selectedEntity: null,
   count: 0,
@@ -48,24 +47,9 @@ export const mutations = {
 }
 
 export const actions = {
-  async getEntities({ commit }) {
-    const params = {
-      entidad: 0,
-      isBloqueado: true,
-      nombre: 'string',
-      orderby: 'string',
-      ordertype: 'ASC',
-      page_number: 0,
-      page_size: 0,
-      roles: ['ROLE_ADMIN'],
-      run: 0,
-    }
-    const resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'GET',
-      url: '/entidades/',
-    })
+  async getEntities({ commit, rootState }, params = {}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesFetchAll(params))
     const [valid] = isValidResponse(resp)
-
     if (valid) {
       commit('setEntitiesList', resp.result)
     }
@@ -80,112 +64,95 @@ export const actions = {
     return false
   },
 
-  async insertEntity({ commit }, entity) {
-    let resp = null
-    const body_ = entity
-    resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'POST',
-      url: '/entidades/',
-      data: body_,
-    })
-    return resp
-  },
-  async getEntity({ commit }, id) {
-    let resp = null
-    resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'GET',
-      url: '/entidades/' + id,
-    })
-    return resp
-  },
-
-  async updateEntity({ commit }, entity) {
-    let resp = null
-    const body_ = entity
-    resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'PUT',
-      url: '/entidades/',
-      data: body_,
-    })
-    return resp
-  },
-
-  async getRegions({ commit }) {
-    const resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'GET',
-      url: '/tipos/distgeografica/regiones/',
-    })
-
+  async insertEntity({ rootState }, params) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesCreate(params))
     const [valid, Toast] = isValidResponse(resp)
-
-    if (!valid) {
-      Toast.error({
-        message: 'Ha ocurrido un error obteniendo las regiones',
+    if (valid) { 
+      Toast.success({
+          message: 'Entidad insertada',
       })
-    } else {
+      return resp.result
+    }
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error insertando la entidad',
+      })
+      return false
+    }
+  },
+  async getEntity({ rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesFetch(id))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) { 
+      return resp.result
+    }
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error',
+      })
+      return false
+    }
+  },
+
+  async updateEntity({ rootState }, params) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesUpdate(params))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) { 
+      Toast.success({
+          message: 'Entidad actualizada',
+      })
+      return resp.result
+    }
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error actualizando la entidad',
+      })
+      return false
+    }    
+  },
+
+  async getRegions({ commit, rootState}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.regions)
+    const [valid] = isValidResponse(resp)
+    if (valid) {
       commit('setRegionList', resp.result)
     }
   },
 
-  async getProvincias({ commit }, region) {
-    const resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'GET',
-      url: '/tipos/distgeografica/regiones/' + region + '/provincias',
-    })
-
-    const [valid, Toast] = isValidResponse(resp)
-
-    if (!valid) {
-      Toast.error({
-        message: 'Ha ocurrido un error obteniendo las provincias',
-      })
-    } else {
+  async getProvincias({ rootState }, region) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.provinces(region))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
       return resp.result.map(({ id, nombre }) => {
         return { id, name: nombre }
       })
     }
-
     return null
   },
 
-  async getComunas({ commit }, provincia) {
-    const resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'GET',
-      url: '/tipos/distgeografica/regiones/provincias/' + provincia + '/comunas',
-    })
-
-    const [valid, Toast] = isValidResponse(resp)
-
-    if (!valid) {
-      Toast.error({
-        message: 'Ha ocurrido un error obteniendo las comunas',
-      })
-    } else {
+  async getComunas({ rootState }, provincia) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.comunas(provincia))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
       return resp.result.map(({ id, nombre }) => {
         return { id, name: nombre }
       })
     }
-
     return null
   },
-  async deleteEntity({ commit }, id) {
-    let resp = null
-
-    resp = await this.$auth.requestWith(STRATEGY, {
-      method: 'DELETE',
-      url: '/entidades/' + id,
-    })
+  async deleteEntity({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesDelete(id))
     const [valid, Toast] = isValidResponse(resp)
-    if (!valid) {
-      Toast.error({
-        message: 'Ha ocurrido un error',
-      })
-    } else {
+    if (valid) { 
       Toast.success({
         message: 'Entidad eliminada',
       })
       commit('deleteEntity', id)
     }
-    return resp
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error eliminando la entidad',
+      })
+    }  
   },
 }

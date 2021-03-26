@@ -105,7 +105,7 @@
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Seguidor</v-col>
                     <v-col>
                         <!-- <dx-select :items="seguidores" v-model="seguidor" solo flat outlined label="Seleccione seguidor" v-bind="$props" :ripple="false" /> -->
-                        <v-autocomplete append-icon="" :ripple="false" solo flat multiple outlined v-model="seguidor" :items="seguidores" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione seguidor" no-data-text="No existen coincidencias">
+                        <v-autocomplete append-icon="" :ripple="false" solo flat multiple outlined v-model="seguidor" :items="seguidores" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione seguidor" placeholder="Debe escribir al menos 4 caracteres" no-data-text="No existen coincidencias">
                             <template v-slot:selection="{ item }">
                                 <dx-badge type="tertiary" label outlined class="mx-1 my-1">
                                     <div class="darken3--text font-16 line-height-22 weight-400 textbreak" :title=" item.name "> {{ item.name }}</div>
@@ -123,7 +123,7 @@
                     <v-col>
                         <!-- <v-text-field v-model="subrogante" solo flat outlined label="Seleccione subrogante" /> -->
                         <!-- <v-select :items="subrogantes" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" v-model="subrogante" label="Seleccione subrogante" solo flat outlined v-bind="$props" :ripple="false" /> -->
-                        <v-autocomplete append-icon="" :ripple="false" solo flat outlined v-model="subrogante" :items="subrogantesByEntity" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione subrogante" no-data-text="No existen coincidencias">
+                        <v-autocomplete append-icon="" :ripple="false" solo flat outlined v-model="subrogante" :items="subrogantesByEntity" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione subrogante" placeholder="Debe escribir al menos 4 caracteres" no-data-text="No existen coincidencias">
                             <template v-slot:selection="{ item }">
                                 <dx-badge type="tertiary" label outlined class="mx-1 my-1">
                                     <div class="darken3--text font-16 line-height-22 weight-400 textbreak">{{ item.name }}</div>
@@ -320,7 +320,7 @@ export default {
                     name: nombres
                 }
             })
-        },        
+        },
         rolesSelect() {
             return this.$store.getters['usuarios/getRoles']
         }
@@ -344,6 +344,11 @@ export default {
             const entlist = this.$store.getters['entidades/getEntities']
             let index = entlist.findIndex((obj => (obj.id == this.entidad)))
             const entidad = entlist[index]
+            const seguidores = this.seguidor.map((s) => {
+                return {
+                    id: s
+                }
+            })
 
             if (this.$refs.form.validate()) {
                 let user = {
@@ -357,41 +362,19 @@ export default {
                     cargo: this.cargo,
                     entidad: entidad,
                     roles: this.roles,
-                    seguidor: this.seguidor,
-                    subrogante: this.subrogante,
+                    seguidor: seguidores,
+                    subrogante: {
+                        id: this.subrogante
+                    },
                     id: this.userid
                 }
-                try {
-                    if (this.userid)
-                        resp = await this.$store.dispatch('usuarios/updateUser', user)
-                    else
-                        resp = await this.$store.dispatch('usuarios/insertUser', user)
-                } catch (error) {}
+                if (this.userid)
+                    await this.$store.dispatch('usuarios/updateUser', user)
+                else
+                    await this.$store.dispatch('usuarios/insertUser', user)
 
-                const [valid, Toast] = isValidResponse(resp)
+                this.$router.replace('/administracion/usuarios')
 
-                if (valid) {
-                    if (this.userid)
-                        Toast.success({
-                            message: 'Usuario actualizado exitósamente',
-                        })
-                    else
-                        Toast.success({
-                            message: 'Usuario creado exitósamente',
-                        })
-
-                    this.$router.replace('/administracion/usuarios')
-
-                } else {
-                    if (this.userid)
-                        Toast.error({
-                            message: 'Ha ocurrido un error al actualizar el usuario',
-                        })
-                    else
-                        Toast.error({
-                            message: 'Ha ocurrido un error al crear el usuario',
-                        })
-                }
             }
         },
         get_roles(roles_) {
@@ -402,7 +385,6 @@ export default {
                 return item !== val
             })
         },
-
 
     },
 }
