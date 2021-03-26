@@ -30,7 +30,7 @@
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">RUT*</v-col>
                     <v-col class="mh-72">
-                        <v-text-field v-model="run" solo flat outlined :rules="rules.rutVerifier" :error-messages="errorMessages" label="99.999.999" style="width: 108px" required class="d-inline-block" :disabled="disabled" />
+                        <v-text-field v-model="run" solo flat outlined :rules="rules.rutVerifier" :error-messages="errorMessages" label="99.999.999" required class="d-inline-block" :disabled="disabled" />
                         -
                         <v-text-field v-model="dv" solo flat outlined :rules="rules.dvVerifier" :error-messages="errorMessages" label="K" style="width: 37px" required class="d-inline-block" :disabled="disabled" />
                     </v-col>
@@ -91,11 +91,11 @@
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col style="min-width: 140px" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28 col-4': !ismobil }]">
                         <div style="width: 70%; float: left; max-width: 160px">Permisos adicionales</div>
-                        <v-icon color="warning" :class="['ml-2', { 'mt-5': !ismobil }, { 'mt-1': ismobil }]" style="float: left">mdi-help-circle</v-icon>
+                        <v-icon color="warning" v-tooltip="{ content: 'this is a help hint' }" :class="['ml-2', { 'mt-5': !ismobil }, { 'mt-1': ismobil }]" style="float: left">mdi-help-circle</v-icon>
                     </v-col>
                     <div class="col-md-5 col-sm-12 px-0 mr-10" v-if="ismobil" style="min-height: 30px"> </div>
                     <v-col>
-                        <dx-select v-model="roles" :items="rolesSelect" @get-selected="get_roles" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :disabled="disabled" :ripple="false">
+                        <dx-select v-model="roles" :items="rolesSelect" @get-selected="get_roles" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :ripple="false">
                         </dx-select>
                     </v-col>
                 </v-row>
@@ -104,7 +104,6 @@
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Seguidor</v-col>
                     <v-col>
-                        <!-- <dx-select :items="seguidores" v-model="seguidor" solo flat outlined label="Seleccione seguidor" v-bind="$props" :ripple="false" /> -->
                         <v-autocomplete append-icon="" :ripple="false" solo flat multiple outlined v-model="seguidor" :items="seguidores" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione seguidor" placeholder="Debe escribir al menos 4 caracteres" no-data-text="No existen coincidencias">
                             <template v-slot:selection="{ item }">
                                 <dx-badge type="tertiary" label outlined class="mx-1 my-1">
@@ -121,8 +120,6 @@
                 <v-row no-gutters :class="['align-center', ismobil]">
                     <v-col cols="auto" class="label-width" :class="['flex weight-400 line-height-30 font-16 py-1', { 'mt-minus-28': !ismobil }]">Subrogante</v-col>
                     <v-col>
-                        <!-- <v-text-field v-model="subrogante" solo flat outlined label="Seleccione subrogante" /> -->
-                        <!-- <v-select :items="subrogantes" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" v-model="subrogante" label="Seleccione subrogante" solo flat outlined v-bind="$props" :ripple="false" /> -->
                         <v-autocomplete append-icon="" :ripple="false" solo flat outlined v-model="subrogante" :items="subrogantesByEntity" :loading="isLoading" hide-details hide-selected item-text="name" item-value="id" label="Seleccione subrogante" placeholder="Debe escribir al menos 4 caracteres" no-data-text="No existen coincidencias">
                             <template v-slot:selection="{ item }">
                                 <dx-badge type="tertiary" label outlined class="mx-1 my-1">
@@ -139,9 +136,9 @@
                 <v-row no-gutters :class="[{ 'align-center': ismobil }]">
                     <v-col cols="auto" :class="['flex weight-400 line-height-30 font-16', { 'mt-3': !ismobil }, {'mt-minus-28': ismobil }]" sryle="height: 100%">Activar subrogancia</v-col>
                     <v-col style="max-height: 72px" :class="[{ 'mt-1': !ismobil }]">
-                        <v-switch class="d-inline-block mt-0 pt-0 success-switch" style="width: 40px" v-model="isSubroganteActivado" inset :ripple="false" dense :disabled="disabled">
+                        <v-switch class="d-inline-block mt-0 pt-0 success-switch" style="width: 40px" :disabled="subrogante === null" v-model="isSubroganteActivado" inset :ripple="false" dense>
                         </v-switch>
-                        <v-icon color="warning" style="margin-top: -4px">mdi-help-circle</v-icon>
+                        <v-icon color="warning" style="margin-top: -4px" v-tooltip="{ content: 'this is a help hint' }">mdi-help-circle</v-icon>
                     </v-col>
                 </v-row>
             </div>
@@ -160,10 +157,7 @@
 </template>
 
 <script>
-import {
-    isValidResponse
-} from '~/shared/utils/request'
-
+import Toast from '~/components/style-guide/alerts/ToastService'
 import {
     verificationDigit,
     verifyRut
@@ -183,16 +177,12 @@ export default {
     },
     async fetch() {
         this.$store.dispatch('entidades/getEntities')
-        // this.$store.dispatch('usuarios/getRoles')
-    },
-    updated() {
-
     },
     mounted() {
-
         const activos = this.$store.getters['usuarios/getActivos']
         if (this.userid) {
             const user = this.$store.getters['usuarios/getSelectedUser']
+            const roles = user.roles.filter(rol => rol != 'ROLE_USUARIO')
             if (user) {
                 this.isSubroganteActivado = user.isSubroganteActivado
                 this.isBloqueado = !user.isBloqueado
@@ -203,7 +193,7 @@ export default {
                 this.correoInstitucional = user.correoInstitucional
                 this.cargo = user.cargo
                 this.entidad = user.entidad.id
-                this.roles = user.roles
+                this.roles = roles
                 this.seguidor = user.seguidor
             }
             console.log(this.roles)
@@ -217,7 +207,6 @@ export default {
                 name: nombres
             }
         })
-        // console.log(this.seguidores)
     },
     data() {
         return {
@@ -225,7 +214,7 @@ export default {
             labelClass: 'text-body-1 font-20',
             errorMessages: '',
             formHasErrors: false,
-            isSubroganteActivado: true,
+            isSubroganteActivado: false,
             isBloqueado: false,
             nombres: null,
             run: null,
@@ -270,7 +259,6 @@ export default {
             valid: true,
         }
     },
-
     computed: {
         entidades() {
             let list = []
@@ -323,7 +311,7 @@ export default {
         },
         rolesSelect() {
             return this.$store.getters['usuarios/getRoles']
-        }
+        },
     },
     methods: {
         addressCheck() {
@@ -344,36 +332,41 @@ export default {
             const entlist = this.$store.getters['entidades/getEntities']
             let index = entlist.findIndex((obj => (obj.id == this.entidad)))
             const entidad = entlist[index]
-            const seguidores = this.seguidor.map((s) => {
-                return {
-                    id: s
-                }
-            })
+            const seguidores = {}
+            if (this.seguidor) {
+                this.seguidor.map((s) => {
+                    return {
+                        id: s
+                    }
+                })
+            }
 
             if (this.$refs.form.validate()) {
-                let user = {
-                    isSubroganteActivado: this.isSubroganteActivado,
-                    isBloqueado: !this.isBloqueado,
-                    nombres: this.nombres,
-                    run: this.run,
-                    dv: this.dv,
-                    apellidos: this.apellidos,
-                    correoInstitucional: this.correoInstitucional,
-                    cargo: this.cargo,
-                    entidad: entidad,
-                    roles: this.roles,
-                    seguidor: seguidores,
-                    subrogante: {
-                        id: this.subrogante
-                    },
-                    id: this.userid
-                }
-                if (this.userid)
-                    await this.$store.dispatch('usuarios/updateUser', user)
-                else
-                    await this.$store.dispatch('usuarios/insertUser', user)
+                if (this.isValidSubrogante()) {
+                    let user = {
+                        isSubroganteActivado: this.isSubroganteActivado,
+                        isBloqueado: !this.isBloqueado,
+                        nombres: this.nombres,
+                        run: this.run,
+                        dv: this.dv,
+                        apellidos: this.apellidos,
+                        correoInstitucional: this.correoInstitucional,
+                        cargo: this.cargo,
+                        entidad: entidad,
+                        roles: this.roles,
+                        seguidor: seguidores,
+                        subrogante: {
+                            id: this.subrogante
+                        },
+                        id: this.userid
+                    }
+                    if (this.userid)
+                        await this.$store.dispatch('usuarios/updateUser', user)
+                    else
+                        await this.$store.dispatch('usuarios/insertUser', user)
 
-                this.$router.replace('/administracion/usuarios')
+                    this.$router.replace('/administracion/usuarios')
+                }
 
             }
         },
@@ -385,7 +378,26 @@ export default {
                 return item !== val
             })
         },
-
+        isValidSubrogante() {
+            const getUserById = this.$store.getters['usuarios/getUserById']
+            const subrogante = getUserById(this.subrogante)
+            if (subrogante && subrogante.isSubroganteActivado && this.isSubroganteActivado) {
+                Toast.error({
+                    message: `El usuario ${subrogante.nombres} se encuentra con subrogancia activada. No podrá Activar subrogancia hasta nombrar un nuevo usuario subrogante`,
+                })
+                // this.isSubroganteActivado = false
+                return false
+            }
+            return true
+        }
+    },
+    watch: {
+        isSubroganteActivado: {
+            handler: function (newValue, before) {
+                this.isValidSubrogante()
+            },
+            deep: true,
+        },
     },
 }
 </script>
