@@ -16,7 +16,6 @@ const sassLoaders = {
     implementation: require('sass'),
     additionalData: `
       @import '~/assets/styles/vuetify-overrides.scss'
-      @import '~/assets/styles/mixins.scss'
     `,
     sassOptions: {
       indentedSyntax: true,
@@ -30,7 +29,6 @@ const scssLoaders = {
     implementation: require('sass'),
     additionalData: `
       @import '~/assets/styles/vuetify-overrides.scss';
-      @import '~/assets/styles/mixins.scss';
     `,
     sassOptions: {
       indentedSyntax: false,

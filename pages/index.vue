@@ -33,5 +33,12 @@ export default {
       return this.visar > 0 && this.firmar > 0 && this.recibir > 0
     },
   },
+  async mounted() {
+    const entidades = await this.$store.dispatch('entidades/fetchUserEntities', {
+      rut: '88888888',
+    })
+
+    console.log(entidades)
+  },
 }
 </script>

@@ -1,4 +1,6 @@
 import { isValidResponse } from '~/shared/utils/request'
+import endpoints from '~/api/endpoints'
+
 export const STRATEGY = 'claveUnica'
 export const state = () => ({
   selectedEntity: null,
@@ -47,7 +49,6 @@ export const mutations = {
 
 export const actions = {
   async getEntities({ commit }) {
-    let resp = null
     const params = {
       entidad: 0,
       isBloqueado: true,
@@ -59,20 +60,26 @@ export const actions = {
       roles: ['ROLE_ADMIN'],
       run: 0,
     }
-    resp = await this.$auth.requestWith(STRATEGY, {
+    const resp = await this.$auth.requestWith(STRATEGY, {
       method: 'GET',
       url: '/entidades/',
     })
-    const [valid, Toast] = isValidResponse(resp)
+    const [valid] = isValidResponse(resp)
 
-    if (!valid) {
-      Toast.error({
-        message: 'Ha ocurrido un error',
-      })
-    } else {
+    if (valid) {
       commit('setEntitiesList', resp.result)
     }
   },
+
+  async fetchUserEntities({ rootState }, params = {}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesFetchAll(params))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      return resp.result
+    }
+    return false
+  },
+
   async insertEntity({ commit }, entity) {
     let resp = null
     const body_ = entity
