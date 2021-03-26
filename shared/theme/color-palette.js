@@ -8,7 +8,6 @@ export const themes = {
     darken1: '#BBBBBB',
     darken2: '#656565',
     darken3: '#373737',
-    darken4: '#717171',
     dark: '#092039', //'#001C41',
     deepdark: '#001C41',
     black: '#111111',

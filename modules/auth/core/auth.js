@@ -395,14 +395,12 @@ export default class Auth {
     }
 
     if (process.client) {
-      console.log('CLIENT REDIRECT')
       if (noRouter) {
         window.location.replace(to)
       } else {
         this.ctx.app.router.replace(to)
       }
     } else {
-      console.log('REDIRECT')
       this.ctx.redirect(302, to, this.ctx.query)
     }
   }

@@ -76,7 +76,6 @@ export default {
     },
 
     clearTimer() {
-      console.log('CLEAR TIMER')
       clearTimeout(this.timer)
     },
 

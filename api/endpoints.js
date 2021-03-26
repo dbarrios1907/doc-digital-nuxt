@@ -11,7 +11,7 @@ export default {
   fetchTasks: query => ({ url: '/documentos/tareas', method: 'GET', query }),
   fetchTasksVisa: '/documentos/tareas/visar',
   fetchTasksSign: '/documentos/tareas/firmar',
-  fetchTasksRejected: '/documentos/tareas/creacion/rechazadas',
+  fetchTasksRejected: { url: '/documentos/tareas/creacion/rechazadas', method: 'GET' },
   fetchTasksErasers: '/documentos/tareas/creacion/borradores',
   fetchTasksCompleted: '/documentos/tareas/creacion/completadas',
   fetchTasksOfficeSent: '/documentos/tareas/op/enviar',

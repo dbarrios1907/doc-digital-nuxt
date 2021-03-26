@@ -28,7 +28,7 @@ export default {
     color: String,
     linkTarget: {
       type: String,
-      default: () => '/ingreso',
+      default: () => '/',
     },
     linkText: {
       type: String,

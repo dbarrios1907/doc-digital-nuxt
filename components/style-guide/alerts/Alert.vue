@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     dismiss() {
-      console.log('DISMISS')
       this.$emit('onDismiss')
     },
   },

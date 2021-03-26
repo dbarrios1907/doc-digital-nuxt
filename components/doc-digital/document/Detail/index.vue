@@ -10,7 +10,7 @@
       </v-col>
     </v-row>
     <v-row class="mt-10">
-      <v-col class="px-md-13 pt-md-9 pb-md-4 bg-grey1 col col-12">
+      <v-col class="px-md-13 py-md-9 py-lg-9 bg-grey1 col col-12">
         <v-row>
           <v-col class="my-auto col col-12 col-md-6">
             <div class="weight-700 font-25 line-height-31 font-robotoslab">Información general del documento</div>
@@ -62,17 +62,15 @@
             <v-progress-circular indeterminate color="primary" class="mt-10" v-else></v-progress-circular>
           </v-col>
         </v-row>
-
-        <v-row>
-          <v-col>
-            <div class="weight-700 font-title line-height-29 mt-8">Resumen de avance de la tramitación</div>
-            <dx-docprogress :items="timeline" class="mt-7" />
-          </v-col>
-        </v-row>
       </v-col>
     </v-row>
-    <div class="weight-700 font-25 line-height-31 font-robotoslab mt-13">Información de la tramitación</div>
-    <dx-collapse :items="collapseitems" />
+
+    <div class="weight-700 font-25 line-height-31 font-robotoslab mt-13">Información de la tramitación del documento</div>
+    <div class="weight-700 font-title line-height-29 mt-8">Resumen de avance de la tramitación</div>
+    <dx-docprogress :items="timeline" class="mt-7" />
+    <DocumentDetailCollapseReset :items="rejectedocs" border />
+    <DocumentDetailCollapseNormal :items="steps" />
+
     <v-dialog v-model="dialog1" overlay-opacity="0.55" overlay-color="#001C41" max-width="600px" :content-class="ismobil">
       <v-card>
         <v-card-title>
@@ -133,6 +131,7 @@ export default {
     tableitem: Object,
     steps: Array,
     requesting: { type: Boolean, default: true },
+    rejectedocs: Array,
   },
   data: () => ({
     dialog: false,
@@ -141,19 +140,21 @@ export default {
     limitmaxCount: 255,
   }),
   computed: {
+    testing() {
+      return [
+        {
+          name: 'block',
+          title: 'Tramitación reiniciada' + (this.rejectedocs.length - 1) + (this.rejectedocs.length > 1 ? 'veces' : 'vez'),
+          description: this.rejectedocs,
+        },
+      ]
+    },
     collapseitems() {
       return [
         {
           name: 'block',
           title: '1. Inicio de la tramitación',
           description: this._filter('CREACION'),
-          // description: [
-          //   {
-          //     fecha: '10-09-2020 9:58',
-          //     creador: 'Trinidad Swinburn Correa',
-          //     entidad: 'Subsecretaría General de la Presidencia',
-          //   },
-          // ],
         },
         {
           name: 'block',
@@ -234,9 +235,6 @@ export default {
   methods: {
     updatefield(key, data) {
       this[key] = data
-    },
-    _filter(item) {
-      return this.steps.filter(({ tipoEtapa }) => tipoEtapa == item)
     },
   },
 }

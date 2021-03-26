@@ -292,4 +292,13 @@ export const actions = {
       return true
     }
   },
+
+  async rejectDocumentTramite({ commit, rootState }) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchTasksRejected)
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      return resp.result
+    }
+    return null
+  },
 }
