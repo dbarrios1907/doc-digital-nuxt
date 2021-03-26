@@ -65,7 +65,7 @@ export default {
     },
     itemValue: {
       type: String,
-      default: 'id',
+      default: null,
     },
     rules: Array,
     multiple: {

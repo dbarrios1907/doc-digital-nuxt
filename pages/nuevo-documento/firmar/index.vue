@@ -61,11 +61,11 @@
       </dx-stepper>
 
       <div class="text-right mt-8 mb-9">
-        <dx-button color="primary" small text>
+        <dx-button color="primary" small text @click="deleteDocument">
           <dx-icon right chevron> mdi-close</dx-icon>
           <span class="underline-text ml-1">Descartar borrador</span>
         </dx-button>
-        <dx-button color="primary" small text>
+        <dx-button color="primary" small text @click="saveDocument">
           <dx-icon right chevron> mdi-content-save</dx-icon>
           <span class="underline-text ml-1">Guardar borrador</span>
         </dx-button>
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import get from 'lodash.get'
 export default {
   data: () => ({
     activeStep: 1,
@@ -91,6 +92,18 @@ export default {
     back() {
       this.activeStep -= 1
       // console.log('Previous Step', this.activeStep)
+    },
+    async saveDocument() {
+      const docInfo = get(this, '$refs.docInfo.$children[0]', {})
+      const valid = await docInfo.validate()
+      if (!valid) return false
+
+      const { files: anexos, tipo: tipoDocumentoOficial, materia, description, folio, reservado: isReservado } = docInfo
+      console.log({ tipoDocumentoOficial, materia, description, folio, isReservado })
+      this.$store.dispatch('documents/createDocument', { tipoDocumentoOficial, materia, description, folio, isReservado, isBorrador: true })
+    },
+    deleteDocument() {
+      this.$router.replace('/')
     },
   },
 }

@@ -20,7 +20,7 @@
           <v-col cols="12" sm="12" md="6" lg="6" class="pr-0">
             <span>Materia o Tema del documento *</span>
             <validation-provider v-slot="{ errors }" name="documentSubject" rules="required">
-              <dx-text-field v-model="tema" solo flat outlined :error-messages="errors" label="Escriba el tema o materia" required />
+              <dx-text-field v-model="materia" solo flat outlined :error-messages="errors" label="Escriba el tema o materia" required />
             </validation-provider>
           </v-col>
           <v-col cols="12" class="py-0 px-0">
@@ -106,7 +106,7 @@ import { wizardStepMixin } from '~/shared/mixins/wizardStepMixin'
 const defaultValues = {
   files: [],
   tipo: '',
-  tema: '',
+  materia: '',
   description: '',
   folio: '',
   reservado: false,
