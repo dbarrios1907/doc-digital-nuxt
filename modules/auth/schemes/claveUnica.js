@@ -122,6 +122,7 @@ export default class ClaveUnicaScheme {
     // }
 
     this.$auth.setUser(userData)
+    this.$auth.ctx.store.dispatch('updateUserAccess', userData)
 
     // Store token
     this.$auth.setToken(this.name, token)

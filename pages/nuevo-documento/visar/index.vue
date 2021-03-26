@@ -119,7 +119,7 @@
                     </div>
                     <Upload multiple v-bind="$props" class="d-inline-block mr-2" />
                     o
-                    <Loadurl :dialog="dialogurl" class="ml-2 d-inline-block" />
+                    <LazyModalLoadUrl :dialog="dialogurl" class="ml-2 d-inline-block"  />
                   </v-col>
                 </v-row>
               </v-card>

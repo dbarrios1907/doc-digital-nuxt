@@ -5,15 +5,13 @@
 <script>
 export default {
   props: {
-    items: Array,
+    items: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {}
-  },
-  methods: {
-    _filter(item) {
-      return this.items.filter(({ tipoEtapa }) => tipoEtapa == item)
-    },
   },
   computed: {
     itemsCollapse() {
@@ -58,6 +56,11 @@ export default {
           description: this._filter('DESTINATARIOS'),
         },
       ]
+    },
+  },
+  methods: {
+    _filter(item) {
+      return this.items.filter(({ tipoEtapa }) => tipoEtapa == item)
     },
   },
 }

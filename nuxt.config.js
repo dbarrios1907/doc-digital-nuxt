@@ -37,6 +37,7 @@ export default {
     '~/plugins/scroll-lock.js',
     '~/plugins/confirm.client.js',
     '~/plugins/vee-validate.js',
+    '~/plugins/permissions.client.js',
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

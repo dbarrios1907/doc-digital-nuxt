@@ -21,9 +21,10 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapState } from 'vuex'
+
 export default {
   data: () => ({
-    userName: 'Daniel Barrios',
     visar: 123,
     firmar: 1,
     recibir: 5,
@@ -32,13 +33,14 @@ export default {
     hasNotifications() {
       return this.visar > 0 && this.firmar > 0 && this.recibir > 0
     },
+    ...mapGetters(['userName']),
   },
-  async mounted() {
-    const entidades = await this.$store.dispatch('entidades/fetchUserEntities', {
-      rut: '88888888',
-    })
-
-    console.log(entidades)
-  },
+  // async mounted() {
+  //   const entidades = await this.$store.dispatch('entidades/fetchUserEntities', {
+  //     rut: '88888888',
+  //   })
+  //
+  //   console.log(entidades)
+  // },
 }
 </script>

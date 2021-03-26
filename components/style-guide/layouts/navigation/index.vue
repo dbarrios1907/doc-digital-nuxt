@@ -7,10 +7,10 @@
             <v-icon large class="light--text mr-1"> mdi-account </v-icon>
           </v-list-item-icon>
 
-          <v-list-item-title>Trinidad Swinburn Correa</v-list-item-title>
+          <v-list-item-title>{{ username }}</v-list-item-title>
         </NavListItem>
 
-        <DxEntitySelectionItem />
+        <DxEntitySelectionItem :entity-name="entityName" />
 
         <div class="py-4" style="display: flex; justify-content: center">
           <create-doc-menu />
@@ -56,6 +56,8 @@ export default {
   mixins: [responsiveMixin],
   inheritAttrs: false,
   props: {
+    username: String,
+    entityName: String,
     routes: {
       type: Array,
       default: () => [],

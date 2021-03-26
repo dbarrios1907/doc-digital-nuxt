@@ -3,6 +3,8 @@
     <div class="dx-notification-container" />
     <dx-navigation
       v-model="drawer"
+      :username="userName"
+      :entity-name="entityName"
       :right="_rightDrawer"
       :routes="routes"
       :clipped="clipped"
@@ -33,7 +35,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import settings from '~/shared/settings'
 
 export default {
@@ -52,6 +54,7 @@ export default {
 
   computed: {
     ...mapState(['routes']),
+    ...mapGetters(['userName', 'entityName']),
     sessionExpired() {
       return this.$store.state.session.expired
     },

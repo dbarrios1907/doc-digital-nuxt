@@ -1,14 +1,66 @@
 import { isValidResponse } from '~/shared/utils/request'
 import endpoints from '~/api/endpoints'
 
+export const documentCreationState = () => ({
+  documentInfoStep: {
+    // "anexos": [
+    //   {
+    //     "id": 0,
+    //     "infoCertificados": [
+    //       {
+    //         "certificado": "string",
+    //         "nombreFirmante": "string",
+    //         "runFirmante": "string"
+    //       }
+    //     ],
+    //     "link": "string",
+    //     "nombre": "string",
+    //     "tipoArchivo": "ANEXO"
+    //   }
+    // ],
+    // "archivoPrincipal": {
+    //   "id": 0,
+    //   "infoCertificados": [
+    //     {
+    //       "certificado": "string",
+    //       "nombreFirmante": "string",
+    //       "runFirmante": "string"
+    //     }
+    //   ],
+    //   "link": "string",
+    //   "nombre": "string",
+    //   "tipoArchivo": "ANEXO"
+    // },
+    "descripcion": undefined,
+    "folio": undefined,
+    // "id": 0,
+    "isBorrador": true,
+    // "isDelete": true,
+    // "isFirmado": true,
+    "isReservado": true,
+    "materia": "string",
+    "tipoDocumentoOficial": {
+      "createAt": "2021-03-26T04:05:44.029Z",
+      "descripcion": "string",
+      "id": 0,
+      "updateAt": "2021-03-26T04:05:44.029Z"
+    },
+  },
+  documentVisaStep: {},
+  documentFirmaStep: {},
+  documentFolioStep: {},
+  documentDestinatariosStep: {},
+})
+
 export const state = () => ({
   documents: [],
   selectedDocument: null,
   documentTypeOptions: [],
-  documentSubjectOptions: [],
+  documentFileOptions: [],
   visaOptions: [],
   epochOptions: [],
   documentFileTypes: [],
+  ...documentCreationState(),
 })
 
 export const getters = {
@@ -108,6 +160,18 @@ export const actions = {
 
   // document creation actions
 
+  async fetchFileTypeOptions({ commit, state, rootState }) {
+    if (state.documentFileOptions.length > 0) return false
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentFileOptions)
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      commit('saveStateProperty', {
+        property: 'documentFileOptions',
+        value: resp.result,
+      })
+    }
+  },
+
   async fetchDocumentTypeOptions({ commit, state, rootState }) {
     if (state.documentTypeOptions.length > 0) return false
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentTypeOptions)
@@ -115,18 +179,6 @@ export const actions = {
     if (valid) {
       commit('saveStateProperty', {
         property: 'documentTypeOptions',
-        value: resp.result,
-      })
-    }
-  },
-
-  async fetchDocumentSubjectOptions({ commit, state, rootState }) {
-    if (state.documentSubjectOptions.length > 0) return false
-    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentSubjectOptions)
-    const [valid] = isValidResponse(resp)
-    if (valid) {
-      commit('saveStateProperty', {
-        property: 'documentSubjectOptions',
         value: resp.result,
       })
     }

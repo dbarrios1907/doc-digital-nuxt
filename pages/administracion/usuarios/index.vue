@@ -264,14 +264,14 @@ export default {
             const inactivos = this.$store.getters['usuarios/getInctivos']
             if (this.activeTab === 'Activos') return activos.length
             else return inactivos.length
-        },     
+        },
     },
     methods: {
         getUserRole(role) {
             let userRoles = this.$store.getters['usuarios/getRoles']
             if(userRoles)
               return userRoles.find(r => r.key === role).name;
-            else 
+            else
               return role
         },
         actionColor() {
@@ -286,7 +286,6 @@ export default {
             if (!this.filterValue) {
                 return true
             }
-            console.log(value)
             return value.toLowerCase().includes(this.filterValue.toLowerCase())
         },
         rutFilter(value) {

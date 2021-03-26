@@ -4,7 +4,7 @@
       <form @submit.prevent="submit">
         <dx-step-title title="Complete la información general del documento." help-hint="this is a help hint" />
         <v-row no-gutters>
-          <v-col cols="6" class="pr-4">
+          <v-col cols="12" sm="12" md="6" lg="6" class="pr-0 pr-md-4">
             <span>Tipo de documento *</span>
             <validation-provider v-slot="{ errors }" name="documentType" rules="required">
               <dx-select
@@ -17,17 +17,10 @@
               />
             </validation-provider>
           </v-col>
-          <v-col cols="6" class="py-0 pr-0">
+          <v-col cols="12" sm="12" md="6" lg="6" class="pr-0">
             <span>Materia o Tema del documento *</span>
             <validation-provider v-slot="{ errors }" name="documentSubject" rules="required">
-              <dx-select
-                v-model="tema"
-                item-text="descripcion"
-                :items="documentSubjectOptions"
-                :error-messages="errors"
-                label="Selecciona una opción"
-                @change="updatefield('tema', $event)"
-              />
+              <dx-text-field v-model="tema" solo flat outlined :error-messages="errors" label="Escriba el tema o materia" required />
             </validation-provider>
           </v-col>
           <v-col cols="12" class="py-0 px-0">
@@ -53,10 +46,10 @@
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="py-0 pl-0 pr-4">
-            <dx-checkbox v-model="reservado" label="Documento reservado" class="float-left darken--text" />
+            <v-checkbox v-model="reservado" label="Documento reservado" class="float-left darken--text" />
             <dx-icon left class="ml-4 py-5" size="18" color="warning">mdi-help-circle</dx-icon>
           </v-col>
-          <v-col cols="6" class="pr-0">
+          <v-col cols="12" sm="12" md="6" lg="6" class="pr-0">
             <span>Folio *</span>
             <validation-provider v-slot="{ errors }" name="folio" rules="required|max:255">
               <dx-text-field
@@ -77,22 +70,29 @@
         </v-row>
 
         <v-row no-gutters>
-          <v-col cols="6" class="py-0 pl-0 pr-4">
+          <v-col cols="12" sm="12" md="6" lg="6" class="py-0 pl-0 pr-4">
             <div>Documento a distribuir *</div>
             <div class="font-small line-height-24 weight-400 darken2--text mt-2 mb-5">
-              Cargue solo un archivo en formato PDF de máximo 20 MB<br>El sistema reconocerá si éste viene firmado.
+              Cargue solo un archivo en formato PDF de máximo 20 MB<br >El sistema reconocerá si éste viene firmado.
               <dx-icon left size="18" color="warning">mdi-help-circle</dx-icon>
             </div>
-            <Upload multiple v-bind="$props" />
+            <Upload multiple v-bind="$props" class="d-inline-block mr-2" />
+            o
+            <LazyModalLoadUrl
+              :dialog="dialogurl"
+              title="Agregar url como archivo principal"
+              button-text="Cargar Referencia URL"
+              class="ml-2 d-inline-block"
+            />
           </v-col>
-          <v-col cols="6" class="py-0 pr-0">
+          <v-col cols="12" sm="12" md="6" lg="6" class="py-0 pr-0">
             <div>Anexos</div>
             <div class="mb-5 font-small line-height-24 weight-400 darken2--text mt-2">
               Puede cargar múltiples archivos con un máximo de 50 MB y en formato libre.
             </div>
             <Upload multiple v-bind="$props" class="d-inline-block mr-2" />
             o
-            <Loadurl :dialog="dialogurl" class="ml-2 d-inline-block" />
+            <LazyModalLoadUrl class="ml-2 d-inline-block" />
           </v-col>
         </v-row>
       </form>
@@ -101,26 +101,35 @@
 </template>
 <script>
 import DxTextField from '~/components/style-guide/form/text-field'
+import { wizardStepMixin } from '~/shared/mixins/wizardStepMixin'
+
+const defaultValues = {
+  files: [],
+  tipo: '',
+  tema: '',
+  description: '',
+  folio: '',
+  reservado: false,
+}
+
 export default {
   components: { DxTextField },
+  mixins: [wizardStepMixin],
+  inheritAttrs: false,
   props: {
     documentTypeOptions: {
       type: Array,
       default: () => [],
     },
-    documentSubjectOptions: {
+    documentFileOptions: {
       type: Array,
       default: () => [],
     },
   },
   data() {
     return {
-      files: [],
-      tipo: '',
-      tema: '',
-      description: '',
-      folio: '',
-      reservado: false,
+      defaultValues,
+      ...defaultValues,
       hiddedesc: true,
       hiddefolio: true,
       limitmaxCount: 255,

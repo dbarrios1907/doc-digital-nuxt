@@ -7,10 +7,6 @@ export default {
   name: 'DxCheckbox',
   inheritAttrs: false,
   props: {
-    selected: {
-      type: Array,
-      default: () => [],
-    },
     label: String,
     ripple: {
       type: Boolean,
