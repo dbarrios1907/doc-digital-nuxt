@@ -1,8 +1,11 @@
-import store from '~/store'
-
-function checkPermission(el, binding) {
+function checkPermission(el, binding, vnode) {
   const { value } = binding
-  const roles = store.getters && store.getters.roles
+  const store = vnode?.context?.$store
+  const roles = store?.getters && store?.getters?.roles
+
+  if (!roles) throw new Error(`No roles where found for the user`)
+
+  if (roles.some(role => role === 'ROLE_ADMIN' || role === 'ROLE_JEFE_SERVICIO' || role === 'ROLE_SUPERADMIN')) return true
 
   if (value && value instanceof Array) {
     if (value.length > 0) {
@@ -22,10 +25,10 @@ function checkPermission(el, binding) {
 }
 
 export default {
-  inserted(el, binding) {
-    checkPermission(el, binding)
+  inserted(el, binding, vnode) {
+    checkPermission(el, binding, vnode)
   },
-  update(el, binding) {
-    checkPermission(el, binding)
+  update(el, binding, vnode) {
+    checkPermission(el, binding, vnode)
   },
 }

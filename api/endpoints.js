@@ -1,6 +1,6 @@
 export default {
-  documentSubjectOptions: { url: '/tipos/tramitacion/documentos', method: 'GET' },
-  documentTypeOptions: { url: '/tipos/tramitacion/documentos/archivo', method: 'GET' },
+  documentTypeOptions: { url: '/tipos/tramitacion/documentos', method: 'GET' },
+  documentFileOptions: { url: '/tipos/tramitacion/documentos/archivo', method: 'GET' },
   roleOptions: { url: '/tipos/seguridad/roles', method: 'GET' },
   epochOptions: { url: '/tipos/tramitacion/etapas', method: 'GET' },
   visaOptions: { url: '/tipos/tramitacion/visaciones', method: 'GET' },
@@ -20,7 +20,7 @@ export default {
   // document creation endpoints
   // models used same endpoint with different method to exec operations (delete, get, create, save)
   documentFetch: docId => ({ url: `/documentos/${docId}`, method: 'GET' }),
-  documentCreate: params => ({ url: `/documentos/`, method: 'POST', params }),
+  documentCreate: data => ({ url: `/documentos/`, method: 'POST', data }),
   documentUpdate: params => ({ url: `/documentos/`, method: 'PUT', params }),
   documentDelete: docId => ({ url: `/documentos/${docId}`, method: 'DELETE' }),
 
@@ -32,8 +32,8 @@ export default {
   documentDeleteMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'DELETE' }),
 
   documentFetchTramite: docId => ({ url: `/documentos/${docId}/tramitacion`, method: 'GET' }),
-  documentCreateTramite: (docId, params) => ({ url: `/documentos/${docId}/tramitacion`, method: 'POST', params }),
-  documentUpdateTramite: (docId, params) => ({ url: `/documentos/${docId}/tramitacion`, method: 'PUT', params }),
+  documentCreateTramite: (docId, data) => ({ url: `/documentos/${docId}/tramitacion`, method: 'POST', data }),
+  documentUpdateTramite: (docId, data) => ({ url: `/documentos/${docId}/tramitacion`, method: 'PUT', data }),
   documentDeleteTramite: docId => ({ url: `/documentos/${docId}/tramitacion/cancelar`, method: 'DELETE' }),
 
   documentFinalizeTramite: docId => ({ url: `/documentos/${docId}/tramitacion/enviar`, method: 'POST' }),

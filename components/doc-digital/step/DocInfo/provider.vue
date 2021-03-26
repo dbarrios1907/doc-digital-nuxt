@@ -1,5 +1,5 @@
 <template>
-  <StepDocInfo v-bind="$attrs" :document-type-options="documentTypeOptions" :document-subject-options="documentSubjectOptions" v-on="$listeners" />
+  <StepDocInfo v-bind="$attrs" :document-type-options="documentTypeOptions" v-on="$listeners" />
 </template>
 
 <script>
@@ -9,11 +9,11 @@ export default {
   name: 'StepDocInfoProvider',
   inheritAttrs: false,
   computed: {
-    ...mapGetters('documents', ['documentTypeOptions', 'documentSubjectOptions']),
+    ...mapGetters('documents', ['documentTypeOptions', 'documentFileOptions']),
   },
   mounted() {
     this.$store.dispatch('documents/fetchDocumentTypeOptions')
-    this.$store.dispatch('documents/fetchDocumentSubjectOptions')
+    this.$store.dispatch('documents/fetchFileTypeOptions')
   },
 }
 </script>

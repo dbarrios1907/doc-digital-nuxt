@@ -1,7 +1,14 @@
 <template>
   <div v-if="!item.hidden">
     <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
-      <NavListItem v-if="onlyOneChild.meta" link :to="resolvePath(onlyOneChild.path)" :nested="nested">
+      <NavListItem
+        v-if="onlyOneChild.meta"
+        link
+        :to="resolvePath(onlyOneChild.path)"
+        :nested="nested"
+        check-permission
+        v-permission="item.roles || ['ROLE_USUARIO']"
+      >
         <v-list-item-icon>
           <v-icon v-text="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" />
         </v-list-item-icon>
@@ -10,7 +17,16 @@
       </NavListItem>
     </template>
 
-    <NavListGroup v-else :ripple="false" active-class="light--text" :prepend-icon="item.meta && item.meta.icon" no-action :sub-group="nested">
+    <NavListGroup
+      v-else
+      :ripple="false"
+      active-class="light--text"
+      :prepend-icon="item.meta && item.meta.icon"
+      no-action
+      :sub-group="nested"
+      check-permission
+      v-permission="item.roles || ['ROLE_USUARIO']"
+    >
       <template v-slot:activator>
         <v-list-item-title>{{ item.meta.title }}</v-list-item-title>
       </template>

@@ -39,19 +39,19 @@
         <v-stepper-items>
           <v-stepper-content step="1">
             <LazyStepDocInfoProvider ref="docInfo" />
-            <dx-step-actions :steps="steps" :step="1" @onComplete="complete" @onNext="next" @onBack="back" />
+            <dx-step-actions :steps="steps" :step="1" @onComplete="complete" @onNext="next($refs.docInfo)" @onBack="back" />
           </v-stepper-content>
           <v-stepper-content step="2">
             <LazyStepVisaProvider ref="visa" />
-            <dx-step-actions :steps="steps" :step="2" @onComplete="complete" @onNext="next" @onBack="back" />
+            <dx-step-actions :steps="steps" :step="2" @onComplete="complete" @onNext="next($refs.visa)" @onBack="back" />
           </v-stepper-content>
           <v-stepper-content step="3">
-            <StepSignature />
-            <dx-step-actions :steps="steps" :step="3" @onComplete="complete" @onNext="next" @onBack="back" />
+            <LazyStepSignatureProvider ref="signature" />
+            <dx-step-actions :steps="steps" :step="3" @onComplete="complete" @onNext="next($refs.signature)" @onBack="back" />
           </v-stepper-content>
           <v-stepper-content step="4">
-            <StepFolio />
-            <dx-step-actions :steps="steps" :step="4" @onComplete="complete" @onNext="next" @onBack="back" />
+            <LazyStepFolio ref="folio" />
+            <dx-step-actions :steps="steps" :step="4" @onComplete="complete" @onNext="next($refs.folio)" @onBack="back" />
           </v-stepper-content>
           <v-stepper-content step="5">
             <StepDestination />
@@ -59,33 +59,51 @@
           </v-stepper-content>
         </v-stepper-items>
       </dx-stepper>
+
+      <div class="text-right mt-8 mb-9">
+        <dx-button color="primary" small text @click="deleteDocument">
+          <dx-icon right chevron> mdi-close</dx-icon>
+          <span class="underline-text ml-1">Descartar borrador</span>
+        </dx-button>
+        <dx-button color="primary" small text @click="saveDocument">
+          <dx-icon right chevron> mdi-content-save</dx-icon>
+          <span class="underline-text ml-1">Guardar borrador</span>
+        </dx-button>
+      </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import get from 'lodash.get'
 export default {
   data: () => ({
     activeStep: 1,
     steps: 5,
   }),
-  mounted() {
-    console.log(this.$refs)
-  },
   methods: {
     complete() {
       alert('Reached Final Step')
     },
-    next() {
-      this.activeStep += 1
-      // this.$nextTick(() => {
-      //   console.log('Next Step', this.activeStep)
-      // })
-      // console.log('Next Step', this.activeStep)
+    async next(stepComponent) {
+      const valid = await stepComponent?.$children[0]?.validate()
+      if (valid) this.activeStep += 1
     },
     back() {
       this.activeStep -= 1
       // console.log('Previous Step', this.activeStep)
+    },
+    async saveDocument() {
+      const docInfo = get(this, '$refs.docInfo.$children[0]', {})
+      const valid = await docInfo.validate()
+      if (!valid) return false
+
+      const { files: anexos, tipo: tipoDocumentoOficial, materia, description, folio, reservado: isReservado } = docInfo
+      console.log({ tipoDocumentoOficial, materia, description, folio, isReservado })
+      this.$store.dispatch('documents/createDocument', { tipoDocumentoOficial, materia, description, folio, isReservado, isBorrador: true })
+    },
+    deleteDocument() {
+      this.$router.replace('/')
     },
   },
 }

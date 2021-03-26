@@ -5,13 +5,13 @@
       <dx-tabs :items="items" tabtype="outlined">
         <template v-slot:tab-item>
           <v-tab-item>
-            <TabDocEmail></TabDocEmail>
+            <TabDocEmail @onAdd="addDestinatario" />
           </v-tab-item>
           <v-tab-item>
-            <TabDocOffice></TabDocOffice>
+            <TabDocOffice @onAdd="addDestinatario" />
           </v-tab-item>
           <v-tab-item>
-            <TabDocSavedList></TabDocSavedList>
+            <TabDocSavedList @onAddList="addTemplateList" @onRemoveList="removeTemplateList" />
           </v-tab-item>
         </template>
       </dx-tabs>
@@ -34,37 +34,21 @@ export default {
         { tab: 'Oficina de Partes', icon: 'mdi-plus-circle-outline' },
         { tab: 'Lista guardada', icon: 'mdi-plus-circle-outline' },
       ],
-      destinations: [
-        {
-          id: '1',
-          name: 'Dirección de Presupuestos',
-        },
-        {
-          id: '2',
-          name: 'email@entidad.gob.cl',
-          cc: true,
-        },
-        {
-          id: '3',
-          name: 'Tesorería General de la República',
-        },
-        {
-          id: '4',
-          name: 'Dirección Nacional de Servicio Civil',
-        },
-        {
-          id: '5',
-          name: 'Servicio Nacional de Aduanas',
-          cc: true,
-        },
-      ],
+      destinations: [],
     }
   },
   computed: {},
   methods: {
     removeDestination(item, index) {
-      this.destinations = this.destinations.filter(v => v.id !== item.id)
+      this.destinations = this.destinations.filter(v => v.email !== item.email)
     },
+    addDestinatario(item) {
+      console.log(item)
+      this.destinations.push(item)
+    },
+    addTemplateList() {},
+
+    removeTemplateList() {},
   },
 }
 </script>

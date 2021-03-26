@@ -3,6 +3,8 @@
     <div class="dx-notification-container" />
     <dx-navigation
       v-model="drawer"
+      :username="userName"
+      :entity-name="entityName"
       :right="_rightDrawer"
       :routes="routes"
       :clipped="clipped"
@@ -28,14 +30,16 @@
         <v-idle :loop="true" :wait="0" :duration="60 * 30" @idle="onIdle" />
       </template>
     </keep-alive>
+    <dx-confirm-modal ref="$confirm" />
   </v-app>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import settings from '~/shared/settings'
 
 export default {
+  name: 'RootLayout',
   data: vm => {
     return {
       clipped: true, // toggles nav full height
@@ -50,6 +54,7 @@ export default {
 
   computed: {
     ...mapState(['routes']),
+    ...mapGetters(['userName', 'entityName']),
     sessionExpired() {
       return this.$store.state.session.expired
     },

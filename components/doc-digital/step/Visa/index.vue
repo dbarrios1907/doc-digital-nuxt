@@ -1,36 +1,46 @@
 <template>
-  <dx-step-body>
-    <dx-step-title title="Complete la información general del documento." help-hint="this is a help hint" />
-    <v-row no-gutters>
-      <v-col cols="12" lg="4" sm="6" md="5" colclass="pr-4">
-        <label>Tipo de visación *</label>
-        <dx-select
-          v-model="visaType"
-          item-text="descripcion"
-          item-value="valor"
-          :items="visaOptions"
-          placeholder="Selecione el tipo de visación"
-          :rules="[() => !!tipo || 'Campo requerido']"
-          label="Selecciona una opción"
-          @change="updatefield('tipo', $event)"
-        />
-      </v-col>
-    </v-row>
-    <v-row no-gutters>
-      <v-col cols="12">
-        <label>Visadores y orden de visación *</label>
-      </v-col>
-      <dx-box centered bordered elevation add-class="py-4">
-        <dx-button small outlined color="primary" v-bind="$props">
-          <dx-icon left chevron regular> mdi-plus-circle-outline </dx-icon>
-          <span class="underline-text">Agregar lista de visación</span>
-        </dx-button>
-      </dx-box>
-    </v-row>
-  </dx-step-body>
+  <validation-observer ref="observer">
+    <dx-step-body>
+      <dx-step-title title="Complete la información general del documento." help-hint="this is a help hint" />
+      <form @submit.prevent="">
+        <v-row no-gutters>
+          <v-col cols="12" lg="6" sm="6" md="6" colclass="pr-4">
+            <label>Tipo de visación *</label>
+            <validation-provider v-slot="{ errors }" name="visaType" rules="required">
+              <dx-select
+                v-model="visaType"
+                item-text="descripcion"
+                item-value="valor"
+                :items="visaOptions"
+                required
+                placeholder="Selecione el tipo de visación"
+                :error-messages="errors"
+                label="Selecciona una opción"
+                @change="updatefield('tipo', $event)"
+              />
+            </validation-provider>
+          </v-col>
+        </v-row>
+      </form>
+      <v-row no-gutters>
+        <v-col cols="12">
+          <label>Visadores y orden de visación *</label>
+        </v-col>
+        <dx-box centered bordered elevation add-class="py-4">
+          <dx-button small outlined color="primary" v-bind="$props">
+            <dx-icon left chevron regular> mdi-plus-circle-outline </dx-icon>
+            <span class="underline-text">Agregar lista de visación</span>
+          </dx-button>
+        </dx-box>
+      </v-row>
+    </dx-step-body>
+  </validation-observer>
 </template>
 <script>
+import { wizardStepMixin } from '~/shared/mixins/wizardStepMixin'
+
 export default {
+  mixins: [wizardStepMixin],
   props: {
     visaOptions: {
       type: Array,

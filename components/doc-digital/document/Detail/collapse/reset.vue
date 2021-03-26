@@ -5,18 +5,16 @@
 <script>
 export default {
   props: {
-    items: Array,
+    items: {
+      type: Array,
+      default: () => [],
+    },
     border: Boolean,
   },
   data() {
     return {
       cant: this.items.length + 1,
     }
-  },
-  methods: {
-    _filter(item) {
-      return this.items.filter(({ tipoEtapa }) => tipoEtapa == item)
-    },
   },
   computed: {
     itemsCollapse() {
@@ -33,6 +31,11 @@ export default {
             },
           ]
         : []
+    },
+  },
+  methods: {
+    _filter(item) {
+      return this.items.filter(({ tipoEtapa }) => tipoEtapa == item)
     },
   },
 }
