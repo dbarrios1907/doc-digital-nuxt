@@ -6,12 +6,12 @@ export default {
   visaOptions: { url: '/tipos/tramitacion/visaciones', method: 'GET' },
   regions: { url: '/tipos/distgeografica/regiones', method: 'GET' },
   provinces: id => ({ url: `/tipos/distgeografica/regiones/${id}/provincias`, method: 'GET' }),
-  comunas: id => ({ url: `/tipos/distgeografica/regiones/provincias/{id}/comunas`, method: 'GET' }),
+  comunas: id => ({ url: `/tipos/distgeografica/regiones/provincias/${id}/comunas`, method: 'GET' }),
 
   fetchTasks: params => ({ url: '/documentos/tareas', method: 'GET', params }),
   fetchTasksVisa: '/documentos/tareas/visar',
   fetchTasksSign: '/documentos/tareas/firmar',
-  fetchTasksRejected: { url: '/documentos/tareas/creacion/rechazadas', method: 'GET' },
+  fetchTasksRejected: '/documentos/tareas/creacion/rechazadas',
   fetchTasksErasers: '/documentos/tareas/creacion/borradores',
   fetchTasksCompleted: '/documentos/tareas/creacion/completadas',
   fetchTasksOfficeSent: '/documentos/tareas/op/enviar',
@@ -40,9 +40,18 @@ export default {
   documentTramiteProgress: docId => ({ url: `/documentos/${docId}/tramitacion/etapas`, method: 'GET' }),
 
   // models used same endpoint with different method to exec operations (delete, get, create, save)
+  //Entities
   entitiesFetchAll: params => ({ url: `/entidades/`, method: 'GET', params }),
   entitiesFetch: id => ({ url: `/entidades/${id}`, method: 'GET' }),
-  entitiesCreate: params => ({ url: `/entidades/`, method: 'POST', params }),
-  entitiesUpdate: params => ({ url: `/entidades/`, method: 'PUT', params }),
+  entitiesCreate: data => ({ url: `/entidades/`, method: 'POST', data }),
+  entitiesUpdate: data => ({ url: `/entidades/`, method: 'PUT', data }),
   entitiesDelete: id => ({ url: `/entidades/${id}`, method: 'DELETE' }),
+
+  //Users
+  usersFetchAll: params => ({ url: `/usuarios/`, method: 'GET', params }),
+  usersFetch: id => ({ url: `/usuarios/${id}`, method: 'GET' }),
+  usersCreate: data => ({ url: `/usuarios/`, method: 'POST', data }),
+  usersUpdate: data => ({ url: `/usuarios/`, method: 'PUT', data }),
+  usersDelete: id => ({ url: `/usuarios/${id}`, method: 'DELETE' }),
+  usersStatus: (id, status) => ({ url: `/usuarios/${id}/activar/${status}`, method: 'POST' }),
 }

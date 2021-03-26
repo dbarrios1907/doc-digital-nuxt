@@ -10,8 +10,8 @@
         <div class="col-sm-6 col-md-6">
             <div v-if="!isListEmpty" class="mt-10 weight-400">
                 <span class="mr-2">Mostrando hasta</span>
-                <v-select v-if="activeTab === 'Activos'" v-model="itemsPerPageUA" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="5" value="5" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
-                <v-select v-else v-model="itemsPerPageUI" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="5" value="5" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
+                <v-select v-if="activeTab === 'Activos'" v-model="itemsPerPageUA" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="10" value="10" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
+                <v-select v-else v-model="itemsPerPageUI" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="10" value="10" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
                 <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>{{countUsuarios + (countUsuarios > 1 ?  ' usuarios' : ' usuario')}}</b></span>
             </div>
             <dx-alert v-else class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0" :class="[{ 'px-4': ismobil }]" absolute bottom right type="error" outlined :show-left-icon="false" :show-right-icon="false">
@@ -156,7 +156,7 @@ export default {
     name: 'Usuarios',
     fetch() {
         // console.log('FETCH ON USERS')
-        this.$store.dispatch('usuarios/getUsers')
+        this.$store.dispatch('usuarios/getUsers', {})
         this.$store.dispatch('usuarios/getRoles')
     },
     data() {
@@ -167,7 +167,7 @@ export default {
                 tab: 'Inactivos'
             }],
             activeTab: 'Activos',
-            options: ['5', '10', '20', '30'],
+            options: ['10', '50', '100', '1000'],
             breadcrums: [{
                     text: 'Administración',
                     disabled: false,
@@ -196,8 +196,8 @@ export default {
             pageUI: 1,
             pageCountUI: 0,
             pageCountUA: 0,
-            itemsPerPageUI: ['5'],
-            itemsPerPageUA: ['5'],
+            itemsPerPageUI: ['10'],
+            itemsPerPageUA: ['10'],
             permiso: [],
             details_dialog: false,
             dialog_confirmacion: false,
@@ -269,10 +269,10 @@ export default {
     methods: {
         getUserRole(role) {
             let userRoles = this.$store.getters['usuarios/getRoles']
-            if(userRoles)
-              return userRoles.find(r => r.key === role).name;
+            if (userRoles)
+                return userRoles.find(r => r.id === role).name;
             else
-              return role
+                return role
         },
         actionColor() {
             const isDark = this.$vuetify.theme.dark
@@ -286,6 +286,7 @@ export default {
             if (!this.filterValue) {
                 return true
             }
+            console.log(value)
             return value.toLowerCase().includes(this.filterValue.toLowerCase())
         },
         rutFilter(value) {
@@ -315,24 +316,11 @@ export default {
             return flag
         },
         async getUser(id) {
-            let resp = null
             this.selectedUser = null
-            try {
-                resp = await this.$store.dispatch('usuarios/getUser', id)
-            } catch (error) {}
-
-            const [valid, Toast] = isValidResponse(resp)
-
-            if (!valid) {
-                Toast.error({
-                    message: 'Usuario no encontrado',
-                })
-                this.loading = false
-            } else {
-                this.loading = false
+            const resp = await this.$store.dispatch('usuarios/getUser', id)
+            if (resp) {
                 return resp
             }
-
             return null
         },
         async get_user_details(id) {
@@ -348,7 +336,7 @@ export default {
             this.loading = true
             let resp = await this.getUser(this.selected_user)
             if (resp) {
-                const u = resp.result
+                const u = resp
                 this.details = [{
                         label: 'Estado:',
                         value: !u.isBloqueado ? 'Activo' : 'Inactivo'
@@ -375,11 +363,15 @@ export default {
                     },
                     {
                         label: 'Permisos adicionales:',
-                        value: u.cargo ? u.cargo : '-'
+                        value: u.roles.map((rol) => {return this.getUserRole(rol)}).join(', ')
                     },
                     {
-                        label: 'Cargo:',
-                        value: u.cargo ? u.cargo : '-'
+                        label: 'Subrogante:',
+                        value: u.subrogante ? u.subrogante.nombres : '-'
+                    },                    
+                    {
+                        label: 'Seguidor:',
+                        value: u.seguidor ? u.seguidor.map((s) => {return s.nombres}).join(', ') : '-'
                     },
                 ]
                 this.selectedUser = resp.result
@@ -391,32 +383,13 @@ export default {
             this.activeTab = activetab
         },
         async setUserStatus() {
-            let resp = null
-            try {
-                resp = await this.$store.dispatch('usuarios/setUserStatus', {
-                    id: this.userid,
-                    status: !this.isBloqueado
-                })
-            } catch (err) {
-                Toast.error({
-                    message: 'Ha ocurrido un error',
-                })
-            }
-
-            const [valid, Toast] = isValidResponse(resp)
-
-            if (!valid) {
-                Toast.error({
-                    message: 'No se pudo eliminar el usuario',
-                })
-            } else {
-                Toast.success({
-                    message: this.isBloqueado ? 'Usuario activado' : 'Usuario inactivado',
-                })
-                this.userid = ''
-                this.isBloqueado = false
-                this.dialog_confirmacion = false
-            }
+            await this.$store.dispatch('usuarios/setUserStatus', {
+                id: this.userid,
+                status: !this.isBloqueado
+            })
+            this.userid = ''
+            this.isBloqueado = false
+            this.dialog_confirmacion = false
         },
         getItemsPerPages(itemsperpage) {
             let items = isArray(itemsperpage) ? itemsperpage[0] : itemsperpage

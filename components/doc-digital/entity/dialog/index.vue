@@ -34,7 +34,7 @@
                         <v-row no-gutters :class="['align-center', ismobil]">
                             <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Correo Oficina de Partes *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
-                                <v-text-field  v-model="correoOficinaPartes" solo flat outlined label="Escribe el correo" :rules="rules.correoRules" required />
+                                <v-text-field v-model="correoOficinaPartes" solo flat outlined label="Escribe el correo" :rules="rules.correoRules" required />
                             </v-col>
                         </v-row>
                     </div>
@@ -54,7 +54,7 @@
                         <v-row no-gutters :class="['align-center', ismobil]">
                             <v-col cols="auto" class="label-width col-md-5 col-sm-5 flex weight-400 line-height-30 font-16 py-1">Provincia *</v-col>
                             <v-col class="mh-72  col-md-7 col-sm-12">
-                                <v-select  @change="getComunas"  :items="provincias" v-model="provincia" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
+                                <v-select @change="getComunas" :items="provincias" v-model="provincia" flat outlined :ripple="false" solo label="Seleccione la entidad" v-bind="$props" required :rules="rules.selectRequired" item-text="name" item-value="id" :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" />
                             </v-col>
                         </v-row>
                     </div>
@@ -88,7 +88,9 @@
 </template>
 
 <script>
-import { isValidResponse } from '~/shared/utils/request'
+import {
+    isValidResponse
+} from '~/shared/utils/request'
 export default {
     name: 'entity-dialog',
     props: {
@@ -100,7 +102,7 @@ export default {
             type: Object,
             default: null,
         },
-    }, 
+    },
     data() {
         return {
             entidadDependencia: null,
@@ -122,74 +124,59 @@ export default {
         }
     },
     methods: {
-      async submitForm () {
-        let failedSubmit = false 
-        if (this.$refs.form.validate())
-            {
+        async submitForm() {
+            let failedSubmit = false
+            if (this.$refs.form.validate()) {
                 let resp = null
                 let entity = {
-                        id: this.data ? this.data.id : 0,
-                        comuna: {},
-                        correoOficinaPartes: this.correoOficinaPartes,
-                        nombre: this.nombre,
-                        provincia: {},
-                        region: {}
-                        }
-                try{
-                    if(!this.data)
-                        resp = await this.$store.dispatch('entidades/insertEntity', entity)
-                    else
-                        resp = await this.$store.dispatch('entidades/updateEntity', entity)
-                    
-                    const [valid, Toast] = isValidResponse(resp)
-                    if (valid) {
-                        Toast.success({
-                            message: this.data ? 'Entidad actualizada' :'Entidad insertada',
-                        })
-                    }
-                    else
-                        Toast.error({
-                            message: this.data ? 'No se pudo actualizar la entidad' : 'No se pudo insertar la entidad',
-                        })
-
-                }catch(err){
-                    failedSubmit = true                    
-                    Toast.error({
-                        message: 'Ha ocurrido un error, intente nuevamente',
-                    })
+                    id: this.data ? this.data.id : 0,
+                    comuna: {id: this.comuna},
+                    correoOficinaPartes: this.correoOficinaPartes,
+                    nombre: this.nombre,
+                    provincia: {id: this.provincia},
+                    region: {id: this.region}
                 }
+                if (!this.data)
+                    await this.$store.dispatch('entidades/insertEntity', entity)
+                else
+                    await this.$store.dispatch('entidades/updateEntity', entity)                
+          
                 this.$refs.form.reset()
                 this.$emit('sumbit', failedSubmit)
             }
-      },
-      close () {
-        this.$refs.form.reset()
-        this.$emit('close')
-      },
-      resetValidation () {
-        this.$refs.form.resetValidation()
-      },
-      async getProvincias(region){
-          try{
-              let  resp = await this.$store.dispatch('entidades/getProvincias', region)
-              this.provincias = resp
-              this.comunas = []
-          }catch(err){console.log(err)}          
-      },      
-      async getComunas(provincia){
-          try{
-              let  resp = await this.$store.dispatch('entidades/getComunas', provincia)
-              this.comunas = resp
-          }catch(err){console.log(err)}          
-      }
+        },
+        close() {
+            this.$refs.form.reset()
+            this.$emit('close')
+        },
+        resetValidation() {
+            this.$refs.form.resetValidation()
+        },
+        async getProvincias(region) {
+            try {
+                let resp = await this.$store.dispatch('entidades/getProvincias', region)
+                this.provincias = resp
+                this.comunas = []
+            } catch (err) {
+                console.log(err)
+            }
+        },
+        async getComunas(provincia) {
+            try {
+                let resp = await this.$store.dispatch('entidades/getComunas', provincia)
+                this.comunas = resp
+            } catch (err) {
+                console.log(err)
+            }
+        }
     },
-    computed: {    
+    computed: {
         ismobil() {
             return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm ? 'ismobile' : ''
         },
         headerTitle() {
             const entity = this.data
-            if(entity){
+            if (entity) {
                 this.entidadDependencia = entity.entidadDependencia
                 this.correoOficinaPartes = entity.correoOficinaPartes
                 this.nombre = entity.nombre
@@ -224,11 +211,15 @@ export default {
 
 <style lang="scss" scoped>
 .entity-dialog {
-    .mh-72{
+    .mh-72 {
         min-height: 72px;
     }
+
     .mt-minus-50 {
         margin-top: -50px;
+    }
+    .label-width{
+        margin-top: -20px;
     }
 }
 </style>

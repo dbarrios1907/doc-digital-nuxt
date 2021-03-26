@@ -1,5 +1,5 @@
 import { isValidResponse } from '~/shared/utils/request'
-export const STRATEGY = 'claveUnica'
+import endpoints from '~/api/endpoints'
 export const state = () => ({
   selectedUser: null,
   count: 0,
@@ -81,172 +81,106 @@ export const mutations = {
   setUserRoles: (state, roles) => {
     state.roles = roles.map(({ valor, descripcion }) => {
       return {
-        key: valor,
+        id: valor,
         name: descripcion,
       }
-    })
-    state.roles.push({
-      key: 'ROLE_USUARIO',
-      name: 'Operador',
     })
   },
 }
 
 export const actions = {
-  async getUsers({ commit }) {
-    let resp = null
-    const params = {
-      entidad: 0,
-      isBloqueado: true,
-      nombre: 'string',
-      orderby: 'string',
-      ordertype: 'ASC',
-      page_number: 0,
-      page_size: 0,
-      roles: ['ROLE_ADMIN'],
-      run: 0,
-    }
-    try {
-      resp = await this.$auth.requestWith(STRATEGY, {
-        method: 'GET',
-        url: '/usuarios/',
-      })
-      const [valid, Toast] = isValidResponse(resp)
-
-      if (!valid) {
-        Toast.error({
-          message: 'Ha ocurrido un error',
-        })
-      } else {
-        commit('setUserList', resp.result, resp.count)
-      }
-    } catch (err) {}
-  },
-
-  async getUser({ commit }, id) {
-    let resp = null
-    try {
-      resp = await this.$auth.requestWith(STRATEGY, {
-        method: 'GET',
-        url: '/usuarios/' + id,
-      })
-      const [valid, Toast] = isValidResponse(resp)
-
-      if (!valid) {
-        Toast.error({
-          message: 'Ha ocurrido un error',
-        })
-      } else {
-        commit('setSelecterUser', resp.result)
-      }
-    } catch (err) {}
-    return resp
-  },
-
-  async insertUser({ commit }, user) {
-    let resp = null
-    const body_ = {
-      isSubroganteActivado: user.isSubroganteActivado,
-      isBloqueado: user.isBloqueado,
-      nombres: user.nombres,
-      run: parseInt(user.run),
-      dv: user.dv,
-      apellidos: user.apellidos,
-      correoInstitucional: user.correoInstitucional,
-      cargo: user.cargo,
-      entidad: user.entidad,
-      roles: user.roles,
-      // subrogante : user.subrogante
-    }
-    try {
-      resp = await this.$auth.requestWith(STRATEGY, {
-        method: 'POST',
-        url: '/usuarios/',
-        data: body_,
-      })
-    } catch (err) {}
-
-    return resp
-  },
-
-  async deleteUser({ commit }, id) {
-    let resp = null
-    try {
-      resp = await this.$auth.requestWith(STRATEGY, {
-        method: 'DELETE',
-        url: '/usuarios/' + id,
-      })
-    } catch (err) {}
-
-    const [valid, Toast] = isValidResponse(resp)
-
+  async getUsers({ commit, rootState }, params = {}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetchAll(params))
+    const [valid] = isValidResponse(resp)
     if (valid) {
+      commit('setUserList', resp.result, resp.count)
+    }
+  },
+
+  async getUser({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetch(id))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) { 
+      commit('setSelecterUser', resp.result)
+      return resp.result
+    }
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error',
+      })
+      return false
+    }
+  },
+
+  async insertUser({ rootState }, user) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersCreate(user))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) { 
+      Toast.success({
+          message: 'Usuario insertado',
+      })
+    }
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error insertando el usuario',
+      })
+    }
+  },
+
+  async deleteUser({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersDelete(id))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) { 
+      Toast.success({
+        message: 'Usuario eliminado',
+      })
       commit('deleteUser', id)
     }
-    return resp
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error eliminando el usuario',
+      })
+    }  
   },
 
-  async updateUser({ commit }, user) {
-    let resp = null
-    const body_ = {
-      isSubroganteActivado: user.isSubroganteActivado,
-      isBloqueado: user.isBloqueado,
-      nombres: user.nombres,
-      run: parseInt(user.run),
-      dv: user.dv,
-      apellidos: user.apellidos,
-      correoInstitucional: user.correoInstitucional,
-      cargo: user.cargo,
-      entidad: user.entidad,
-      roles: user.roles,
-      id: parseInt(user.id),
-      // seguidor : user.seguidor
-      // subrogante : user.subrogante
-    }
-    try {
-      resp = await this.$auth.requestWith(STRATEGY, {
-        method: 'PUT',
-        url: '/usuarios/',
-        data: body_,
-      })
-    } catch (err) {}
-    return resp
-  },
-
-  async setUserStatus({ commit }, { id, status }) {
-    let resp = null
-    try {
-      resp = await this.$auth.requestWith(STRATEGY, {
-        method: 'POST',
-        url: '/usuarios/' + id + '/activar/' + status,
-      })
-    } catch (err) {}
-
+  async updateUser({ rootState }, user) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersUpdate(user))
     const [valid, Toast] = isValidResponse(resp)
+    if (valid) { 
+      Toast.success({
+          message: 'Entidad actualizada',
+      })
+      return resp.result
+    }
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error actualizando la entidad',
+      })
+      return false
+    }    
+  },
 
-    if (valid) {
+  async setUserStatus({ commit, rootState }, { id, status }) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersStatus(id, status))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) { 
+      Toast.success({
+        message: status ? 'Usuario activado' : 'Usuario inactivado',
+      })
       commit('setUserStatus', { id, status })
     }
-    return resp
+    else{
+      Toast.error({
+        message: 'Ha ocurrido un error ' + status ? 'activando' : 'inactivando' + ' el usuario',
+      })
+    }  
   },
 
-  async getRoles({ commit }, id) {
-    let resp = null
-    try {
-      resp = await this.$auth.requestWith(STRATEGY, {
-        method: 'GET',
-        url: '/tipos/seguridad/roles',
-      })
-      const [valid, Toast] = isValidResponse(resp)
-
-      if (!valid) {
-        Toast.error({
-          message: 'Ha ocurrido un error',
-        })
-      } else {
-        commit('setUserRoles', resp.result)
-      }
-    } catch (err) {}
-    return resp
+  async getRoles({commit, rootState}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.roleOptions)
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      commit('setUserRoles', resp.result)
+    }
   },
 }
