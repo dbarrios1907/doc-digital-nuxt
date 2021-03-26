@@ -1,5 +1,5 @@
 <template>
-<v-dialog entity-dialog overlay-opacity="0.55" :fullscreen="ismobil == 'ismobile'" :data="data" rlay-color="#001C41" v-model="dialog" max-width="672px" :content-class="'entity-dialog'">
+<v-dialog entity-dialog overlay-opacity="0.55" persistent :fullscreen="ismobil == 'ismobile'" :data="data" rlay-color="#001C41" v-model="dialog" max-width="672px" :content-class="'entity-dialog'">
     <v-card>
         <v-card-title>
             <h5 class="font-title weight-700 darken3--text font-roboto">{{headerTitle}}</h5>

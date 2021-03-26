@@ -4,8 +4,8 @@
     overlay-opacity="0.55"
     rlay-color="#001C41"
     max-width="603px"
-    :content-class="ismobil"
-    class="v-dialog-details"
+    :content-class="ismobil"    
+    persistent
   >
     <v-card>
       <v-card-title>
