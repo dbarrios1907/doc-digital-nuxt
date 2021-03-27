@@ -43,8 +43,8 @@
                                 <td v-if="!ismobil"></td>
                             </tr>
                         </template>
-                        <template v-slot:[`item.nombres`]="{ item: { nombres, apellidos } }">
-                            <span class="breaktext">{{ nombres + ' ' + apellidos }}</span>
+                        <template v-slot:[`item.nombres`]="{ item: { nombres } }">
+                            <span class="breaktext">{{ nombres }}</span>
                         </template>
 
                         <template v-slot:[`item.rut`]="{ item: { rut } }">
@@ -91,8 +91,8 @@
                             </tr>
                         </template>
 
-                        <template v-slot:[`item.nombres`]="{ item: { nombres, apellidos } }">
-                            <span class="breaktext">{{ nombres + ' ' + apellidos }}</span>
+                        <template v-slot:[`item.nombres`]="{ item: { nombres } }">
+                            <span class="breaktext">{{ nombres }}</span>
                         </template>
 
                         <template v-slot:[`item.rut`]="{ item: { rut } }">
@@ -286,8 +286,7 @@ export default {
             if (!this.filterValue) {
                 return true
             }
-            console.log(value)
-            return value.toLowerCase().includes(this.filterValue.toLowerCase())
+            return (value.toLowerCase().includes(this.filterValue.toLowerCase()))
         },
         rutFilter(value) {
             if (!this.filterRut) {

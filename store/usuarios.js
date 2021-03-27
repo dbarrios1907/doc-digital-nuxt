@@ -18,6 +18,10 @@ export const getters = {
       return user.isBloqueado
     })
   },
+  getUserById: state => id => {
+    const userIndex = state.users.findIndex(obj => obj.id == id)
+    return state.users[userIndex]
+  },
   getByEntity: state => entityid => {
     return state.users.filter(user => {
       return user.entidad ? user.entidad.id === entityid : false
@@ -33,30 +37,19 @@ export const getters = {
 
 export const mutations = {
   update: (state, id, newuser) => {
-    const userIndex = state.users.findIndex(obj => obj.userid == id)
+    const userIndex = state.users.findIndex(obj => obj.id == id)
     state.users[userIndex] = newuser
   },
   setUserList: (state, listUsers, count) => {
-    const users = []
+    let users = []
     for (let i = 0; i < listUsers.length; i++) {
-      users.push({
-        id: listUsers[i].id,
-        rut: listUsers[i].run + '-' + listUsers[i].dv,
-        nombres: listUsers[i].nombres,
-        apellidos: listUsers[i].apellidos,
-        correoInstitucional: listUsers[i].correoInstitucional,
-        cargo: listUsers[i].cargo,
-        subrogante: listUsers[i].subrogante,
-        roles: listUsers[i].roles
-          ? listUsers[i].roles.filter(rol => {
-              return rol != 'ROLE_USUARIO'
-            })
-          : [],
-        isBloqueado: listUsers[i].isBloqueado,
-        isDelete: listUsers[i].isDelete,
-        nombreCompleto: listUsers[i].nombreCompleto,
-        entidad: listUsers[i].entidad,
-      })
+      let user = listUsers[i]
+      user.rut = listUsers[i].run + '-' + listUsers[i].dv,
+      user.nombres = listUsers[i].nombres + ' ' + listUsers[i].apellidos,
+      user.roles=  listUsers[i].roles ? listUsers[i].roles.filter(rol => {
+            return rol != 'ROLE_USUARIO'
+          }) : [],
+      users.push(user)
     }
     state.users = users
     state.count = count
@@ -148,13 +141,13 @@ export const actions = {
     const [valid, Toast] = isValidResponse(resp)
     if (valid) { 
       Toast.success({
-          message: 'Entidad actualizada',
+          message: 'Usuario actualizado',
       })
       return resp.result
     }
     else{
       Toast.error({
-        message: 'Ha ocurrido un error actualizando la entidad',
+        message: 'Ha ocurrido un error actualizando el usuario',
       })
       return false
     }    
