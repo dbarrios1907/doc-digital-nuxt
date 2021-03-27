@@ -4,9 +4,9 @@
       <v-chip color="primary" small>
         {{ formatdate(item.createAt) }}
       </v-chip>
-      <div class="font-small line-height-23"><span class="darken3--text weight-700">Devuelto por:</span> {{ item.creador }}</div>
-      <div class="font-small line-height-23"><span class="darken3--text weight-700">Etapa de la tramitación:</span> {{ item.etapa }}</div>
-      <div class="font-small line-height-23"><span class="darken3--text weight-700">Motivo de la devolución:</span> {{ item.motivo }}</div>
+      <div class="font-small line-height-23"><span class="darken3--text weight-700">Devuelto por:</span> {{ item.ejecutor }}</div>
+      <div class="font-small line-height-23"><span class="darken3--text weight-700">Etapa de la tramitación:</span> {{ item.tipoEtapa }}</div>
+      <div class="font-small line-height-23"><span class="darken3--text weight-700">Motivo de la devolución:</span> {{ item.motivoDevolucion }}</div>
       <v-divider class="darken1 my-4" v-if="items.length - 1 != index" />
     </div>
   </div>

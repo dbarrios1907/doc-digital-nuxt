@@ -90,36 +90,6 @@ export default {
             description: 'Primera',
           },
         ]
-        // [
-        //   {
-        //     label: 'Tema: ',
-        //     value: doc.materia,
-        //   },
-        //   {
-        //     label: 'Descripción: ',
-        //     value: doc.descripcion,
-        //   },
-        //   {
-        //     label: 'Hacer seguimiento: ',
-        //     value: doc.isFirmado ? 'Activo' : 'No activo',
-        //   },
-        //   {
-        //     label: 'Reservado: ',
-        //     value: doc.isReservado ? 'Si' : 'No: ',
-        //   },
-        //   {
-        //     label: 'Tipo de documento: ',
-        //     value: doc.tipoDocumentoOficial ? doc.tipoDocumentoOficial.descripcion : '',
-        //   },
-        //   {
-        //     label: 'Anexos: ',
-        //     value: (doc.anexos ? doc.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
-        //   },
-        //   {
-        //     label: 'Página de firma: ',
-        //     value: 'Primera',
-        //   },
-        // ]
       }
     },
     confirmDeleteDoc(docid) {

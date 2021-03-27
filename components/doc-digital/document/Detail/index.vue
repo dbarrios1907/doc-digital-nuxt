@@ -5,7 +5,7 @@
       <v-col :class="['px-0 px-md-3 col-12 col-md-6 pr-0', { 'text-right': !ismobil }]">
         <dx-button color="primary" outlined>
           <dx-icon right regular> mdi-download </dx-icon>
-          <span class="ml-2 text-underline">Descargar documento</span>
+          <span class="ml-2 text-underline" @click="download">Descargar documento</span>
         </dx-button>
       </v-col>
     </v-row>
@@ -20,7 +20,7 @@
               <dx-icon right regular> mdi-close </dx-icon>
               <span class="ml-2 text-underline">Rechazar</span>
             </dx-button>
-            <dx-button class="white--text" color="primary2">
+            <dx-button class="white--text" color="primary2" @click="dialog2 = true">
               <pencil-write-icon />
               <span class="ml-2 text-underline">Firmar</span>
             </dx-button>
@@ -30,7 +30,8 @@
         <div class="weight-700 font-regular line-height-20 mb-3 mt-6">Previsualizacion:</div>
         <v-row>
           <v-col class="col-12 col-md-4">
-            <PreviewThumbnail @click="dialog = true" />
+            <PreviewThumbnail />
+
             <v-dialog v-model="dialog" overlay-opacity="0.55" overlay-color="#001C41" max-width="960px" :content-class="ismobil">
               <v-card>
                 <v-card-title>
@@ -44,7 +45,7 @@
 
                 <v-card-text class="font-roboto weight-400 line-height-30 font-title darken3--text">
                   <perfect-scrollbar :style="{ height: '500px' }">
-                    <PreviewZoom />
+                    <!--<PreviewZoom />-->
                   </perfect-scrollbar>
                 </v-card-text>
 
@@ -68,65 +69,25 @@
     <div class="weight-700 font-25 line-height-31 font-robotoslab mt-13">Información de la tramitación del documento</div>
     <div class="weight-700 font-title line-height-29 mt-8">Resumen de avance de la tramitación</div>
     <dx-docprogress :items="timeline" class="mt-7" />
-    <DocumentDetailCollapseReset :items="rejectedocs" border />
+    <DocumentDetailCollapseReset :items="rejectedocs" border class="my-4" />
     <DocumentDetailCollapseNormal :items="steps" />
-
-    <v-dialog v-model="dialog1" overlay-opacity="0.55" overlay-color="#001C41" max-width="600px" :content-class="ismobil">
-      <v-card>
-        <v-card-title>
-          <h5 class="font-title weight-700 darken3--text">Rechazar documento</h5>
-          <v-spacer />
-          <v-btn color="darken3" icon @click="dialog1 = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider class="darken1" />
-
-        <v-card-text class="font-roboto weight-400 line-height-30 font-title darken3--text py-10 px-10">
-          <div class="font-title line-height-30 mb-10">Para rechazar el documento escriba el motivo</div>
-          <div>
-            <span>Motivo del rechazo *</span>
-            <v-textarea
-              v-model="rechazo"
-              no-resize
-              rows="4"
-              outlined
-              :value="rechazo"
-              :maxlength="limitmaxCount"
-              @input="updatefield('rechazo', $event)"
-            >
-              <template v-slot:append>
-                <div class="count darken3--text">{{ desclength }}/{{ limitmaxCount }}</div>
-              </template>
-            </v-textarea>
-          </div>
-        </v-card-text>
-
-        <v-card-actions class="px-10">
-          <v-spacer />
-          <dx-button color="primary" outlined class="text-none" @click="dialog1 = false">
-            <span class="text-underline"> Cancelar </span>
-          </dx-button>
-          <dx-button color="primary" class="text-none ml-5">
-            <span class="text-underline"> Firmar </span>
-          </dx-button>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <DocumentDetailModalRechazar :docid="docid" v-model="dialog1" @onClose="dialog1 = false" @onCancel="dialog1 = false" />
+    <DocumentDetailModalFirmar :docid="docid" v-model="dialog2" @onClose="dialog2 = false" @onCancel="dialog2 = false" />
   </div>
 </template>
 <script>
-import PreviewZoom from '../../preview/Zoom'
+//import PreviewZoom from '../../preview/Zoom'
 import PreviewThumbnail from '../../preview/Thumbnail'
 import DocumentTableItem from '../TableItem'
+
 export default {
-  name: 'DocumentDetail',
   components: {
     PreviewThumbnail,
-    PreviewZoom,
+    //PreviewZoom,
     DocumentTableItem,
   },
   props: {
+    docid: String,
     timeline: Array,
     tableitem: Object,
     steps: Array,
@@ -136,67 +97,11 @@ export default {
   data: () => ({
     dialog: false,
     dialog1: false,
-    rechazo: '',
-    limitmaxCount: 255,
+    dialog2: false,
   }),
   computed: {
-    testing() {
-      return [
-        {
-          name: 'block',
-          title: 'Tramitación reiniciada' + (this.rejectedocs.length - 1) + (this.rejectedocs.length > 1 ? 'veces' : 'vez'),
-          description: this.rejectedocs,
-        },
-      ]
-    },
-    collapseitems() {
-      return [
-        {
-          name: 'block',
-          title: '1. Inicio de la tramitación',
-          description: this._filter('CREACION'),
-        },
-        {
-          name: 'block',
-          title: '2. Visación',
-          disabled: true,
-          description: this._filter('VISACION'),
-        },
-        {
-          name: 'card',
-          title: '3. Firma',
-          //description: this._filter('FIRMA'),
-          description: [
-            {
-              title: 'Grupo 1 de firmas',
-              body: {
-                title: 'Sebastian Piñera Echenique',
-                description: 'Administrativa de Presidencia',
-                status: {
-                  name: 'mdi-clock-time-three-outline',
-                  description: 'Firma pendiente',
-                },
-              },
-            },
-          ],
-        },
-        {
-          name: 'block',
-          title: '4. Folio y despacho',
-          description: this._filter('FOLIO_DESPACHO'),
-        },
-        {
-          name: 'block',
-          title: '5. Destinatarios',
-          description: this._filter('DESTINATARIOS'),
-        },
-      ]
-    },
     ismobil() {
       return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
-    },
-    desclength() {
-      return this.rechazo.length
     },
     tableitems() {
       return [
@@ -235,6 +140,9 @@ export default {
   methods: {
     updatefield(key, data) {
       this[key] = data
+    },
+    download() {
+      this.$store.dispatch('documents/downloadDocument', this.docid)
     },
   },
 }

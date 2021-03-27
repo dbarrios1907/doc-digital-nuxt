@@ -11,23 +11,15 @@ export default {
     },
     border: Boolean,
   },
-  data() {
-    return {
-      cant: this.items.length + 1,
-    }
-  },
   computed: {
     itemsCollapse() {
-      return this.cant
+      return this.items.length > 0
         ? [
             {
               name: 'notify',
-              title: 'Tramitación reiniciada ' + this.cant + (this.cant > 1 ? ' veces' : ' vez'),
+              title: 'Tramitación reiniciada ' + this.items.length + (this.items.length > 1 ? ' veces' : ' vez'),
               link: 'Revise aquí los motivos',
-              description: [
-                { creador: 'leo', etapa: 'visacion', motivo: 'testing', createAt: '10-09-2020 9:58' },
-                { creador: 'leo', etapa: 'visacion', motivo: 'testing', createAt: '10-09-2020 9:58' },
-              ], //this.items,
+              description: this.items,
             },
           ]
         : []

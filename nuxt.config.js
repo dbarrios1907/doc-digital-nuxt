@@ -38,6 +38,7 @@ export default {
     '~/plugins/confirm.client.js',
     '~/plugins/vee-validate.js',
     '~/plugins/permissions.client.js',
+    '~/plugins/vuepdf.client.js',
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -93,27 +94,6 @@ export default {
         test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
         loader: 'file-loader',
       })
-      // Sets webpack's mode to development if `isDev` is true.
-      // if (isDev) {
-      //   config.mode = 'development'
-      // }
-      // Inject vuetify css variables before sass loader
-      // hack to solve integration isues with vuetify
-
-      // const injectSassOptions = (arrMod, appendOptions) => {
-      //   arrMod.oneOf.map(v => {
-      //     const found = v.use.find(l => l.loader.includes('/sass-loader/'))
-      //     if (found) Object.assign(found.options, appendOptions)
-      //   })
-      // }
-      //
-      // config.module.rules.forEach(v => {
-      //   if (v.test.test('.scss')) {
-      //     injectSassOptions(v, { additionalData: `@import '~/assets/styles/vuetify-overrides.scss'; ` })
-      //   } else if (v.test.test('.sass')) {
-      //     injectSassOptions(v, { additionalData: `@import '~/assets/styles/vuetify-overrides.scss'` })
-      //   }
-      // })
     },
     transpile: ['vuetify', 'vee-validate/dist/rules'],
   },

@@ -31,19 +31,19 @@ export const documentCreationState = () => ({
     //   "nombre": "string",
     //   "tipoArchivo": "ANEXO"
     // },
-    "descripcion": undefined,
-    "folio": undefined,
+    descripcion: undefined,
+    folio: undefined,
     // "id": 0,
-    "isBorrador": true,
+    isBorrador: true,
     // "isDelete": true,
     // "isFirmado": true,
-    "isReservado": true,
-    "materia": "string",
-    "tipoDocumentoOficial": {
-      "createAt": "2021-03-26T04:05:44.029Z",
-      "descripcion": "string",
-      "id": 0,
-      "updateAt": "2021-03-26T04:05:44.029Z"
+    isReservado: true,
+    materia: 'string',
+    tipoDocumentoOficial: {
+      createAt: '2021-03-26T04:05:44.029Z',
+      descripcion: 'string',
+      id: 0,
+      updateAt: '2021-03-26T04:05:44.029Z',
     },
   },
   documentVisaStep: {},
@@ -102,11 +102,15 @@ export const actions = {
       )
     }
   },
-  async getSteps({ commit, rootState }, id) {
-    const resp = await this.$auth.requestWith(rootState.authStrategy, {
-      method: 'GET',
-      url: '/documentos/' + id + '/tramitacion/etapas',
-    })
+  async fetchTramiteProgress({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentTramiteProgress(id))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      return resp.result
+    }
+  },
+  async fetchDocumentTramite({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentFetchTramite(id))
     const [valid] = isValidResponse(resp)
     if (valid) {
       return resp.result
@@ -134,11 +138,8 @@ export const actions = {
     }
     return null
   },
-  async getTramitacion({ commit, rootState }, id) {
-    const resp = await this.$auth.requestWith(rootState.authStrategy, {
-      method: 'GET',
-      url: '/documentos/' + id + '/tareas',
-    })
+  async fetchDocumentTasks({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentFetchTasks(id))
     const [valid] = isValidResponse(resp)
     if (valid) {
       return resp.result
@@ -344,12 +345,33 @@ export const actions = {
     }
   },
 
-  async rejectDocumentTramite({ commit, rootState }) {
+  async rejectDocumentTramite({ commit, rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchTasksRejected)
+    const [valid] = isValidResponse(resp)
+    console.log(resp)
+    if (valid) {
+      return resp.result
+    }
+    return null
+  },
+
+  async downloadDocument({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentDownloadMain(id))
     const [valid] = isValidResponse(resp)
     if (valid) {
       return resp.result
     }
     return null
+  },
+  async fetchDocumentSign({ commit, rootState }, { otp, params }) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentSign(otp, params))
+    const [valid, Toast] = isValidResponse(resp)
+    const text = otp == '0' ? 'rechazado' : 'firmado'
+    if (valid) {
+      Toast.success({
+        message: `Documento ${text} satisfactoriamente - Fecha: ${resp.timestamp} hrs`,
+      })
+      return true
+    }
   },
 }

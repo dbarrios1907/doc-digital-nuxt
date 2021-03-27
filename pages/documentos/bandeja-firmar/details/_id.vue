@@ -1,21 +1,30 @@
 <template>
-  <DocumentDetail :timeline="timeline" :tableitem="tableitem" :requesting="requesting" :steps="tramitacion" :rejectedocs="rejectedocs" />
+  <DocumentDetail
+    :timeline="timeline"
+    :tableitem="tableitem"
+    :requesting="requesting"
+    :steps="steps"
+    :rejectedocs="rejectedocs"
+    :docid="this.$route.params.id"
+  />
 </template>
 
 <script>
 export default {
   fetch() {
-    this.fetch_('timeline', 'documents/getSteps')
+    this.fetch_('timeline', 'documents/fetchTramiteProgress')
     this.fetch_('tableitem', 'documents/fetchDocument')
-    this.fetch_('tramitacion', 'documents/getTramitacion')
+    this.fetch_('steps', 'documents/fetchDocumentTasks')
     this.fetch_('rejectedocs', 'documents/rejectDocumentTramite')
+    //this.fetch_('tramites', 'documents/fetchDocumentTramite')
   },
   data: () => ({
     timeline: [],
     tableitem: {},
-    tramitacion: [],
+    steps: [],
     requesting: true,
     rejectedocs: [],
+    tramites: [],
   }),
   methods: {
     async fetch_(item, url) {
