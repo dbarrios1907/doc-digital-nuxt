@@ -328,7 +328,7 @@ export const actions = {
       Toast.success({
         message: resp?.message || 'Documento en trámite eliminado satisfactoriamente',
       })
-      return true
+      return this.$router.replace('/')
     }
   },
 

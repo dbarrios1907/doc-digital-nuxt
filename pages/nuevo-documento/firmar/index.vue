@@ -102,8 +102,9 @@ export default {
       console.log({ tipoDocumentoOficial, materia, description, folio, isReservado })
       this.$store.dispatch('documents/createDocument', { tipoDocumentoOficial, materia, description, folio, isReservado, isBorrador: true })
     },
-    deleteDocument() {
+    deleteDocument(docId) {
       this.$router.replace('/')
+      this.$store.dispatch('documents/deleteDocumentTramite', docId)
     },
   },
 }

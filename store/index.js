@@ -160,4 +160,8 @@ export const actions = {
   },
 
   updateUserAccess({ commit, state }, userData) {},
+
+  fetcUserResume(){
+
+  }
 }
