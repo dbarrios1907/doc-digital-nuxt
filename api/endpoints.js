@@ -32,6 +32,13 @@ export default {
     data,
   }),
 
+  documentVisar: docId => ({
+    url: `/documentos/${docId}/tareas/visar`,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    data: {},
+  }),
+
   documentUpload: docId => ({ url: `/documentos/${docId}/anexos/archivo`, method: 'POST' }),
   documentDownload: (docId, fileId) => ({ url: `/documentos/${docId}/anexos/archivo/${fileId}`, method: 'GET' }),
 

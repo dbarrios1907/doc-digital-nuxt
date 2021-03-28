@@ -9,8 +9,8 @@
     >
       <template v-slot:actions="{ docid }">
         <v-icon dense @click="openDetails(docid)"> mdi-eye </v-icon>
-        <pencil-sign-icon class="mx-4" />
-        <v-icon dense @click="confirmDeleteDoc(docid)"> mdi-close </v-icon>
+        <pencil-sign-icon class="mx-4" aria-controls @click="getid('dialog2', docid)" />
+        <v-icon dense @click="getid('dialog1', docid)"> mdi-close </v-icon>
       </template>
     </DocumentTray>
     <DocumentDetailDialog :dialog="dialog_d" :items="details" headTitle="Documento">
@@ -23,16 +23,8 @@
         </dx-button>
       </template>
     </DocumentDetailDialog>
-    <DialogConfirmation :dialog="dialog_c" headTitle="¿Realmente desea eliminar este documento?">
-      <template v-slot:actions>
-        <dx-button color="white" outlined v-bind="$props" class="text-none ml-4 mr-2 primary" @click="deleteDocument">
-          <span class="text-underline"> Aceptar </span>
-        </dx-button>
-        <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="dialog_c = false">
-          <span class="text-underline"> Cancelar </span>
-        </dx-button>
-      </template>
-    </DialogConfirmation>
+    <DocumentDetailModalRechazar :docid="docid" v-model="dialog1" @onClose="dialog1 = false" @onCancel="dialog1 = false" />
+    <DocumentDetailModalFirmar :docid="docid" v-model="dialog2" @onClose="dialog2 = false" @onCancel="dialog2 = false" />
   </div>
 </template>
 
@@ -44,9 +36,10 @@ export default {
   data() {
     return {
       dialog_d: false,
-      dialog_c: false,
-      docid: '',
       details: [],
+      dialog1: false,
+      dialog2: false,
+      docid: '',
     }
   },
   computed: {
@@ -55,6 +48,10 @@ export default {
     },
   },
   methods: {
+    getid(name, id) {
+      this.docid = id.toString()
+      this[name] = true
+    },
     async openDetails(id) {
       let doc = await this.$store.dispatch('documents/fetchDocument', id)
       if (doc) {
@@ -90,17 +87,6 @@ export default {
             description: 'Primera',
           },
         ]
-      }
-    },
-    confirmDeleteDoc(docid) {
-      this.docid = docid
-      this.dialog_c = true
-    },
-    async deleteDocument() {
-      let resp = await this.$store.dispatch('documents/deleteDocument', this.docid)
-      if (resp) {
-        this.dialog_c = false
-        this.docid = ''
       }
     },
   },

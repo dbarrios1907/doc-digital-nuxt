@@ -1,12 +1,29 @@
 <template>
-  <DocumentDetail
-    :timeline="timeline"
-    :tableitem="tableitem"
-    :requesting="requesting"
-    :steps="steps"
-    :rejectedocs="rejectedocs"
-    :docid="this.$route.params.id"
-  />
+  <div>
+    <DocumentDetail
+      :timeline="timeline"
+      :tableitem="tableitem"
+      :requesting="requesting"
+      :steps="steps"
+      :rejectedocs="rejectedocs"
+      :dialog1="dialog1"
+      :dialog2="dialog2"
+      :docid="this.$route.params.id"
+    >
+      <template v-slot:actions>
+        <dx-button class="white--text mr-md-5" color="darken1" @click="dialog1 = true">
+          <dx-icon right regular> mdi-close </dx-icon>
+          <span class="ml-2 text-underline">Rechazar</span>
+        </dx-button>
+        <dx-button class="white--text" color="primary2" @click="dialog2 = true">
+          <pencil-write-icon />
+          <span class="ml-2 text-underline">Firmar</span>
+        </dx-button>
+      </template>
+    </DocumentDetail>
+    <DocumentDetailModalRechazar :docid="this.$route.params.id" v-model="dialog1" @onClose="dialog1 = false" @onCancel="dialog1 = false" />
+    <DocumentDetailModalFirmar :docid="this.$route.params.id" v-model="dialog2" @onClose="dialog2 = false" @onCancel="dialog2 = false" />
+  </div>
 </template>
 
 <script>
@@ -25,6 +42,8 @@ export default {
     requesting: true,
     rejectedocs: [],
     tramites: [],
+    dialog1: false,
+    dialog2: false,
   }),
   methods: {
     async fetch_(item, url) {

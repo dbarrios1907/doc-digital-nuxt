@@ -16,14 +16,15 @@
             <div class="weight-700 font-25 line-height-31 font-robotoslab">Información general del documento</div>
           </v-col>
           <v-col :class="['my-auto col col-12 col-md-6', ismobil ? 'text-center' : 'text-right']">
-            <dx-button class="white--text mr-md-5" color="darken1" @click="dialog1 = true">
+            <slot name="actions" />
+            <!--<dx-button class="white--text mr-md-5" color="darken1" @click="dialog1 = true">
               <dx-icon right regular> mdi-close </dx-icon>
               <span class="ml-2 text-underline">Rechazar</span>
             </dx-button>
             <dx-button class="white--text" color="primary2" @click="dialog2 = true">
               <pencil-write-icon />
               <span class="ml-2 text-underline">Firmar</span>
-            </dx-button>
+            </dx-button>-->
           </v-col>
         </v-row>
 
@@ -71,8 +72,6 @@
     <dx-docprogress :items="timeline" class="mt-7" />
     <DocumentDetailCollapseReset :items="rejectedocs" border class="my-4" />
     <DocumentDetailCollapseNormal :items="steps" />
-    <DocumentDetailModalRechazar :docid="docid" v-model="dialog1" @onClose="dialog1 = false" @onCancel="dialog1 = false" />
-    <DocumentDetailModalFirmar :docid="docid" v-model="dialog2" @onClose="dialog2 = false" @onCancel="dialog2 = false" />
   </div>
 </template>
 <script>
@@ -93,11 +92,13 @@ export default {
     steps: Array,
     requesting: { type: Boolean, default: true },
     rejectedocs: Array,
+    dialog1: { type: Boolean, default: false },
+    dialog2: { type: Boolean, default: false },
   },
   data: () => ({
     dialog: false,
-    dialog1: false,
-    dialog2: false,
+    /*dialog1: false,
+    dialog2: false,*/
   }),
   computed: {
     ismobil() {

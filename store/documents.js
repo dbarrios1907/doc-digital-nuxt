@@ -374,4 +374,14 @@ export const actions = {
       return true
     }
   },
+  async fetchDocumentVisar({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentVisar(id))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) {
+      Toast.success({
+        message: `Documento visado satisfactoriamente - Fecha: ${resp.timestamp} hrs`,
+      })
+      return true
+    }
+  },
 }
