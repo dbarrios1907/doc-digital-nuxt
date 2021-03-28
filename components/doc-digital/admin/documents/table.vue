@@ -385,20 +385,17 @@ export default {
     table>tbody>tr>td {
         padding: 6px 10px !important;
     }
+    table>tbody>tr {
+        height: 37px !important;
+    }
 
-    .mobile-container {
-        table>tbody>tr {
-            height: 37px !important;
-        }
+    table>tbody>tr>td:nth-child(1),
+    table>thead>tr>th:nth-child(1) {
+        text-align: left;
+    }
 
-        table>tbody>tr>td:nth-child(1),
-        table>thead>tr>th:nth-child(1) {
-            text-align: left;
-        }
-
-        .dx-pagination {
-            margin: 0px auto !important;
-        }
+    .dx-pagination {
+        margin: 0px auto !important;
     }
 }
 @include theme(v-application) using ($material) {
