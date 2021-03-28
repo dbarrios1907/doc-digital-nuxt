@@ -1,7 +1,7 @@
 <template>
   <v-container class="dx-docprogress">
     <v-row>
-      <v-col class="text-center" v-for="item in items" :key="item.etapa">
+      <v-col class="text-center" v-for="(item, index) in items" :key="index">
         <div :class="['icon-container py-2', { done: item.isCompletada }, { pending: !item.isCompletada }, { dissabled: item.disable }]">
           <Pending v-if="!item.isCompletada" />
           <div
@@ -12,7 +12,10 @@
             <dx-icon v-else>mdi-minus</dx-icon>
           </div>
         </div>
-        <div :class="['text-container font-15 line-height-20 weight-400 py-3', { dissabled: item.disable }]">{{ translate(item.etapa) }}</div>
+        <div :class="['text-container font-15 line-height-20 weight-400 py-3', { dissabled: item.disable }]">
+          {{ item.name }} <br />
+          <span v-if="item.disable">(no requiere)</span>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -83,7 +86,7 @@ export default {
       }
     }
     .dissabled {
-      color: $darken1-color !important;
+      color: #45454566 !important;
     }
   }
 }
