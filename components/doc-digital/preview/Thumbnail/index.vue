@@ -1,6 +1,6 @@
 <template>
 <client-only>
-  <div style="max-width: 247px">
+  <div :style="{maxWidth: maxWidth}" :class="['relative', {'mx-auto': center}]">
     <vue-pdf
       ref="pdf"
       src="https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf"
@@ -21,11 +21,18 @@
         <dx-icon right regular @click="next" v-else> mdi-chevron-right </dx-icon>
       </v-col>
     </v-row>
+    <div class="zoom--icon" aria-controls>
+      <slot name="zoom"/>
+    </div>
   </div>
 </client-only>
 </template>
 <script>
 export default {
+  props:{
+    maxWidth: {type: String, default: '247px'},
+    center: {type: Boolean},
+  },
   data: () => ({
     loadedRatio: 0,
     page: 1,
@@ -44,3 +51,13 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.relative{
+  position: relative;
+}
+.zoom--icon {
+  position: absolute;
+  right:rem-calc(10px);
+  bottom: rem-calc(75px);
+}
+</style>

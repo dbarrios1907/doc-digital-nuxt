@@ -7,6 +7,12 @@
       empty-results="no tiene documentos pendientes para firmar"
       inboxurl="/documentos/bandeja-firmar/details/"
     >
+      <template v-slot:actionsPrimary>
+        <dx-button color="primary" outlined>
+          <dx-icon right regular> mdi-download </dx-icon>
+          <span class="ml-2 text-underline">Descargar documento</span>
+        </dx-button>
+      </template>
       <template v-slot:actions="{ docid }">
         <v-icon dense @click="openDetails(docid)"> mdi-eye </v-icon>
         <pencil-sign-icon class="mx-4" aria-controls @click="getid('dialog2', docid)" />

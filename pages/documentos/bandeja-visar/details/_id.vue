@@ -6,10 +6,14 @@
       :requesting="requesting"
       :steps="steps"
       :rejectedocs="rejectedocs"
-      :dialog1="dialog1"
-      :dialog2="dialog2"
       :docid="this.$route.params.id"
     >
+      <template v-slot:actionsPrimary>
+        <dx-button color="primary" outlined>
+          <dx-icon right regular> mdi-download </dx-icon>
+          <span class="ml-2 text-underline">Descargar documento</span>
+        </dx-button>
+      </template>
       <template v-slot:actions>
         <dx-button class="white--text mr-md-5" color="darken1" @click="dialog1 = true">
           <dx-icon right regular> mdi-close </dx-icon>
@@ -17,7 +21,7 @@
         </dx-button>
         <dx-button class="white--text" color="primary2" @click="dialog2 = true">
           <pencil-write-icon />
-          <span class="ml-2 text-underline">Visar</span>
+          <span class="ml-2 text-underline">Visar documento</span>
         </dx-button>
       </template>
     </DocumentDetail>
