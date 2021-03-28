@@ -82,6 +82,7 @@ const routes = () => [
       {
         path: 'documentos',
         name: 'Documentos',
+        redirect: 'noRedirect',
         meta: { title: 'Documentos', icon: 'mdi-file-multiple' },
         children: [
           {
