@@ -156,6 +156,7 @@ export default {
                     value: 'id',
                     sortable: true,
                     search: false,
+                    width: 75
                 },
                 {
                     text: 'Nombre',

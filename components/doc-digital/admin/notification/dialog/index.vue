@@ -10,13 +10,13 @@
         <v-form ref="form" v-model="valid" lazy-validation>
             <v-card-text class="mt-6 py-6 px-7">
                 <v-row no-gutters :class="['mt-1 notification-form']"> 
-                     <div class="col-md-4 col-sm-4 px-0 mr-md-12" style="height: 300px" :class="[ismobil, 'col-container']">
+                     <div style="height: 300px" v-if="!ismobil" class="col-container col-md-4 col-sm-4 px-0 mr-md-12">
                          <div class="weight-400 font-12 mb-3"> Previsualización: </div>
                          <iframe :srcdoc="body_" frameborder="0" class="bg-grey1" style="width: 100%; height: 100%"></iframe>
                      </div>
-                      <div class="col-md-7 col-sm-7 px-0" :class="[ismobil, 'col-container']">
-                           <v-row no-gutters :class="['mt-1 entity-form']">
-                                <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
+                      <div class="col-container col-md-7 col-sm-7 px-0">
+                           <v-row no-gutters :class="['mt-1 nofitication-form']">
+                                <div class="col-md-12 col-sm-12 px-0 mr-md-10 mh-72" :class="[ismobil, 'col-container']">
                                     <v-row no-gutters :class="['align-center', ismobil]">
                                         <v-col cols="auto" class="label-width col-md-3 col-sm-3 flex weight-400 line-height-30 font-16 py-1">Nombre</v-col>
                                         <v-col class="mh-72  col-md-9 col-sm-12">
@@ -25,8 +25,8 @@
                                     </v-row>
                                 </div>
                             </v-row>
-                            <v-row no-gutters :class="['mt-1 entity-form']">
-                                <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
+                            <v-row no-gutters :class="['mt-1 nofitication-form']">
+                                <div class="col-md-12 col-sm-12 px-0 mr-md-10 mh-72" :class="[ismobil, 'col-container']">
                                     <v-row no-gutters :class="['align-center', ismobil]">
                                         <v-col cols="auto" class="label-width col-md-3 col-sm-3 flex weight-400 line-height-30 font-16 py-1">Asunto</v-col>
                                         <v-col class="mh-72  col-md-9 col-sm-12">
@@ -35,8 +35,8 @@
                                     </v-row>
                                 </div>
                             </v-row>                            
-                            <v-row no-gutters :class="['mt-1 entity-form']">
-                                <div class="col-md-12 col-sm-12 px-0 mr-10 mh-72" :class="[ismobil, 'col-container']">
+                            <v-row no-gutters :class="['mt-1 nofitication-form']">
+                                <div class="col-md-12 col-sm-12 px-0 mr-md-10 mh-72" :class="[ismobil, 'col-container']">
                                     <v-row no-gutters :class="['align-center', ismobil]">
                                         <v-col cols="auto" class="label-width col-md-12 col-sm-12 flex weight-400 line-height-30 font-16 py-1">Cuerpo del mensaje (HTML)</v-col>
                                         <v-col class="mh-72  col-md-12 col-sm-12">
@@ -45,6 +45,10 @@
                                     </v-row>
                                 </div>
                             </v-row>
+                     </div>
+                     <div style="height: 300px" v-if="ismobil" class="col-container col-md-4 col-sm-4 px-0 mr-md-12 mb-5">
+                         <div class="weight-400 font-12 mb-3"> Previsualización: </div>
+                         <iframe :srcdoc="body_" frameborder="0" class="bg-grey1" style="width: 100%; height: 100%"></iframe>
                      </div>
                 </v-row>
             </v-card-text>
