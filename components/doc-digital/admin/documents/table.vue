@@ -18,7 +18,7 @@
                     <dx-select v-model="itemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
                     <span class="ml-md-3">resultados de un total de <b>{{ computedDocuments.length }} documentos {{documentType}}</b>.</span>
                 </div>
-                <dx-alert v-else class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0 px-md-0 px-4" absolute bottom right type="error" outlined :show-left-icon="false" :show-right-icon="false">
+                <dx-alert v-else class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0 px-4 py-2 text-center" absolute bottom right type="error" outlined :show-left-icon="false" :show-right-icon="false">
                     No se han encontrado coincidencias.
                 </dx-alert>
 
