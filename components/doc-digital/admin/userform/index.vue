@@ -207,7 +207,7 @@ export default {
                 name: nombres
             }
         })
-    },
+    }, 
     data() {
         return {
             subrogantes: ['Subragante 1', 'Subragante 2'],
@@ -223,7 +223,7 @@ export default {
             correoInstitucional: null,
             cargo: null,
             entidad: null,
-            roles: [],
+            roles: null,
             subrogante: null,
             breadcrumbs: [{
                     text: 'Administración',

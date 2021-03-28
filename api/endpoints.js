@@ -10,12 +10,13 @@ export default {
 
   fetchTasks: params => ({ url: '/documentos/tareas', method: 'GET', params }),
   fetchTasksVisa: '/documentos/tareas/visar',
-  fetchTasksSign: '/documentos/tareas/firmar',
+  fetchTasksSign: { url: `/documentos/tareas/firmar`, method: 'GET' },
   fetchTasksRejected: '/documentos/tareas/creacion/rechazadas',
   fetchTasksErasers: '/documentos/tareas/creacion/borradores',
   fetchTasksCompleted: '/documentos/tareas/creacion/completadas',
   fetchTasksOfficeSent: '/documentos/tareas/op/enviar',
   fetchTasksOfficeReceived: '/documentos/tareas/op/recibir',
+  fetchTasksOffice: inbox => ({ url: `/documentos/tareas/op/${inbox}`, method: 'GET' }),
 
   // document creation endpoints
   // models used same endpoint with different method to exec operations (delete, get, create, save)

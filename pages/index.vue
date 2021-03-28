@@ -9,7 +9,7 @@
       <v-col class="pr-md-5">
         <header class="font-robotoslab font-25 weight-700 line-height-31 py-5">Hola {{ userName }}, ¡Ya estás en DocDigital!</header>
 
-        <SectionPending v-if="hasNotifications" :visar="visar" :firmar="firmar" :recibir="recibir" />
+        <SectionPending v-if="hasNotifications" :visar="visar" :firmar="computedFirmar" :recibir="computedRecibir" />
         <dx-alert v-else class="mb-2" absolute centered type="success" :show-right-icon="false" :shadow="false">
           No tienes documentos pendientes
         </dx-alert>
@@ -25,22 +25,33 @@ import { mapGetters, mapState } from 'vuex'
 
 export default {
   data: () => ({
-    visar: 123,
-    firmar: 1,
-    recibir: 5,
+    visar: 0,
+    firmar: 0,
+    recibir: 0,
   }),
   computed: {
     hasNotifications() {
-      return this.visar > 0 && this.firmar > 0 && this.recibir > 0
+      // console.log( this.computedVisar > 0 || this.computedFirmar > 0 || this.computedRecibir > 0)
+      return this.visar > 0 || this.computedFirmar > 0 || this.computedRecibir > 0
     },
     ...mapGetters(['userName']),
+    computedVisar(){
+      const getDocumentsCount = this.$store.getters['documents/getDocumentsCount'] 
+      return getDocumentsCount('enviar')
+    },
+    computedFirmar(){
+      const getDocumentsCount = this.$store.getters['documents/getDocumentsCount'] 
+      return getDocumentsCount('firmar')
+    },
+    computedRecibir(){
+      const getDocumentsCount = this.$store.getters['documents/getDocumentsCount']
+      return getDocumentsCount('recibir')
+    },
   },
-  // async mounted() {
-  //   const entidades = await this.$store.dispatch('entidades/fetchUserEntities', {
-  //     rut: '88888888',
-  //   })
-  //
-  //   console.log(entidades)
-  // },
+  async fetch(){
+    await this.$store.dispatch('documents/getDocumentsByInboxCount', 'recibir')
+    await this.$store.dispatch('documents/getDocumentsByInboxCount', 'enviar')
+    await this.$store.dispatch('documents/getDocumentsByInboxCount', 'firmar')
+  }
 }
 </script>
