@@ -117,6 +117,7 @@ export default {
                     value: 'id',
                     sortable: true,
                     search: false,
+                    width: 75
                 },
                 {
                     text: 'Nombre',
@@ -183,63 +184,6 @@ export default {
     .v-select .v-input__slot {
         min-height: 48px !important;
     }
-
-    table a {
-        text-decoration: none;
-    }
-
-    .v-application .correos .tab-default .v-tab--active {
-        height: 46px !important;
-        min-width: 155px !important;
-    }
-
-    .v-text-field--outlined>.v-input__control>.v-input__slot {
-        min-height: 48px;
-        border-radius: 0px;
-    }
-
-    .actions-menu {
-        width: auto;
-        float: right;
-        position: absolute;
-        right: 28px;
-        z-index: 1;
-    }
-
-    .v-application .v-menu__content.theme--light.menuable__content__active,
-    .v-application .v-menu__content.theme--dark.menuable__content__active {
-        margin-top: 0px !important;
-        border: 0px !important;
-        box-shadow: none !important;
-    }
-
-    .col-sm-6.movil-container {
-        min-width: 202px;
-        text-align: center;
-    }
-
-    .dx-filtermenu {
-        max-width: 202px;
-    }
-
-    .dx-filtermenu.movil-container {
-        max-width: 100% !important;
-    }
-
-    .v-select.movil-container {
-        margin: 0 10px;
-    }
-
-     table>tbody>tr>td {
-        padding: 6px 10px !important;
-    }
-
-    :not(.movil-container) {
-        table>thead>tr>th:nth-child(2) {
-            width: 17% !important;
-        }
-
-    }
     .movil-container {
         table>tbody>tr {
             height: 37px !important;
@@ -248,6 +192,14 @@ export default {
         .dx-pagination {
             margin: 0px auto !important;
         }
-    }
+    }    
 }
+@include theme(v-data-table) using ($material) {
+        &.table-check thead > tr {
+            & > th:first-child {
+                min-width: 5rem !important;
+                width: 10.6875rem !important;
+            }
+        }
+    }
 </style>
