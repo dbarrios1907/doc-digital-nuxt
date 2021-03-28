@@ -7,6 +7,7 @@
       :steps="steps"
       :rejectedocs="rejectedocs"
       :docid="this.$route.params.id"
+      :tramites="tramites"
     >
       <template v-slot:actionsPrimary>
         <dx-button color="primary" outlined>
@@ -37,7 +38,7 @@ export default {
     this.fetch_('tableitem', 'documents/fetchDocument')
     this.fetch_('steps', 'documents/fetchDocumentTasks')
     this.fetch_('rejectedocs', 'documents/rejectDocumentTramite')
-    //this.fetch_('tramites', 'documents/fetchDocumentTramite')
+    this.fetch_('tramites', 'documents/fetchDocumentTramite')
   },
   data: () => ({
     timeline: [],
@@ -45,7 +46,7 @@ export default {
     steps: [],
     requesting: true,
     rejectedocs: [],
-    tramites: [],
+    tramites: {},
     dialog1: false,
     dialog2: false,
   }),
