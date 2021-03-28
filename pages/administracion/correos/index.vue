@@ -38,7 +38,7 @@
 
             <template v-slot:[`item.notifid`]="{ item: { id } }">
                 <v-icon dense class="mr-4" @click="notif_dialog = true"> mdi-square-edit-outline </v-icon>
-                <v-icon dense class="mr-4" > mdi-eye </v-icon>
+                <v-icon dense class="mr-4" @click="notif_detail_dialog = true"> mdi-eye </v-icon>
             </template>
 
             <template v-slot:footer>
@@ -56,6 +56,21 @@
         </template>
         <template v-slot:actions> </template>
     </admin-notification-dialog>
+    <admin-notification-dialog-details :dialog="notif_detail_dialog" :data="correo" @close="notif_detail_dialog = false">
+        <template v-slot:actionclose>
+            <v-btn icon color="darken3" @click="(notif_detail_dialog = false), (correo = null)">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+        </template>
+        <template v-slot:actions>
+            <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="(notif_detail_dialog = false), (correo = null)">
+                <span class="text-underline"> Cerrar </span>
+            </dx-button>
+            <dx-button color="white" @click="(notif_detail_dialog = false), (notif_dialog = true)" outlined v-bind="$props" :class="[{ 'ml-4': ismobil }]" class="text-none ml-5 mr-1 primary">
+                <span class="text-underline"> Editar </span>
+            </dx-button>
+        </template>
+    </admin-notification-dialog-details>
 </div>
 </template>
 
@@ -65,8 +80,7 @@ import {
 } from '~/shared/utils/request'
 export default {
     name: 'Entidades',
-    fetch() {
-    },
+    fetch() {},
     data() {
         return {
             options: ['5', '10', '20', '30'],
@@ -184,22 +198,24 @@ export default {
     .v-select .v-input__slot {
         min-height: 48px !important;
     }
+
     .movil-container {
         table>tbody>tr {
             height: 37px !important;
-        }        
+        }
 
         .dx-pagination {
             margin: 0px auto !important;
         }
-    }    
+    }
 }
+
 @include theme(v-data-table) using ($material) {
-        &.table-check thead > tr {
-            & > th:first-child {
-                min-width: 5rem !important;
-                width: 10.6875rem !important;
-            }
+    &.table-check thead>tr {
+        &>th:first-child {
+            min-width: 5rem !important;
+            width: 10.6875rem !important;
         }
     }
+}
 </style>
