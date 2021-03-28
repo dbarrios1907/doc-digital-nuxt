@@ -127,6 +127,9 @@
     background-color: $bg-color;
     color :  $tx-color;
   }
+  .v-tabs > .v-tabs-bar {
+      background-color: #ffffff00 !important;
+  }
 }
 @include theme(tab-default) using ($material) {
   $bg-color: map-get($material, 'v_tabs', 'light');

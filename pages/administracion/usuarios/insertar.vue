@@ -2,7 +2,7 @@
   <!-- <perfect-scrollbar :style="{ height: '100%' }"> -->
   <div :class="['fill-height', { 'px-custom-6': ismobil }]">
     <dx-breadcrumbs :items="breadcrums" v-if="!ismobil" class="mb-10"/>
-    <userform/>
+    <admin-userform/>
   </div>
   <!-- </perfect-scrollbar> -->
 </template>

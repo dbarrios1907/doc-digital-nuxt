@@ -65,14 +65,14 @@
             </template>
         </DataTable>
     </v-row>
-    <EntityDialog :dialog="entity_dialog" :data="selected_entidad" @close="entity_dialog = false" @sumbit="onSumbitEntity">
+    <AdminEntityDialog :dialog="entity_dialog" :data="selected_entidad" @close="entity_dialog = false" @sumbit="onSumbitEntity">
         <template v-slot:actionclose>
             <v-btn icon color="darken3" @click=";(entity_dialog = false), (selected_entidad = null)">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </template>
         <template v-slot:actions> </template>
-    </EntityDialog>
+    </AdminEntityDialog>
     <DialogDetail :dialog="entity_detail_dialog" :items="details" headTitle="Entidad">
         <template v-slot:actions>
             <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="editEntity(selected_entidad.id)">

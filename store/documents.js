@@ -60,7 +60,10 @@ export const state = () => ({
   visaOptions: [],
   epochOptions: [],
   documentFileTypes: [],
-  ...documentCreationState(),
+  ...documentCreationState(),  
+  recibir : 0,
+  enviar : 0,
+  firmar : 0,
 })
 
 export const getters = {
@@ -70,11 +73,17 @@ export const getters = {
   visaOptions: state => state.visaOptions,
   epochOptions: state => state.epochOptions,
   documentFileTypes: state => state.documentFileTypes,
+  getDocumentsCount: state => inbox => {
+    return state[inbox]
+  }
 }
 
 export const mutations = {
   setDocuments: (state, docs) => {
     state.documents = docs
+  },
+  setDocumentsCount: (state, {inbox, count}) => { 
+    state[inbox] = count
   },
   deleteDocument: (state, id) => {
     const documents = state.documents.filter(function (doc) {
@@ -382,6 +391,28 @@ export const actions = {
         message: `Documento visado satisfactoriamente - Fecha: ${resp.timestamp} hrs`,
       })
       return true
+    }
+  },
+  async getDocumentsByInbox({ commit, rootState }, inbox) {
+    const endp = inbox == 'firmar' ? endpoints.fetchTasksSign : endpoints.fetchTasksOffice(inbox)
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endp)
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      commit(
+        'setDocuments',
+        resp.result.map(({ documento }) => documento)
+      )
+    }
+  },  
+  async getDocumentsByInboxCount({ commit, rootState }, inbox) {
+    const endp = inbox == 'firmar' ? endpoints.fetchTasksSign : endpoints.fetchTasksOffice(inbox)
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endp)
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      commit(
+        'setDocumentsCount',
+        {inbox, count: resp.count}
+      )
     }
   },
 }

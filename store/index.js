@@ -57,6 +57,11 @@ const routes = () => [
         name: 'Recibidos',
         meta: { title: 'Recibidos', icon: 'mdi-inbox-arrow-down' },
       },
+      {
+        path: 'firmados',
+        name: 'firmados',
+        meta: { title: 'Firmados', icon: 'mdi-pencil' },
+      },
     ],
   },
   {
@@ -78,6 +83,23 @@ const routes = () => [
         path: 'documentos',
         name: 'Documentos',
         meta: { title: 'Documentos', icon: 'mdi-file-multiple' },
+        children: [
+          {
+            path: 'enviados',
+            name: 'Enviados',
+            meta: { title: 'Enviados', icon: 'mdi-send' },
+          },
+          {
+            path: 'recibidos',
+            name: 'Recibidos',
+            meta: { title: 'Recibidos', icon: 'mdi-inbox-arrow-down' },
+          },
+          {
+            path: 'por-firmar',
+            name: 'por-firmar',
+            meta: { title: 'Por firmar', icon: 'mdi-pencil' },
+          },
+        ],
       },
       {
         path: 'entidades',

@@ -9,6 +9,7 @@ export default {
   comunas: id => ({ url: `/tipos/distgeografica/regiones/provincias/${id}/comunas`, method: 'GET' }),
 
   fetchTasks: params => ({ url: '/documentos/tareas', method: 'GET', params }),
+<<<<<<< HEAD
   fetchTasksVisa: { url: '/documentos/tareas/visar', method: 'GET' },
   fetchTasksSign: { url: '/documentos/tareas/firmar', method: 'GET' },
   fetchTasksRejected: { url: '/documentos/tareas/creacion/rechazadas', method: 'GET' },
@@ -17,6 +18,16 @@ export default {
   fetchTasksOfficeSent: { url: '/documentos/tareas/op/enviar', method: 'GET' },
   fetchTasksOfficeReceived: { url: '/documentos/tareas/op/recibir', method: 'GET' },
   documentFetchTasks: docId => ({ url: `/documentos/${docId}/tareas`, method: 'GET' }),
+=======
+  fetchTasksVisa: '/documentos/tareas/visar',
+  fetchTasksSign: { url: `/documentos/tareas/firmar`, method: 'GET' },
+  fetchTasksRejected: '/documentos/tareas/creacion/rechazadas',
+  fetchTasksErasers: '/documentos/tareas/creacion/borradores',
+  fetchTasksCompleted: '/documentos/tareas/creacion/completadas',
+  fetchTasksOfficeSent: '/documentos/tareas/op/enviar',
+  fetchTasksOfficeReceived: '/documentos/tareas/op/recibir',
+  fetchTasksOffice: inbox => ({ url: `/documentos/tareas/op/${inbox}`, method: 'GET' }),
+>>>>>>> develop_issues
 
   // document creation endpoints
   // models used same endpoint with different method to exec operations (delete, get, create, save)

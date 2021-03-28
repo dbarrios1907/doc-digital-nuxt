@@ -116,7 +116,7 @@
             :mobile-breakpoint="0"
             hide-default-footer
             item-key="materia"
-            show-select
+            :show-select="showselect"
             @page-count="pageCount = $event"
           >
             <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
@@ -188,6 +188,10 @@ export default {
     documentos: {
       type: Array,
       default: () => [],
+    },    
+    showselect: {
+      type: Boolean,
+      default: true,
     },
     title: String,
     subtitle: String,

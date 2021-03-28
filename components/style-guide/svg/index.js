@@ -23,4 +23,8 @@ export { default as CsvDown } from './icons/CsvDownIcon.svg'
 export { default as Pending } from './icons/Pending.svg'
 export { default as Done } from './icons/Done.svg'
 export { default as CcPlusIcon } from './icons/CcPlusIcon.svg'
+<<<<<<< HEAD
 export { default as ZoomIcon } from './icons/ZoomIcon.svg'
+=======
+export { default as CsvExport } from './icons/CsvExport.svg'
+>>>>>>> develop_issues
