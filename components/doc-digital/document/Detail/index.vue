@@ -38,7 +38,7 @@
 
     <div class="weight-700 font-25 line-height-31 font-robotoslab mt-13">Información de la tramitación del documento</div>
     <div class="weight-700 font-title line-height-29 mt-8">Resumen de avance de la tramitación</div>
-    <dx-docprogress :items="timeline" class="mt-7" />
+    <dx-docprogress :items="timeitems" class="mt-7" />
     <DocumentDetailCollapseReset :items="rejectedocs" border class="my-4" />
     <DocumentDetailCollapseNormal :items="steps" />
   </div>
@@ -56,11 +56,12 @@ export default {
   },
   props: {
     docid: String,
-    timeline: Array,
+    timeline: { type: Array, default: () => [] },
     tableitem: Object,
-    steps: Array,
+    steps: { type: Array, default: () => [] },
     requesting: { type: Boolean, default: true },
-    rejectedocs: Array,
+    rejectedocs: { type: Array, default: () => [] },
+    tramites: Object,
   },
   data: () => ({
     dialog: false,
@@ -68,6 +69,34 @@ export default {
   computed: {
     ismobil() {
       return this.$vuetify.breakpoint.xs ? 'ismobile' : ''
+    },
+    timeitems() {
+      return [
+        {
+          name: '1. Inicio de la tramitación',
+          ...this._filter('CREACION'),
+        },
+        {
+          name: '2. Visación',
+          disable: this.tramites.tipoVisacion === 'SIN_VISACION',
+          isCompletada: this.isCompleted('VISACION'),
+          ...this._filter('VISACION'),
+        },
+        {
+          name: '3. Firma',
+          disable: false,
+          isCompletada: this.isCompleted('FIRMA'),
+          ...this._filter('FIRMA'),
+        },
+        {
+          name: '4. Folio y despacho',
+          ...this._filter('FOLIO_DESPACHO'),
+        },
+        {
+          name: '5. Destinatarios',
+          ...this._filter('DESTINATARIOS'),
+        },
+      ]
     },
     tableitems() {
       return [
@@ -109,6 +138,15 @@ export default {
     },
     download() {
       this.$store.dispatch('documents/downloadDocument', this.docid)
+    },
+    _filter(item) {
+      return this.timeline.filter(({ etapa }) => etapa == item)[0]
+    },
+    isCompleted(item) {
+      if (this._filter('CREACION')) {
+        return (!this.tramites.isProcesoVisacionFirma && this._filter('CREACION').isCompletada) || this._filter(item).isCompletada
+      }
+      return false
     },
   },
 }

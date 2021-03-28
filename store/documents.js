@@ -290,17 +290,6 @@ export const actions = {
     }
   },
 
-  async fetchDocumentTramite({ commit, rootState }, id) {
-    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentFetchTramite(id))
-    const [valid, Toast] = isValidResponse(resp)
-    if (valid) {
-      Toast.success({
-        message: resp?.message,
-      })
-      return true
-    }
-  },
-
   async createDocumentTramite({ commit, rootState }, id, params) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentCreateTramite(id, params))
     const [valid, Toast] = isValidResponse(resp)
