@@ -24,34 +24,20 @@ export default {
         {
           name: 'block',
           title: '2. Visación',
-          disabled: true,
           description: this._filter('VISACION'),
         },
         {
-          name: 'card',
+          name: 'sign',
           title: '3. Firma',
-          //description: this._filter('FIRMA'),
-          description: [
-            {
-              title: 'Grupo 1 de firmas',
-              body: {
-                title: 'Sebastian Piñera Echenique',
-                description: 'Administrativa de Presidencia',
-                status: {
-                  name: 'mdi-clock-time-three-outline',
-                  description: 'Firma pendiente',
-                },
-              },
-            },
-          ],
+          description: this._filter('FIRMA'),
         },
         {
-          name: 'block',
+          name: 'folio',
           title: '4. Folio y despacho',
           description: this._filter('FOLIO_DESPACHO'),
         },
         {
-          name: 'block',
+          name: 'destinatarios',
           title: '5. Destinatarios',
           description: this._filter('DESTINATARIOS'),
         },

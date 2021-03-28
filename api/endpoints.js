@@ -9,13 +9,14 @@ export default {
   comunas: id => ({ url: `/tipos/distgeografica/regiones/provincias/${id}/comunas`, method: 'GET' }),
 
   fetchTasks: params => ({ url: '/documentos/tareas', method: 'GET', params }),
-  fetchTasksVisa: '/documentos/tareas/visar',
-  fetchTasksSign: { url: `/documentos/tareas/firmar`, method: 'GET' },
-  fetchTasksRejected: '/documentos/tareas/creacion/rechazadas',
-  fetchTasksErasers: '/documentos/tareas/creacion/borradores',
-  fetchTasksCompleted: '/documentos/tareas/creacion/completadas',
-  fetchTasksOfficeSent: '/documentos/tareas/op/enviar',
-  fetchTasksOfficeReceived: '/documentos/tareas/op/recibir',
+  fetchTasksVisa: { url: '/documentos/tareas/visar', method: 'GET' },
+  fetchTasksSign: { url: '/documentos/tareas/firmar', method: 'GET' },
+  fetchTasksRejected: { url: '/documentos/tareas/creacion/rechazadas', method: 'GET' },
+  fetchTasksErasers: { url: '/documentos/tareas/creacion/borradores', method: 'GET' },
+  fetchTasksCompleted: { url: '/documentos/tareas/creacion/completadas', method: 'GET' },
+  fetchTasksOfficeSent: { url: '/documentos/tareas/op/enviar', method: 'GET' },
+  fetchTasksOfficeReceived: { url: '/documentos/tareas/op/recibir', method: 'GET' },
+  documentFetchTasks: docId => ({ url: `/documentos/${docId}/tareas`, method: 'GET' }),
   fetchTasksOffice: inbox => ({ url: `/documentos/tareas/op/${inbox}`, method: 'GET' }),
 
   // document creation endpoints
@@ -24,6 +25,20 @@ export default {
   documentCreate: data => ({ url: `/documentos/`, method: 'POST', data }),
   documentUpdate: params => ({ url: `/documentos/`, method: 'PUT', params }),
   documentDelete: docId => ({ url: `/documentos/${docId}`, method: 'DELETE' }),
+
+  documentSign: (otp, data) => ({
+    url: `/documentos/${data.tareaId}/tareas/firmar/${otp}`,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    data,
+  }),
+
+  documentVisar: docId => ({
+    url: `/documentos/${docId}/tareas/visar`,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    data: {},
+  }),
 
   documentUpload: docId => ({ url: `/documentos/${docId}/anexos/archivo`, method: 'POST' }),
   documentDownload: (docId, fileId) => ({ url: `/documentos/${docId}/anexos/archivo/${fileId}`, method: 'GET' }),

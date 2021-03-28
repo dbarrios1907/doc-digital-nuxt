@@ -7,10 +7,16 @@
       empty-results="no tiene documentos pendientes para firmar"
       inboxurl="/documentos/bandeja-firmar/details/"
     >
+      <template v-slot:actionsPrimary>
+        <dx-button color="primary" outlined>
+          <dx-icon right regular> mdi-download </dx-icon>
+          <span class="ml-2 text-underline">Descargar documento</span>
+        </dx-button>
+      </template>
       <template v-slot:actions="{ docid }">
         <v-icon dense @click="openDetails(docid)"> mdi-eye </v-icon>
-        <pencil-sign-icon class="mx-4" />
-        <v-icon dense @click="confirmDeleteDoc(docid)"> mdi-close </v-icon>
+        <pencil-sign-icon class="mx-4" aria-controls @click="getid('dialog2', docid)" />
+        <v-icon dense @click="getid('dialog1', docid)"> mdi-close </v-icon>
       </template>
     </DocumentTray>
     <DocumentDetailDialog :dialog="dialog_d" :items="details" headTitle="Documento">
@@ -23,16 +29,8 @@
         </dx-button>
       </template>
     </DocumentDetailDialog>
-    <DialogConfirmation :dialog="dialog_c" headTitle="¿Realmente desea eliminar este documento?">
-      <template v-slot:actions>
-        <dx-button color="white" outlined v-bind="$props" class="text-none ml-4 mr-2 primary" @click="deleteDocument">
-          <span class="text-underline"> Aceptar </span>
-        </dx-button>
-        <dx-button color="primary" outlined v-bind="$props" class="text-none" @click="dialog_c = false">
-          <span class="text-underline"> Cancelar </span>
-        </dx-button>
-      </template>
-    </DialogConfirmation>
+    <DocumentDetailModalRechazar :docid="docid" v-model="dialog1" @onClose="dialog1 = false" @onCancel="dialog1 = false" />
+    <DocumentDetailModalFirmar :docid="docid" v-model="dialog2" @onClose="dialog2 = false" @onCancel="dialog2 = false" />
   </div>
 </template>
 
@@ -44,9 +42,10 @@ export default {
   data() {
     return {
       dialog_d: false,
-      dialog_c: false,
-      docid: '',
       details: [],
+      dialog1: false,
+      dialog2: false,
+      docid: '',
     }
   },
   computed: {
@@ -55,6 +54,10 @@ export default {
     },
   },
   methods: {
+    getid(name, id) {
+      this.docid = id.toString()
+      this[name] = true
+    },
     async openDetails(id) {
       let doc = await this.$store.dispatch('documents/fetchDocument', id)
       if (doc) {
@@ -90,47 +93,6 @@ export default {
             description: 'Primera',
           },
         ]
-        // [
-        //   {
-        //     label: 'Tema: ',
-        //     value: doc.materia,
-        //   },
-        //   {
-        //     label: 'Descripción: ',
-        //     value: doc.descripcion,
-        //   },
-        //   {
-        //     label: 'Hacer seguimiento: ',
-        //     value: doc.isFirmado ? 'Activo' : 'No activo',
-        //   },
-        //   {
-        //     label: 'Reservado: ',
-        //     value: doc.isReservado ? 'Si' : 'No: ',
-        //   },
-        //   {
-        //     label: 'Tipo de documento: ',
-        //     value: doc.tipoDocumentoOficial ? doc.tipoDocumentoOficial.descripcion : '',
-        //   },
-        //   {
-        //     label: 'Anexos: ',
-        //     value: (doc.anexos ? doc.anexos.length : 0) > 0 ? 'Si tiene' : 'No tiene',
-        //   },
-        //   {
-        //     label: 'Página de firma: ',
-        //     value: 'Primera',
-        //   },
-        // ]
-      }
-    },
-    confirmDeleteDoc(docid) {
-      this.docid = docid
-      this.dialog_c = true
-    },
-    async deleteDocument() {
-      let resp = await this.$store.dispatch('documents/deleteDocument', this.docid)
-      if (resp) {
-        this.dialog_c = false
-        this.docid = ''
       }
     },
   },
