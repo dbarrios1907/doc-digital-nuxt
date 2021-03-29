@@ -1,21 +1,52 @@
 <template>
-  <DocumentDetail :timeline="timeline" :tableitem="tableitem" :requesting="requesting" :steps="tramitacion" :rejectedocs="rejectedocs" />
+  <div>
+    <DocumentDetail
+      :timeline="timeline"
+      :tableitem="tableitem"
+      :requesting="requesting"
+      :steps="steps"
+      :rejectedocs="rejectedocs"
+      :docid="this.$route.params.id"
+      :tramites="tramites"
+    >
+      <!-- <template v-slot:actionsPrimary>
+        <dx-button color="primary" outlined>
+          <dx-icon right regular> mdi-download </dx-icon>
+          <span class="ml-2 text-underline">Descargar documento</span>
+        </dx-button>
+      </template>
+      <template v-slot:actions>
+        <dx-button class="white--text mr-md-5" color="darken1" @click="dialog1 = true">
+          <dx-icon right regular> mdi-close </dx-icon>
+          <span class="ml-2 text-underline">Rechazar</span>
+        </dx-button>
+        <dx-button class="white--text" color="primary2" @click="dialog2 = true">
+          <pencil-write-icon />
+          <span class="ml-2 text-underline">Firmar</span>
+        </dx-button>
+      </template> -->
+    </DocumentDetail>
+ </div>
 </template>
 
 <script>
 export default {
   fetch() {
-    this.fetch_('timeline', 'documents/getSteps')
+    this.fetch_('timeline', 'documents/fetchTramiteProgress')
     this.fetch_('tableitem', 'documents/fetchDocument')
-    this.fetch_('tramitacion', 'documents/getTramitacion')
+    this.fetch_('steps', 'documents/fetchDocumentTasks')
     this.fetch_('rejectedocs', 'documents/rejectDocumentTramite')
+    this.fetch_('tramites', 'documents/fetchDocumentTramite')
   },
   data: () => ({
     timeline: [],
     tableitem: {},
-    tramitacion: [],
+    steps: [],
     requesting: true,
     rejectedocs: [],
+    tramites: {},
+    dialog1: false,
+    dialog2: false,
   }),
   methods: {
     async fetch_(item, url) {

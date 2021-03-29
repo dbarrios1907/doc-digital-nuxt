@@ -36,6 +36,7 @@
         </NavListItem>
       </template>
     </dx-scrollbar>
+    <slot name="switch" />
   </v-navigation-drawer>
 </template>
 

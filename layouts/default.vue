@@ -12,7 +12,11 @@
       app
       @onmouseover="onMouseOver"
       @mouseleave="onMouseLeave"
-    />
+    >
+      <template v-slot:switch>
+          <admin-user-switch />
+      </template>
+    </dx-navigation>
 
     <dx-header :drawer="drawer" :clipped-left="clipped" fixed app elevation="0" :height="92" @onToggleMenu="toggleDrawer" />
     <v-main app>
@@ -67,6 +71,9 @@ export default {
     _rightDrawer() {
       return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md
     },
+    userIdString(){
+      return this.userId.toString()
+    }
   },
   methods: {
     ...mapActions({
