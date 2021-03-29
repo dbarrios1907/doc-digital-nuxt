@@ -10,7 +10,7 @@
       :tramites="tramites"
     >
       <template v-slot:actionsPrimary>
-        <dx-button color="primary" outlined>
+        <dx-button color="primary" outlined href="/api/public/documentos/1/archivo?tempHash=olPcMhNYfL" download>
           <dx-icon right regular> mdi-download </dx-icon>
           <span class="ml-2 text-underline">Descargar documento</span>
         </dx-button>

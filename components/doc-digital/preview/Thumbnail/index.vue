@@ -1,9 +1,10 @@
 <template>
+<div>
 <client-only>
   <div :style="{maxWidth: maxWidth}" :class="['relative', {'mx-auto': center}]">
     <vue-pdf
       ref="pdf"
-      src="https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf"
+      src="/api/public/documentos/1/archivo?tempHash=olPcMhNYfL"
       :page="page"
       @progress="loadedRatio = $event"
       @num-pages="numPages = $event"
@@ -26,6 +27,7 @@
     </div>
   </div>
 </client-only>
+</div>
 </template>
 <script>
 export default {
@@ -47,6 +49,18 @@ export default {
     },
     back() {
       this.page -= 1
+    },
+    printPdf (url) {
+      var iframe = document.createElement('iframe');
+      document.body.appendChild(iframe);
+      iframe.style.display = 'none';
+      iframe.onload = function() {
+        setTimeout(function() {
+          iframe.focus();
+          iframe.contentWindow.print();
+        }, 1);
+      };
+      iframe.src = url;
     }
   },
 }

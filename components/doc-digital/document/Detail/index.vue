@@ -61,7 +61,7 @@ export default {
     steps: { type: Array, default: () => [] },
     requesting: { type: Boolean, default: true },
     rejectedocs: { type: Array, default: () => [] },
-    tramites: Object,
+    tramites: { type: Object, default: () => {} },
   },
   data: () => ({
     dialog: false,
@@ -78,7 +78,7 @@ export default {
         },
         {
           name: '2. Visación',
-          disable: this.tramites.tipoVisacion === 'SIN_VISACION',
+          disable: this.tramites ? this.tramites.tipoVisacion === 'SIN_VISACION' : false,
           isCompletada: this.isCompleted('VISACION'),
           ...this._filter('VISACION'),
         },

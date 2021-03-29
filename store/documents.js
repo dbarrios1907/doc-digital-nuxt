@@ -60,10 +60,10 @@ export const state = () => ({
   visaOptions: [],
   epochOptions: [],
   documentFileTypes: [],
-  ...documentCreationState(),  
-  recibir : 0,
-  enviar : 0,
-  firmar : 0,
+  ...documentCreationState(),
+  recibir: 0,
+  enviar: 0,
+  firmar: 0,
 })
 
 export const getters = {
@@ -75,14 +75,14 @@ export const getters = {
   documentFileTypes: state => state.documentFileTypes,
   getDocumentsCount: state => inbox => {
     return state[inbox]
-  }
+  },
 }
 
 export const mutations = {
   setDocuments: (state, docs) => {
     state.documents = docs
   },
-  setDocumentsCount: (state, {inbox, count}) => { 
+  setDocumentsCount: (state, { inbox, count }) => {
     state[inbox] = count
   },
   deleteDocument: (state, id) => {
@@ -392,16 +392,13 @@ export const actions = {
         resp.result.map(({ documento }) => documento)
       )
     }
-  },  
+  },
   async getDocumentsByInboxCount({ commit, rootState }, inbox) {
     const endp = inbox == 'firmar' ? endpoints.fetchTasksSign : endpoints.fetchTasksOffice(inbox)
     const resp = await this.$auth.requestWith(rootState.authStrategy, endp)
     const [valid] = isValidResponse(resp)
     if (valid) {
-      commit(
-        'setDocumentsCount',
-        {inbox, count: resp.count}
-      )
+      commit('setDocumentsCount', { inbox, count: resp.count })
     }
   },
 }
