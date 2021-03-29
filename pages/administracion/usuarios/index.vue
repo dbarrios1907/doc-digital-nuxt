@@ -31,7 +31,7 @@
                             {{ h.text }}
                             <v-icon :class="[{ iconsearch: h.search }, { focus: actived === h.value }]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
                         </template>
-                        <template slot="body.prepend" v-if="searchname || searchrut || filtered">
+                        <template slot="body.prepend" v-if="searchname || searchrut || searchpermisos || filtered">
                             <tr class="body-prepend">
                                 <td>
                                     <v-text-field type="text" @focus="actived = 'nombres'" hide-details solo flat outlined v-model="filterValue" label="Nombre" v-if="searchname" />
@@ -39,7 +39,10 @@
                                 <td v-if="!ismobil">
                                     <v-text-field type="text" @focus="actived = 'rut'" hide-details solo flat outlined v-model="filterRut" label="Rut" v-if="searchrut" />
                                 </td>
-                                <td v-if="!ismobil"></td>
+                                <td v-if="!ismobil">
+                                    <dx-select v-model="filterPermisos" :items="rolesUser" @on-delete-item="removeItem" label="Permisos" item-text="name" item-value="id" multiple v-bind="$props" closableItems :ripple="false">
+                                    </dx-select>
+                                </td>
                                 <td v-if="!ismobil"></td>
                             </tr>
                         </template>
@@ -51,7 +54,7 @@
                             <span class="breaktext">{{ rut }}</span>
                         </template>
 
-                        <template v-slot:[`item.access`]="{ item: { roles } }">
+                        <template v-slot:[`item.roles`]="{ item: { roles } }">
                             <v-chip v-for="v in roles" :key="v+Math.random()" class="ml-2 my-1" color="primary" small>
                                 {{ getUserRole(v) }}
                             </v-chip>
@@ -78,7 +81,7 @@
                                 mdi-magnify
                             </v-icon>
                         </template>
-                        <template v-if="searchname || searchrut || filtered" slot="body.prepend">
+                        <template v-if="searchname || searchrut || searchpermisos || filtered" slot="body.prepend">
                             <tr class="body-prepend">
                                 <td>
                                     <v-text-field v-model="filterValue" type="text" hide-details solo v-if="searchname" flat outlined label="Nombre" @focus="actived = 'nombres'" />
@@ -99,7 +102,7 @@
                             <span class="breaktext">{{ rut }}</span>
                         </template>
 
-                        <template v-slot:[`item.access`]="{ item: { roles } }">
+                        <template v-slot:[`item.roles`]="{ item: { roles } }">
                             <v-chip v-for="v in roles" :key="v+Math.random()" class="ml-2 my-1" color="primary" small>
                                 {{ getUserRole(v) }}
                             </v-chip>
@@ -188,9 +191,11 @@ export default {
             actived: null,
             searchname: false,
             searchrut: false,
+            searchpermisos: false,
             filtered: false,
             filterValue: '',
             filterRut: '',
+            filterPermisos: [],
             isleft: true,
             pageUA: 1,
             pageUI: 1,
@@ -235,10 +240,10 @@ export default {
                 },
                 {
                     text: 'Permisos adicionales',
-                    value: 'access',
-                    filterable: true,
+                    value: 'roles',
                     sortable: false,
-                    filter: this.permisosFilter
+                    filter: this.permisosFilter,
+                    search: true
                 },
                 {
                     text: 'Acciones',
@@ -265,11 +270,14 @@ export default {
             if (this.activeTab === 'Activos') return activos.length
             else return inactivos.length
         },
+        rolesUser(){
+            return this.$store.getters['usuarios/getRoles']
+        },
     },
-    methods: {
+    methods: {       
         getUserRole(role) {
             let userRoles = this.$store.getters['usuarios/getRoles']
-            if (userRoles)
+            if (userRoles.length > 0)
                 return userRoles.find(r => r.id === role).name;
             else
                 return role
@@ -298,21 +306,17 @@ export default {
             event.stopPropagation()
             if (header.value == 'nombres') this.searchname = !this.searchname
             if (header.value == 'rut') this.searchrut = !this.searchrut
+            if (header.value == 'roles') this.searchpermisos = !this.searchpermisos
         },
         removeItem(item) {
-            this.permiso = this.permiso.filter(function (val) {
+            this.filterPermisos = this.filterPermisos.filter(function (val) {
                 return item !== val
             })
         },
         permisosFilter(value) {
             let flag = false
-            if (this.permiso.length == 0) return true
-
-            value.filter(function (e) {
-                flag = this.indexOf(e) > -1
-            }, this.permiso)
-
-            return flag
+            if (this.filterPermisos.length == 0) return true
+            return this.filterPermisos.every(element => value.includes(element))
         },
         async getUser(id) {
             this.selectedUser = null

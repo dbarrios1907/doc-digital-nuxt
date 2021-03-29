@@ -99,11 +99,6 @@ const routes = () => [
             name: 'Recibidos',
             meta: { title: 'Recibidos', icon: 'mdi-inbox-arrow-down' },
           },
-          {
-            path: 'por-firmar',
-            name: 'por-firmar',
-            meta: { title: 'Por firmar', icon: 'mdi-pencil' },
-          },
         ],
       },
       {
@@ -157,7 +152,8 @@ export const getters = {
   roles: state => get(state, 'auth.user.authorities', []),
   userName: state => get(state, 'auth.user.ctx.nombre', ''),
   entityName: state => get(state, 'auth.user.ctx.entidadNombre', ''),
-  userId: state => get(state, 'auth.user.ctx.id', ''),
+  userId: state => get(state, 'auth.user.ctx.key', ''),
+  userIsMultiUser: state => get(state, 'auth.user.isMultiUser', ''),
   dashboard: state => state.dashboard,
 }
 

@@ -4,7 +4,7 @@ export const state = () => ({
   selectedUser: null,
   count: 0,
   users: [],
-  roles: null,
+  roles: [],
 })
 
 export const getters = {
@@ -31,7 +31,7 @@ export const getters = {
     return state.selectedUser
   },
   getRoles(state) {
-    return state.roles
+    return state.roles.filter(rol => rol.id != 'ROLE_USUARIO')
   },
 }
 
@@ -174,6 +174,28 @@ export const actions = {
     const [valid] = isValidResponse(resp)
     if (valid) {
       commit('setUserRoles', resp.result)
+    }
+  },
+
+  async hasSubrogados({rootState}, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersSubrogados(id))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) {
+      if(resp.result.length > 0)
+      {
+        Toast.warning({
+            message: `Al inactivar el usuario se desactivarán las funciones de Subrogancia y Seguimiento`,
+        })
+      }
+    }
+  },
+  async setSubrogancia({rootState}, {id, status}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersSetSubrogancia(id, status))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) {
+        Toast.success({
+            message: `Subrogancia ${status ? 'activada' : 'inactivada'}`,
+        })
     }
   },
 }
