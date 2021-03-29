@@ -34,7 +34,7 @@ export default class ClaveUnicaScheme {
     }
 
     if (!this._redirectURI) return this.$auth.callOnError('Could not fetch authorization URI')
-    window.location = this._redirectURI
+    window.location.replace(this._redirectURI)
     // this.$auth.redirect(this._redirectURI, true)
   }
 
@@ -58,7 +58,6 @@ export default class ClaveUnicaScheme {
     const [valid] = isValidResponse(resp)
 
     if (valid) {
-      debugger
       await this.validateAndPersistToken(resp)
       return retry()
     }
@@ -235,21 +234,16 @@ export default class ClaveUnicaScheme {
     }
 
     let resp = null
-    try {
-      resp = await this.$auth.request({
-        method,
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        baseURL: process.server ? undefined : false,
-        data,
-      })
-    } catch (e) {
-      await this.$auth.handleErrorResponse(e)
-      return false
-    }
 
+    resp = await this.$auth.request({
+      method,
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      baseURL: process.server ? undefined : false,
+      data,
+    })
     await this.validateAndPersistToken(resp, data)
 
     // Redirect to home
@@ -263,6 +257,7 @@ export default class ClaveUnicaScheme {
     }
     const message = resp?.error
     this.$auth.$storage.setUniversal('route.message', message)
+
     if (isAuthErrorResponse(resp)) {
       await this.reset()
     }

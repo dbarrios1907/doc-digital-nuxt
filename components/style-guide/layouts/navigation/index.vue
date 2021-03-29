@@ -18,7 +18,7 @@
       </slot>
       <slot name="menu">
         <v-list>
-          <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+          <sidebar-item v-for="route in routes" :key="route.name" :item="route" :base-path="route.path" />
         </v-list>
       </slot>
       <template v-if="_isTablet">
@@ -45,6 +45,7 @@ import NavListItem from './components/NavListItem.vue'
 import SidebarItem from './components/SidebarItem.vue'
 import _get from 'lodash.get'
 import DxEntitySelectionItem from '~/components/style-guide/layouts/navigation/components/EntitySelectionItem'
+import { mapState } from 'vuex'
 
 export default {
   name: 'DxNavigation',
@@ -83,13 +84,14 @@ export default {
     },
   },
   mounted() {
+    console.log(this.borradores, this.indexerMap)
     this.scrollHeight = this.$refs.navbar.$el.scrollHeight + 'px'
   },
   methods: {
     onScroll(e) {
       e.preventDefault()
     },
-  },
+  }
 }
 </script>
 

@@ -1,4 +1,6 @@
 export default {
+  fetchUserDashboard: userId => ({ url: `/documentos/tareas/resumenusuario/${userId}`, method: 'GET' }),
+
   documentTypeOptions: { url: '/tipos/tramitacion/documentos', method: 'GET' },
   documentFileOptions: { url: '/tipos/tramitacion/documentos/archivo', method: 'GET' },
   roleOptions: { url: '/tipos/seguridad/roles', method: 'GET' },

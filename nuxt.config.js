@@ -37,6 +37,7 @@ export default {
     '~/plugins/scroll-lock.js',
     '~/plugins/confirm.client.js',
     '~/plugins/vee-validate.js',
+    '~/plugins/hideTray.client.js',
     '~/plugins/permissions.client.js',
     '~/plugins/vuepdf.client.js',
   ],

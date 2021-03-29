@@ -3,11 +3,11 @@
     <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
       <NavListItem
         v-if="onlyOneChild.meta"
+        v-permission="item.roles || ['ROLE_USUARIO']"
+        v-hidetray="item.hideTray"
         link
         :to="resolvePath(onlyOneChild.path)"
         :nested="nested"
-        check-permission
-        v-permission="item.roles || ['ROLE_USUARIO']"
       >
         <v-list-item-icon>
           <v-icon v-text="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" />
@@ -19,13 +19,12 @@
 
     <NavListGroup
       v-else
+      v-permission="item.roles || ['ROLE_USUARIO']"
       :ripple="false"
       active-class="light--text"
       :prepend-icon="item.meta && item.meta.icon"
       no-action
       :sub-group="nested"
-      check-permission
-      v-permission="item.roles || ['ROLE_USUARIO']"
     >
       <template v-slot:activator>
         <v-list-item-title>{{ item.meta.title }}</v-list-item-title>

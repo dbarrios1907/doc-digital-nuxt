@@ -5,6 +5,13 @@ export const isValidResponse = resp => [resp?.status === 200, Toast]
 
 export const getErrorResponse = err => [get(err, `response.data`, null), Toast]
 
+export const getLocationURL = () => process.client && window?.location?.pathname
+
+export const requestOutsideLayout = () => {
+  const match = getLocationURL().match(/^[\/(login|callback)].*/)
+  return match && match.length > 0
+}
+
 export const isAuthErrorResponse = resp => resp?.status === 401 || resp?.status === 403
 
 export const tokenExpiredError = resp => resp?.erroCode === 40301

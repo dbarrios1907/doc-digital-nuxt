@@ -1,4 +1,6 @@
 import get from 'lodash.get'
+import endpoints from '~/api/endpoints'
+import { isValidResponse } from '~/shared/utils/request'
 const routes = () => [
   {
     path: '/documentos',
@@ -23,6 +25,7 @@ const routes = () => [
       {
         path: 'bandeja-borradores',
         name: 'bandeja-borradores',
+        hideTray: 'dashboard.pendientesBorrador',
         meta: { title: 'Editar Borradores', icon: 'mdi-file-multiple' },
       },
       {
@@ -81,25 +84,8 @@ const routes = () => [
       },
       {
         path: 'documentos',
-        name: 'Documentos',
+        name: 'documentos-administracion',
         meta: { title: 'Documentos', icon: 'mdi-file-multiple' },
-        children: [
-          {
-            path: 'enviados',
-            name: 'Enviados',
-            meta: { title: 'Enviados', icon: 'mdi-send' },
-          },
-          {
-            path: 'recibidos',
-            name: 'Recibidos',
-            meta: { title: 'Recibidos', icon: 'mdi-inbox-arrow-down' },
-          },
-          {
-            path: 'por-firmar',
-            name: 'por-firmar',
-            meta: { title: 'Por firmar', icon: 'mdi-pencil' },
-          },
-        ],
       },
       {
         path: 'entidades',
@@ -138,12 +124,22 @@ export const state = () => ({
   routes: routes(),
   authStrategy: 'claveUnica',
   selectedEntity: null,
+  dashboard: {
+    pendientesBorrador: 0,
+    pendientesDevueltos: 0,
+    pendientesFirmar: 0,
+    pendientesOpEnviar: 0,
+    pendientesOpRecibir: 0,
+    pendientesVisar: 0,
+  },
 })
 
 export const getters = {
   roles: state => get(state, 'auth.user.authorities', []),
   userName: state => get(state, 'auth.user.ctx.nombre', ''),
   entityName: state => get(state, 'auth.user.ctx.entidadNombre', ''),
+  userId: state => get(state, 'auth.user.ctx.id', ''),
+  dashboard: state => state.dashboard,
 }
 
 export const mutations = {
@@ -151,7 +147,9 @@ export const mutations = {
     state.selectedEntity = entity
   },
 
-  updateUserAccess() {},
+  updateDashboard({ state }, payload) {
+    Object.apply(state.dashboard, payload)
+  },
 }
 
 export const actions = {
@@ -161,7 +159,12 @@ export const actions = {
 
   updateUserAccess({ commit, state }, userData) {},
 
-  fetcUserResume(){
-
-  }
+  async fetchUserDashboard({ commit, rootState, getters }) {
+    console.log(getters)
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchUserDashboard(getters.userId))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      commit('updateDashboard', resp?.result || {})
+    }
+  },
 }

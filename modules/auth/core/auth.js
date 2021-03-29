@@ -1,7 +1,7 @@
 import Storage from './storage'
 import { isSet, getProp } from './utilities'
 import { routeOption, isRelativeURL, isSameURL } from '~/shared/utils/router'
-import { getErrorResponse, isAuthErrorResponse } from '~/shared/utils/request'
+import { getErrorResponse, isAuthErrorResponse, requestOutsideLayout } from '~/shared/utils/request'
 import { isProdEnv } from '~/shared/utils/env'
 
 export default class Auth {
@@ -264,8 +264,9 @@ export default class Auth {
     }
 
     return Promise.resolve(this.strategy.handleErrorResponse(resp, retry)).catch(resp => {
-      if (isAuthErrorResponse(resp)) {
-        return Promise.reject(error)
+      if (isAuthErrorResponse(resp) || requestOutsideLayout()) {
+        this.redirect('unauthorized', true)
+        throw error
       }
       Toast.error({
         message: resp?.error || this.strategy.options?.genericErrorMessage,
@@ -298,7 +299,6 @@ export default class Auth {
       .request(_endpoint)
       .then(response => {
         const result = _endpoint.propertyName ? getProp(response.data, _endpoint.propertyName) : response.data
-
         if (withResponse) {
           return {
             response,
