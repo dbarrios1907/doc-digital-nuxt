@@ -15,9 +15,6 @@
         No se han encontrado coincidencias.
     </dx-alert>
     <v-row no-gutters>
-        <!-- <div :class="['col-md-12 col-sm-12', ismobil, { 'mt-8': ismobil }]">
-            <dx-filtermenu label="Filtra tu búsqueda" :items="['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4']" :class="ismobil" />
-        </div> -->
         <div :class="['col-md-12 col-sm-12', ismobil, { 'd-flex justify-end align-center': !ismobil }, { 'mt-5  text-center': ismobil }]">
             <a @click.prevent="openEntityForm" class="text-underline weight-700 font-title"> + Agregar Entidad</a>
         </div>
@@ -29,9 +26,6 @@
                 <v-icon v-if="h.search" :key="h.value" :class="[{ iconsearch: h.search }, { focus: actived === h.value }]" @click="activeSearch(header, $event)">
                     mdi-magnify
                 </v-icon>
-                <!-- <v-icon v-if="h.filterable" :key="h.value" :class="['float-right', { focus: actived === h.value }]" @click="openFilter(header, $event)">
-                    mdi-filter
-                </v-icon> -->
             </template>
             <template v-if="searchname || searchid || filtered" slot="body.prepend">
                 <tr class="body-prepend">
@@ -118,12 +112,12 @@ export default {
             breadcrums: [{
                     text: 'Administración',
                     disabled: false,
-                    href: '#',
+                    href: '/',
                 },
                 {
                     text: 'Entidades',
                     disabled: true,
-                    href: 'breadcrumbs_link_2',
+                    href: '#',
                 },
             ],
             drawer: true,
@@ -162,6 +156,7 @@ export default {
                     value: 'id',
                     sortable: true,
                     search: false,
+                    width: 75
                 },
                 {
                     text: 'Nombre',

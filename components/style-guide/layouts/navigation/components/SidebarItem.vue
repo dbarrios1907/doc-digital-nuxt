@@ -24,6 +24,7 @@
       active-class="light--text"
       :prepend-icon="item.meta && item.meta.icon"
       no-action
+      :class="[{'pl-5': item.sumbenu}]"
       :sub-group="nested"
     >
       <template v-slot:activator>

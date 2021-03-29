@@ -29,8 +29,8 @@
 
   &.table-check thead > tr {
     & > th:first-child {
-      min-width: rem-calc(45px) !important;
-      width: rem-calc(75px);
+      // min-width: rem-calc(45px);
+      // width:auto;
     }
   }
 
