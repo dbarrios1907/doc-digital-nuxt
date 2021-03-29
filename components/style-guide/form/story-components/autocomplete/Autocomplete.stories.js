@@ -72,7 +72,7 @@ const Template = (args, { argTypes }) => ({
     <div>
       <w-col>
         <v-autocomplete
-            
+
             v-model="value"
             :items="items"
             chips
@@ -85,7 +85,7 @@ const Template = (args, { argTypes }) => ({
             outlined
         ></v-autocomplete>
       </w-col>
-  
+
       <w-col>
         <v-autocomplete
             :ripple="false"
@@ -133,7 +133,7 @@ const Template = (args, { argTypes }) => ({
           </template>
         </v-autocomplete>
       </w-col>
-    
+
     </div>
   `,
 })
@@ -177,7 +177,7 @@ const Template1 = (args, { argTypes }) => ({
   template: `
     <wrapper>
       <v-autocomplete
-        :ripple="false"  
+        :ripple="false"
         solo
         flat
         multiple
@@ -187,7 +187,6 @@ const Template1 = (args, { argTypes }) => ({
         :loading="isLoading"
         :search-input.sync="search"
         chips
-        clearable
         hide-details
         hide-selected
         item-text="name"

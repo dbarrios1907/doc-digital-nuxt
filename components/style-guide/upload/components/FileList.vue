@@ -20,13 +20,22 @@
 <script>
 import UploadInputMixing from '../mixins/upload-inputs'
 import { STATUS } from '../helpers/shared-properties'
+import xhrUpload from '../helpers/ajax-uploader'
 import { idMixin } from '@/shared/mixins/id'
 import { hash } from '@/shared/utils/hash'
 import FileItem from './FileItem'
+import BvEvent from '~/shared/utils/event.class'
 
 export default {
   components: {
     FileItem,
+  },
+  inject: {
+    bUpload: {
+      default() /* istanbul ignore next */ {
+        return null
+      },
+    },
   },
   mixins: [idMixin, UploadInputMixing],
   props: {
@@ -70,6 +79,9 @@ export default {
   },
   mounted() {
     this.initialize(this.files)
+    if (!this.autoUpload && this.bUpload) {
+      this.bUpload.$on('upload', () => this.uploadThreadsHandler(this.uploadThreads))
+    }
   },
   methods: {
     genFileId(file) {
@@ -112,18 +124,89 @@ export default {
         return this.onRemove(null, rawFile)
       }
     },
+    onSuccess(res, file) {
+      //timing out to show progress bar
+      setTimeout(() => {
+        file.status = STATUS.SUCCESS
+        this.bUpload.onSuccess(res, file)
+        this.$forceUpdate()
+      }, 400)
+
+      this.uploadThreadsHandler()
+    },
+
+    onError(res, file) {
+      //timing out to show progress bar
+      setTimeout(() => {
+        file.status = STATUS.FAIL
+        this.bUpload.onError(res, file)
+        this.$forceUpdate()
+      }, 400)
+
+      this.uploadThreadsHandler()
+    },
+
+    abort(file) {
+      const { reqs } = this
+      if (file) {
+        let uid = file
+        if (file.uid) uid = file.uid
+        if (reqs[uid]) {
+          reqs[uid].abort()
+        }
+      } else {
+        Object.keys(reqs).forEach(uid => {
+          if (reqs[uid]) reqs[uid].abort()
+          delete reqs[uid]
+        })
+      }
+    },
+    post(rawFile) {
+      const { uid } = rawFile
+      const options = {
+        headers: this.bUpload.headers || {},
+        withCredentials: this.bUpload.withCredentials || false,
+        file: rawFile,
+        data: this.bUpload.data || {},
+        filename: this.bUpload.name || this.fileName,
+        action: this.bUpload.action,
+        onProgress: e => {
+          return this.onProgress(e, rawFile)
+        },
+        onSuccess: res => {
+          this.onSuccess(res, rawFile)
+          delete this.reqs[uid]
+        },
+        onError: err => {
+          this.onError(err, rawFile)
+          delete this.reqs[uid]
+        },
+      }
+      const functor = this.bUpload.uploadHandler || xhrUpload
+      const req = functor(options)
+      this.reqs[uid] = req
+      return req
+    },
+    onProgress(e, file) {
+      this.$nextTick(() => {
+        file.progress = Math.floor(e.percent)
+        this.bUpload.onProgress(e, file)
+        this.$forceUpdate()
+      })
+    },
+
     async onRemove(id) {
       // by call bvEvt.preventDefault()
-      // const tabEvt = new BvEvent('onRemove', {
-      //   cancelable: true,
-      //   vueTarget: this,
-      // })
-      //
-      // this.$emit(tabEvt.type, tabEvt)
-      //
-      // if (!tabEvt.defaultPrevented) {
-      //   this.filesLocal = this.filesLocal.filter(f => f.id !== id)
-      // }
+      const tabEvt = new BvEvent('onRemove', {
+        cancelable: true,
+        vueTarget: this,
+      })
+
+      this.$emit(tabEvt.type, tabEvt)
+
+      if (!tabEvt.defaultPrevented) {
+        this.filesLocal = this.filesLocal.filter(f => f.id !== id)
+      }
     },
   },
 }

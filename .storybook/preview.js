@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import { addDecorator } from '@storybook/vue'
 import vuetify from './plugins/vuetify'
+import veeValidate from '../plugins/vee-validate'
+import confirm from '../plugins/confirm.client'
 // import '@/plugins/vee-validate'
 import '../plugins/style-guide'
 import VTooltip from '@/plugins/tooltip.client'

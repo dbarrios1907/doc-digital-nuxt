@@ -1,17 +1,22 @@
 <template>
   <li v-if="file" tabindex="0" class="dx-list__item d-flex align-center select-text">
-    <div class="dx-item__start py-2 px-4 mr-3 rounded-pill secondary primary--text">
-      {{ file[descriptionProp].split('.').pop() }}
-    </div>
+    <dx-box class="flex-column">
+      <dx-box class="flex-shrink-0">
+        <div class="dx-item__start py-2 px-4 mr-3 rounded-pill secondary primary--text">
+          {{ file[descriptionProp].split('.').pop() }}
+        </div>
 
-    <div class="d-flex-inline flex-fill text-truncate dx-item__body" :title="file[descriptionProp]">
-      {{ file[descriptionProp] }}
-    </div>
+        <div class="d-flex-inline flex-fill text-truncate dx-item__body" :title="file[descriptionProp]">
+          {{ file[descriptionProp] }}
+        </div>
 
-    <div class="d-flex dx-item__bottom">
-      <dx-icon right color="primary" medium> mdi-download </dx-icon>
-      <dx-icon right color="primary" medium> mdi-trash-can-outline </dx-icon>
-    </div>
+        <div class="d-flex dx-item__bottom">
+          <dx-icon class="pointer" right color="primary" medium @click="onDownload"> mdi-download </dx-icon>
+          <dx-icon class="pointer" right color="primary" medium @click="onRemove"> mdi-trash-can-outline </dx-icon>
+        </div>
+      </dx-box>
+      <v-progress-linear class="d-flex flex-fill flex-wrap" value="file.progress" />
+    </dx-box>
   </li>
 </template>
 <script>
@@ -62,7 +67,28 @@ export default {
     isSuccess(status) {
       return status === STATUS.SUCCESS
     },
-    onRemove(e, id, status) {
+    onDownload() {
+      // IE doesn't allow using a blob object directly as link href
+      // instead it is necessary to use msSaveOrOpenBlob
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(this.file)
+        return
+      }
+
+      // For other browsers:
+      // Create a link pointing to the ObjectURL containing the blob.
+      const data = window.URL.createObjectURL(this.file)
+      const link = document.createElement('a')
+      link.setAttribute('href', data)
+      link.setAttribute('download', this.file.name)
+      link.click()
+      setTimeout(function () {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(data)
+      }, 100)
+    },
+    onRemove() {
+      const { id, status } = this.file
       this.$emit('onRemove', id, status)
     },
   },

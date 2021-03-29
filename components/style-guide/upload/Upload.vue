@@ -17,6 +17,7 @@
       :capture="capture || null"
       :accept="accept || null"
       :multiple="multiple"
+      :action="action"
       :uploadThreads="uploadThreads"
     />
 
@@ -38,7 +39,7 @@ export default {
   },
   provide() {
     return {
-      upload: this,
+      bUpload: this,
     }
   },
   mixins: [FormFileMixin, UploadInputMixing, idMixin],
@@ -49,6 +50,10 @@ export default {
       default: file => {
         console.log(file)
       },
+    },
+    action: {
+      type: String,
+      default: '/fileupload',
     },
     uploadThreads: {
       type: Number,
@@ -128,8 +133,9 @@ export default {
         this.stackedFiles = [files]
       }
       this.$refs.input.value = ''
-
-      console.log(files)
+    },
+    upload(e) {
+      this.$emit('upload')
     },
     addListeners() {
       // listen for new added files
