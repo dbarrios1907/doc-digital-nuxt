@@ -251,7 +251,15 @@ export default class ClaveUnicaScheme {
   }
 
   async loginWithEntity(userId) {
-    const resp = await this.$auth.requestWith(this.name, this.options.loginWithEntity(userId))
+    debugger
+    const { url, method } = this.options.loginEntity
+    const resp = await this.$auth.requestWith(this.name, {
+      url: url + userId,
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     await this.validateAndPersistToken(resp)
     this.$auth.$storage.setUniversal('pendingEntityLogin', false)
     // Redirect to home

@@ -152,6 +152,7 @@ export const state = () => ({
 export const getters = {
   roles: state => get(state, 'auth.user.authorities', []),
   userName: state => get(state, 'auth.user.ctx.nombre', ''),
+  userRun: state => get(state, 'auth.user.ctx.run]', ''),
   entityName: state => get(state, 'auth.user.ctx.entidadNombre', ''),
   userId: state => get(state, 'auth.user.id', ''),
   userIsMultiUser: state => get(state, 'auth.user.isMultiUser', ''),

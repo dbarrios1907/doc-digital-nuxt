@@ -23,23 +23,22 @@
         </v-row>
       </form>
       <v-row no-gutters>
-        <v-col cols="12">
+        <v-col cols="12" sm="12" md="8" lg="6">
           <label>Visadores y orden de visación *</label>
+          <sign-list :mock="true" username-prop="name" entity-prop="symbol" />
         </v-col>
-        <dx-box centered bordered elevation add-class="py-4">
-          <dx-button small outlined color="primary" v-bind="$props">
-            <dx-icon left chevron regular> mdi-plus-circle-outline </dx-icon>
-            <span class="underline-text">Agregar lista de visación</span>
-          </dx-button>
-        </dx-box>
       </v-row>
     </dx-step-body>
   </validation-observer>
 </template>
 <script>
 import { wizardStepMixin } from '~/shared/mixins/wizardStepMixin'
+import SignList from '~/components/doc-digital/signList'
 
 export default {
+  components: {
+    SignList,
+  },
   mixins: [wizardStepMixin],
   props: {
     visaOptions: {

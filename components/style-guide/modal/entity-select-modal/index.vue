@@ -21,6 +21,8 @@
       <Autocomplete
         v-model="selection"
         :mock="mock"
+        fetch-action="usuarios/fetchRelatedUsers"
+        :item-text="_itemText"
         class="px-5 pt-3 pb-3"
         list-label="Escriba al menos 3 caracteres para filtrar las entidades"
         label="Seleccionar entidad"
@@ -69,6 +71,11 @@ export default {
       zIndex: 200,
     },
   }),
+  computed: {
+    _itemText() {
+      return this.mock ? 'name' : 'entityName'
+    },
+  },
   methods: {
     open(mock = false) {
       this.dialog = true

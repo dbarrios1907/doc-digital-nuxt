@@ -127,7 +127,7 @@ export default class Auth {
   }
 
   loginWithEntity() {
-    if (!this.strategy.login) {
+    if (!this.strategy.loginWithEntity) {
       return Promise.resolve()
     }
 

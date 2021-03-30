@@ -59,19 +59,22 @@ export default {
       type: String,
       default: 'symbol',
     },
-    multiple: {
-      type: Boolean,
-      default: false,
-    },
     mock: Boolean,
     fetchUrl: {
       type: String,
       default: 'https://api.coingecko.com/api/v3/coins/list',
     },
-    fetchAction: String,
+    fetchAction: {
+      type: String,
+      default: 'usuarios/fetchUserEntities',
+    },
     fetchParams: {
       type: Object,
       default: () => ({}),
+    },
+    searchProp: {
+      type: String,
+      default: 'nombre',
     },
   },
   data: () => ({
@@ -104,13 +107,15 @@ export default {
       this.$emit('onRemoveItem', item, this.itemValue)
     },
     fetchData(val) {
-      const promise = this.mock ? fetch(this.fetchUrl) : this.$store.dispatch(this.fetchAction, this.fetchParams)
-      return promise
-        .then(res => res.clone().json())
-        .then(res => {
-          this.items = res
-        })
-        .finally(() => (this.isLoading = false))
+      const promise = this.mock
+        ? fetch(this.fetchUrl)
+            .then(res => res.clone().json())
+            .then(res => (this.items = res))
+        : this.$store.dispatch(this.fetchAction, { ...this.fetchParams, [this.searchProp]: val }).then(res => {
+            console.log(res)
+            this.items = res || []
+          })
+      return promise.finally(() => (this.isLoading = false))
     },
   },
 }

@@ -1,6 +1,7 @@
 import { isValidResponse } from '~/shared/utils/request'
 import endpoints from '~/api/endpoints'
 import startCase from '~/shared/utils/startcase'
+import Settings from '~/shared/settings'
 
 export const state = () => ({
   selectedEntity: null,
@@ -23,7 +24,7 @@ export const getters = {
   },
   getComunas: state => provid => {
     return state.comunas.filter(com => com.provincia.id === provid)
-  },  
+  },
   getEntitiesLenth(state) {
     return state.count
   },
@@ -61,7 +62,11 @@ export const actions = {
   },
 
   async fetchUserEntities({ rootState }, params = {}) {
-    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesFetchAll(params))
+    const defaults = {
+      pageSize: Settings.pageSize,
+    }
+    const data = { ...defaults, ...params }
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesFetchAll(data))
     const [valid] = isValidResponse(resp)
     if (valid) {
       return resp.result

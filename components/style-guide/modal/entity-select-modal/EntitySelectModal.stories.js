@@ -10,7 +10,7 @@ const Template = (args, { argTypes }) => ({
   }),
   methods: {
     async openModal() {
-      const value = await this.$refs.$entitySelectModal.open()
+      const value = await this.$refs.$entitySelectModal.open(true)
       console.log(value)
     },
   },
