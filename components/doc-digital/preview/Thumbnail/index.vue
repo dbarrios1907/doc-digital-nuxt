@@ -1,7 +1,8 @@
 <template>
 <div>
 <client-only>
-  <div :style="{maxWidth: maxWidth}" :class="['relative', {'mx-auto': center}]">
+  <div :class="['pdf--preview', 'relative', {'mx-auto': center}, {'ishtml': ishtml},{'iszoom': iszoom}]">
+    <iframe :scrolling="!iszoom ? 'no': ''" overflow="hidden" v-if="ishtml" :src="src" />
     <vue-pdf
       ref="pdf"
       :src="src"
@@ -10,8 +11,9 @@
       @num-pages="numPages = $event"
       @link-clicked="page = $event"
       @page-loaded="currentPage = $event"
+      v-else
     ></vue-pdf>
-    <v-row class="mt-4">
+    <v-row class="mt-4" v-if="!ishtml">
       <v-col cols="2" class="text-left">
         <dx-icon class="darken1--text" right regular v-if="page == 1">mdi-chevron-left </dx-icon>
         <dx-icon right regular @click="back" v-else> mdi-chevron-left </dx-icon>
@@ -32,9 +34,10 @@
 <script>
 export default {
   props:{
-    maxWidth: {type: String, default: '247px'},
     center: {type: Boolean},
     src: {type: String, default: ''},
+    ishtml: {type: Boolean, default: false},
+    iszoom: {type: Boolean, default: false}
   },
   data: () => ({
     loadedRatio: 0,
@@ -62,5 +65,32 @@ export default {
   position: absolute;
   right:rem-calc(10px);
   bottom: rem-calc(75px);
+}
+.pdf--preview {
+  max-width: 247px;
+  height: 443px;
+}
+
+.ishtml {
+  &.pdf--preview {
+    height: 339px;
+  }
+
+  .zoom--icon {
+    bottom: rem-calc(10px);
+  }
+}
+
+.iszoom {
+  max-width: 940px;
+  height: 100vh;
+}
+ 
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: white;
 }
 </style>

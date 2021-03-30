@@ -1,5 +1,5 @@
 <template>
-  <v-pagination v-bind="$attrs" class="dx-pagination" v-on="$listeners" />
+  <v-pagination v-bind="$attrs" class="dx-pagination" v-on="$listeners"/>
 </template>
 
 <script>

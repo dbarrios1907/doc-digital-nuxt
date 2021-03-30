@@ -272,11 +272,14 @@ export const actions = {
     return valid ? true : false
   },
 
-  async downloadDocumentMain({ commit, rootState }, id, fileId) {
-    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentDownloadMain(id, fileId))
+  async downloadDocumentMain({ commit, rootState }, id) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentDownloadMain(id))
     const [valid] = isValidResponse(resp)
     // @todo force download or preview
     return valid ? true : false
+    //var blob = new Blob([resp], { type: 'text/html' })
+    //var blobUrl = URL.createObjectURL(blob)
+    //return blobUrl || ''
   },
 
   async uploadDocumentMain({ commit, rootState }, id, file) {
@@ -368,6 +371,7 @@ export const actions = {
       Toast.success({
         message: `Documento ${text} satisfactoriamente - Fecha: ${resp.timestamp} hrs`,
       })
+      this.getDocs()
       return true
     }
   },

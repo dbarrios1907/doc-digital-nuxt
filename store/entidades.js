@@ -1,5 +1,6 @@
 import { isValidResponse } from '~/shared/utils/request'
 import endpoints from '~/api/endpoints'
+import startCase from '~/shared/utils/startcase'
 
 export const state = () => ({
   selectedEntity: null,
@@ -22,6 +23,9 @@ export const getters = {
   },
   getComunas: state => provid => {
     return state.comunas.filter(com => com.provincia.id === provid)
+  },  
+  getEntitiesLenth(state) {
+    return state.count
   },
 }
 
@@ -30,8 +34,9 @@ export const mutations = {
     const entIndex = state.entities.findIndex(obj => obj.id == id)
     state.entities[entIndex] = newEntity
   },
-  setEntitiesList: (state, entitiesList) => {
+  setEntitiesList: (state, [entitiesList, count]) => {
     state.entities = entitiesList
+    state.count = count
   },
   setRegionList: (state, regionList) => {
     state.regions = regionList.map(({ id, nombre }) => {
@@ -51,7 +56,7 @@ export const actions = {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesFetchAll(params))
     const [valid] = isValidResponse(resp)
     if (valid) {
-      commit('setEntitiesList', resp.result)
+      commit('setEntitiesList', [resp.result, resp.total_count])
     }
   },
 

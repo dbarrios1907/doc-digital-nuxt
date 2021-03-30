@@ -73,4 +73,6 @@ export default {
   usersUpdate: data => ({ url: `/usuarios/`, method: 'PUT', data }),
   usersDelete: id => ({ url: `/usuarios/${id}`, method: 'DELETE' }),
   usersStatus: (id, status) => ({ url: `/usuarios/${id}/activar/${status}`, method: 'POST' }),
+  usersSubrogados: id => ({ url: `/usuarios/${id}/subrogados`, method: 'GET' }),
+  usersSetSubrogancia: (id, status) => ({ url: `/usuarios/${id}/subrogante/activar/${status}`, method: 'POST' }),
 }

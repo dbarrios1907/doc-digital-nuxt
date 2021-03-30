@@ -9,6 +9,7 @@
       :docid="this.$route.params.id"
       :tramites="tramites"
       :src="src"
+      :ishtml="gettype() === 4"
     >
       <template v-slot:actionsPrimary>
         <dx-button color="darken3" class="white--text" href="/api/public/documentos/3/archivo?tempHash=olPcMhNYfL" download>
@@ -33,6 +34,7 @@ export default {
     this.fetch_('steps', 'documents/fetchDocumentTasks')
     this.fetch_('rejectedocs', 'documents/rejectDocumentTramite')
     this.fetch_('tramites', 'documents/fetchDocumentTramite')
+    this.down()
   },
   data: () => ({
     timeline: [],
@@ -52,6 +54,18 @@ export default {
         this[item] = resp
         this.requesting = false
       }
+    },
+    async down() {
+      let resp = await this.$store.dispatch('documents/downloadDocumentMain', this.gettype())
+      //if (resp) {
+      //  this.src = resp
+      //}
+    },
+    gettype() {
+      if (this.tableitem.archivoPrincipal) {
+        return this.tableitem.archivoPrincipal.id
+      }
+      return 1
     },
   },
 }

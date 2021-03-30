@@ -13,7 +13,11 @@
       @onmouseover="onMouseOver"
       @mouseleave="onMouseLeave"
       @entitySelectionFocus="onEntitySelectionFocus"
-    />
+    >
+      <template v-slot:switch>
+          <admin-user-switch />
+      </template>
+    </dx-navigation>
 
     <dx-header :drawer="drawer" :clipped-left="clipped" fixed app elevation="0" :height="92" @onToggleMenu="toggleDrawer" />
     <v-main app>
