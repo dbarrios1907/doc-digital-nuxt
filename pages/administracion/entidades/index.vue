@@ -8,7 +8,7 @@
     </dx-bodytitle>
     <div v-if="!isListEmpty" class="mt-10 weight-400">
         <span class="mr-2">Mostrando hasta</span>
-        <v-select v-model="itemsPerPage" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="10" value="10" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
+        <v-select v-model="itemsPerPage" @change="setItemsPerPage" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="10" value="10" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
         <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>{{ countEntities + (countEntities > 1 ? ' entidades' : ' entidad') }}</b></span>
     </div>
     <dx-alert v-else class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0 px-md-0 px-4" absolute bottom right type="error" outlined :show-left-icon="false" :show-right-icon="false">
@@ -20,18 +20,18 @@
         </div>
     </v-row>
     <v-row class="mt-6" no-gutters>
-        <DataTable :headers="computedHeaders" :items="getEntities" :page.sync="page" :items-per-page="itemsPerPage" :class="['table-check', 'table-sm', ismobil]" :mobile-breakpoint="0" dense item-key="name" hide-default-footer calculate-widths @page-count="pageCount = $event">
+        <DataTable @update:options="sortEvent" :headers="computedHeaders" :items="getEntities" :page.sync="page" :items-per-page="getItemsPerPage" :class="['table-check', 'table-sm', ismobil]" :mobile-breakpoint="0" dense item-key="name" hide-default-footer calculate-widths @page-count="pageCount">
             <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
                 {{ h.text }}
                 <v-icon v-if="h.search" :key="h.value" :class="[{ iconsearch: h.search }, { focus: actived === h.value }]" @click="activeSearch(header, $event)">
                     mdi-magnify
                 </v-icon>
             </template>
-            <template v-if="searchname || searchid || filtered" slot="body.prepend">
+            <template v-if="searchname || filtered" slot="body.prepend">
                 <tr class="body-prepend">
                     <td v-if="!ismobil" />
                     <td>
-                        <v-text-field v-model="filterValue" type="text" hide-details solo v-if="searchname" flat outlined label="Nombre" @focus="actived = 'nombre'" />
+                        <v-text-field v-model="filterValue" type="text" hide-details solo v-if="searchname" flat outlined label="Nombre" @focus="actived = 'nombre'" @input="searchByName" />
                     </td>
                     <td v-if="!ismobil" />
                     <td />
@@ -97,7 +97,13 @@ import {
 export default {
     name: 'Entidades',
     fetch() {
-        this.$store.dispatch('entidades/getEntities')
+        const params = {
+            orderBy: 'id',
+            orderType: 'ASC',
+            pageNumber: 0,
+            pageSize: 10
+        }
+        this.$store.dispatch('entidades/getEntities', params)
     },
     data() {
         return {
@@ -108,7 +114,7 @@ export default {
                     tab: 'Inactivos',
                 },
             ],
-            options: ['5', '10', '20', '30'],
+            options: [10, 50, 100, 1000],
             breadcrums: [{
                     text: 'Administración',
                     disabled: false,
@@ -127,12 +133,11 @@ export default {
             caseSensitive: false,
             actived: null,
             searchname: false,
-            searchid: false,
+            searchentdep: false,
             filtered: false,
             filterValue: '',
-            filterid: '',
+            filterEntidadDep: '',
             page: 1,
-            pageCount: 3,
             itemsPerPage: 10,
             entity_dialog: false,
             entity_detail_dialog: false,
@@ -141,6 +146,8 @@ export default {
             details: [],
             selected_entidad: null,
             valuess: [],
+            orderBy: String,
+            orderType: String
         }
     },
     computed: {
@@ -171,7 +178,6 @@ export default {
                     value: 'entidaddep',
                     filterable: true,
                     sortable: false,
-                    filter: this.entdepFilter,
                 },
                 {
                     text: 'Acciones',
@@ -184,12 +190,17 @@ export default {
             return this.$store.getters['entidades/getEntities']
         },
         countEntities() {
-            const entities = this.$store.getters['entidades/getEntities']
-            return entities.length
+            return this.$store.getters['entidades/getEntitiesLenth']
         },
         isListEmpty() {
-            const entities = this.$store.getters['entidades/getEntities']
-            return entities.length === 0
+            return this.countEntities === 0
+        },
+        pageCount() {
+            const pagescount = this.$store.getters['entidades/getEntitiesLenth']
+            return parseInt(pagescount / this.itemsPerPage)
+        },
+        getItemsPerPage() {
+            return parseInt(this.itemsPerPage)
         },
     },
     methods: {
@@ -201,22 +212,13 @@ export default {
             event.stopPropagation()
             this.filtered = !this.filtered
         },
-        nameFilter(value) {
-            if (!this.filterValue) {
-                return true
-            }
-            return value.toLowerCase().includes(this.filterValue.toLowerCase())
-        },
-        idFilter(value) {
-            if (!this.filterid) {
-                return true
-            }
-            return value.includes(this.filterid)
+        async nameFilter(value) {
+            return true
         },
         activeSearch(header, value) {
             event.stopPropagation()
             if (header.value == 'nombre') this.searchname = !this.searchname
-            if (header.value == 'id') this.searchid = !this.searchid
+            if (header.value == 'entidadDependencia') this.searchentdep = !this.searchentdep
         },
         onSumbitEntity(failed) {
             this.entity_dialog = false
@@ -272,11 +274,42 @@ export default {
             this.entity_id = id
             this.dialog_confirmacion = true
         },
+        searchByName(value) {
+            this.fetchEntities()
+        },
         async deleteEntity() {
             const id = this.entity_id
             await this.$store.dispatch('entidades/deleteEntity', id)
             this.entity_id = ''
             this.dialog_confirmacion = false
+        },
+        async fetchEntities() {
+            const params = {
+                nombre: this.filterValue,
+                orderBy: this.orderBy,
+                orderType: this.orderType,
+                pageNumber: this.page - 1,
+                pageSize: this.itemsPerPage
+            }
+            await this.$store.dispatch('entidades/getEntities', params)
+        },
+        sortEvent(value) {
+            const [field, obj] = value.sortBy
+            const [order, obj_] = value.sortDesc
+            this.orderBy = field
+            this.orderType = order ? 'DESC' : 'ASC'
+            this.fetchEntities()
+        },
+        setItemsPerPage(value) {
+            this.fetchEntities()
+        },
+    },
+    watch: {
+        page: {
+            handler: function (newValue, before) {
+                this.fetchEntities()
+            },
+            deep: true,
         },
     },
 }
