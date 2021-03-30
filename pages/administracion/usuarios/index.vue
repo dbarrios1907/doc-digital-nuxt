@@ -277,10 +277,18 @@ export default {
     methods: {       
         getUserRole(role) {
             let userRoles = this.$store.getters['usuarios/getRoles']
-            if (userRoles.length > 0)
-                return userRoles.find(r => r.id === role).name;
+            if (userRoles.length > 0){
+                const role_ = userRoles.find(r => r.id === role);
+                return role_ ? role_.name : role
+            }
             else
                 return role
+        },
+        userRoles(roles){
+            if(roles.length > 0)
+                return roles.filter(rol => rol != "ROLE_USUARIO").map((rol) => {return this.getUserRole(rol)}).join(', ')
+            else
+                ""
         },
         actionColor() {
             const isDark = this.$vuetify.theme.dark
@@ -366,7 +374,7 @@ export default {
                     },
                     {
                         label: 'Permisos adicionales:',
-                        value: u.roles.map((rol) => {return this.getUserRole(rol)}).join(', ')
+                        value: this.userRoles(u.roles)
                     },
                     {
                         label: 'Subrogante:',
