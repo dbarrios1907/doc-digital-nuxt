@@ -4,6 +4,7 @@
     <dx-navigation
       v-model="drawer"
       :username="userName"
+      :multi-user="userIsMultiUser"
       :entity-name="entityName"
       :right="_rightDrawer"
       :routes="routes"
@@ -15,7 +16,7 @@
       @entitySelectionFocus="onEntitySelectionFocus"
     >
       <template v-slot:switch>
-          <admin-user-switch />
+        <admin-user-switch />
       </template>
     </dx-navigation>
 
@@ -64,7 +65,7 @@ export default {
 
   computed: {
     ...mapState(['routes']),
-    ...mapGetters(['userName', 'entityName']),
+    ...mapGetters(['userName', 'entityName', 'userIsMultiUser']),
     sessionExpired() {
       return this.$store.state.session.expired
     },
@@ -80,7 +81,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch('fetchUserDashboard')
-    if (this.$auth.$storage.getUniversal('pendingEntityLogin')) {
+    if (this.$auth.$storage.getUniversal('pendingEntityLogin') && this.userIsMultiUser) {
       this.onEntitySelectionFocus()
     }
   },
@@ -111,7 +112,6 @@ export default {
     async onEntitySelectionFocus() {
       // show entity selection
       const selectedEntity = await this.$refs.$entitySelectModal.open()
-      console.log(selectedEntity)
       if (selectedEntity.userId) {
         debugger
         this.$auth.loginWithEntity(selectedEntity.userId)
