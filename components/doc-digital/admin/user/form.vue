@@ -19,7 +19,7 @@
                     <v-col cols="auto" style="max-height: 74px; min-width: 140px; max-width: 140px" :class="['weight-400 line-height-30 font-16 py-1', { 'mt-5': !ismobil }]">Estado</v-col>
                     <v-col style="max-height: 72px; line-height: 74px;">
                         Activo
-                        <v-switch class="d-inline-block mt-0 pt-0 success-switch ml-4" style="width: 40px" v-model="isBloqueado" inset :ripple="false" dense>
+                        <v-switch class="d-inline-block mt-0 pt-0 success-switch ml-4" style="width: 40px" v-model="isBloqueado" inset :ripple="false" dense @change="checkSubrogantes">
                         </v-switch>
                     </v-col>
                 </v-row>
@@ -95,7 +95,7 @@
                     </v-col>
                     <div class="col-md-5 col-sm-12 px-0 mr-10" v-if="ismobil" style="min-height: 30px"> </div>
                     <v-col>
-                        <dx-select v-model="roles" :items="rolesSelect" @get-selected="get_roles" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :ripple="false">
+                        <dx-select v-model="roles" :items="rolesSelect" @on-delete-item="removeRol" label="Seleccione roles" item-text="name" item-value="id" multiple v-bind="$props" closableItems :ripple="false">
                         </dx-select>
                     </v-col>
                 </v-row>
@@ -176,7 +176,9 @@ export default {
         },
     },
     async fetch() {
-        this.$store.dispatch('entidades/getEntities')
+        await this.$store.dispatch('entidades/getEntities')
+        await this.$store.dispatch('usuarios/getRoles')
+        await this.$store.dispatch('usuarios/getUsers', {})
     },
     mounted() {
         const activos = this.$store.getters['usuarios/getActivos']
@@ -378,6 +380,11 @@ export default {
                 return item !== val
             })
         },
+        removeRol(item) {
+            this.roles = this.roles.filter(function (val) {
+                return item !== val
+            })
+        },
         isValidSubrogante() {
             const getUserById = this.$store.getters['usuarios/getUserById']
             const subrogante = getUserById(this.subrogante)
@@ -385,11 +392,13 @@ export default {
                 Toast.error({
                     message: `El usuario ${subrogante.nombres} se encuentra con subrogancia activada. No podrá Activar subrogancia hasta nombrar un nuevo usuario subrogante`,
                 })
-                // this.isSubroganteActivado = false
                 return false
             }
             return true
-        }
+        },
+        async checkSubrogantes(value){
+             await this.$store.dispatch('usuarios/hasSubrogados', this.userid) 
+        },
     },
     watch: {
         isSubroganteActivado: {

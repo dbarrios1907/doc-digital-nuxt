@@ -17,7 +17,6 @@
     :required="required"
     :disabled="disabled"
     v-on="$listeners"
-    @change="emitSelected"
   >
     <template v-if="multiple" v-slot:selection="{ item }">
       <dx-badge type="tertiary" label outlined class="mx-1 my-1">
@@ -87,13 +86,11 @@ export default {
     }
   },
   methods: {
-    emitSelected() {
-      this.$emit('get-selected', this.value)
-    },
+    // emitSelected() {
+    //   this.$emit('get-selected', this.value)
+    // },
     removeItem(item) {
-      this.value = this.value.filter(function (val) {
-        return item.id !== val
-      })
+       this.$emit('on-delete-item', item.id)
     },
   },
 }
