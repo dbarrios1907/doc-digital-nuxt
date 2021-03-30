@@ -10,7 +10,7 @@
           <v-list-item-title>{{ username }}</v-list-item-title>
         </NavListItem>
 
-        <DxEntitySelectionItem :entity-name="entityName" @onFocus="$emit('entitySelectionFocus')" />
+        <DxEntitySelectionItem v-if="multiUser" :entity-name="entityName" @onFocus="$emit('entitySelectionFocus')" />
 
         <div class="py-4" style="display: flex; justify-content: center">
           <create-doc-menu />
@@ -60,6 +60,7 @@ export default {
   props: {
     username: String,
     entityName: String,
+    multiUser: Boolean,
     routes: {
       type: Array,
       default: () => [],

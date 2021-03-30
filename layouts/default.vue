@@ -113,8 +113,9 @@ export default {
       // show entity selection
       const selectedEntity = await this.$refs.$entitySelectModal.open()
       if (selectedEntity.userId) {
-        debugger
         this.$auth.loginWithEntity(selectedEntity.userId)
+      } else {
+        this.$auth.$storage.setUniversal('pendingEntityLogin', false)
       }
     },
   },
