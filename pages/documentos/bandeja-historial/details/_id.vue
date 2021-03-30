@@ -8,7 +8,7 @@
       :rejectedocs="rejectedocs"
       :docid="this.$route.params.id"
       :tramites="tramites"
-      :src="getsrc()"
+      :src="src"
       :ishtml="gettype() == 4"
     >
       <template v-slot:actionsPrimary>
@@ -40,12 +40,9 @@ export default {
     tramites: {},
     dialog1: false,
     dialog2: false,
-    src: '',
+    src: '/api/public/documentos/1/archivo?tempHash=olPcMhNYfL',
   }),
   methods: {
-    getsrc() {
-      return this.gettype() === 4 ? this.src : '/api/public/documentos/1/archivo?tempHash=olPcMhNYfL'
-    },
     async fetch_(item, url) {
       let resp = await this.$store.dispatch(url, this.$route.params.id)
       if (resp) {
@@ -55,9 +52,9 @@ export default {
     },
     async down() {
       let resp = await this.$store.dispatch('documents/downloadDocumentMain', this.gettype())
-      if (resp) {
-        this.src = resp
-      }
+      //if (resp) {
+      //  this.src = resp
+      //}
     },
     gettype() {
       if (this.tableitem.archivoPrincipal) {
