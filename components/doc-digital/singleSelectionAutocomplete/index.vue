@@ -4,12 +4,10 @@
     :ripple="false"
     solo
     flat
-    :multiple="multiple"
     outlined
     :items="items"
     :loading="isLoading"
     :search-input.sync="search"
-    chips
     hide-details
     hide-selected
     :item-text="itemText"
@@ -23,17 +21,6 @@
           {{ listLabel }}
         </v-list-item-title>
       </v-list-item>
-    </template>
-    <template v-slot:selection="{ attr, on, item }">
-      <dx-badge type="tertiary" label outlined class="mx-1 my-1">
-        <v-avatar v-if="item.avatar" left>
-          <v-img :src="item.avatar" />
-        </v-avatar>
-        <div :title="item[itemText]" class="darken3--text font-16 line-height-22 weight-400 overflow-ellipsis" style="max-width: calc(100% - 30px)">
-          {{ item[itemText] }}
-        </div>
-        <dx-icon v-if="closableItems" left class="darken3--text ml-2 mr-0" @click.prevent="removeItem(item)"> mdi-close </dx-icon>
-      </dx-badge>
     </template>
     <template v-slot:item="{ item }">
       <v-list-item-avatar color="primary" class="headline font-weight-light white--text">
@@ -49,7 +36,7 @@
 
 <script>
 export default {
-  name: 'UserAutocomplete',
+  name: 'SingleSelectionAutocomplete',
   inheritAttrs: false,
   props: {
     label: {
@@ -76,9 +63,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    mock: Boolean,
     fetchUrl: {
       type: String,
       default: 'https://api.coingecko.com/api/v3/coins/list',
+    },
+    fetchAction: String,
+    fetchParams: {
+      type: Object,
+      default: () => ({}),
     },
   },
   data: () => ({
@@ -100,17 +93,24 @@ export default {
       this.isLoading = true
 
       // Lazily load input items
-      fetch(this.fetchUrl)
+      this.fetchData(val)
+    },
+  },
+  mounted() {
+    this.fetchData()
+  },
+  methods: {
+    removeItem(item) {
+      this.$emit('onRemoveItem', item, this.itemValue)
+    },
+    fetchData(val) {
+      const promise = this.mock ? fetch(this.fetchUrl) : this.$store.dispatch(this.fetchAction, this.fetchParams)
+      return promise
         .then(res => res.clone().json())
         .then(res => {
           this.items = res
         })
         .finally(() => (this.isLoading = false))
-    },
-  },
-  methods: {
-    removeItem(item) {
-      this.$emit('onRemoveItem', item, this.itemValue)
     },
   },
 }

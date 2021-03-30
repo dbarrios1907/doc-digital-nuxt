@@ -346,7 +346,6 @@ export const actions = {
   async rejectDocumentTramite({ commit, rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchTasksRejected)
     const [valid] = isValidResponse(resp)
-    console.log(resp)
     if (valid) {
       return resp.result
     }

@@ -1,22 +1,22 @@
 <template>
-  <li v-if="file" tabindex="0" class="dx-list__item d-flex align-center select-text">
-    <dx-box class="flex-column">
-      <dx-box class="flex-shrink-0">
-        <div class="dx-item__start py-2 px-4 mr-3 rounded-pill secondary primary--text">
-          {{ file[descriptionProp].split('.').pop() }}
-        </div>
+  <li v-if="file" tabindex="0" class="dx-list__item">
+    <div class="dx-item__top d-flex align-center select-text flex-shrink-0">
+      <div class="dx-item__start py-2 px-4 mr-3 rounded-pill secondary primary--text" :class="_textColor">
+        {{ file[descriptionProp].split('.').pop() }}
+      </div>
 
-        <div class="d-flex-inline flex-fill text-truncate dx-item__body" :title="file[descriptionProp]">
-          {{ file[descriptionProp] }}
-        </div>
+      <div class="dx-item__body text-truncate" :title="file[descriptionProp]" style="min-width: 0; width: 100%">
+        {{ file[descriptionProp] }}
+      </div>
 
-        <div class="d-flex dx-item__bottom">
-          <dx-icon class="pointer" right color="primary" medium @click="onDownload"> mdi-download </dx-icon>
-          <dx-icon class="pointer" right color="primary" medium @click="onRemove"> mdi-trash-can-outline </dx-icon>
-        </div>
-      </dx-box>
-      <v-progress-linear class="d-flex flex-fill flex-wrap" value="file.progress" />
-    </dx-box>
+      <div class="d-flex dx-item__end">
+        <dx-icon class="pointer" right :color="_iconColor" medium @click="onDownload"> mdi-download </dx-icon>
+        <dx-icon class="pointer" right :color="_iconColor" medium @click="onRemove"> mdi-trash-can-outline </dx-icon>
+      </div>
+    </div>
+    <div class="dx-item__bottom py-1">
+      <v-progress-linear :color="_iconColor" :value="progress" />
+    </div>
   </li>
 </template>
 <script>
@@ -48,6 +48,10 @@ export default {
       type: String,
       default: STATUS.PENDING,
     },
+    progress: {
+      type: Number,
+      default: 0,
+    },
   },
   data: () => ({
     thumbnail: null,
@@ -55,6 +59,12 @@ export default {
   computed: {
     showProgress() {
       return this.status === STATUS.PENDING || this.status === STATUS.IN_PROGRESS
+    },
+    _textColor() {
+      return this.status === 'fail' ? 'error--text' : 'primary--text'
+    },
+    _iconColor() {
+      return this.status === 'fail' ? 'error' : 'primary'
     },
   },
   mounted() {
@@ -95,15 +105,24 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .dx-list__item {
-  flex-shrink: 0;
+  list-style: none;
+  //flex-shrink: 0;
   .dx-item__body {
     color: black;
   }
+  float: none;
 
   .dx-item__start {
     line-height: normal;
+    float: left;
+  }
+  .dx-item__end {
+    float: right;
+  }
+  .dx-item__bottom {
+    clear: both;
   }
 }
 </style>

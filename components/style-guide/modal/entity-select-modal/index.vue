@@ -5,26 +5,40 @@
     overlay-color="#001C41"
     :max-width="options.width"
     :style="{ zIndex: options.zIndex }"
-    v-bind="$attrs"
     persistent
-    v-on="$listeners"
     @keydown.esc="cancel"
   >
     <v-card>
       <v-card-title>
         <h5 class="font-title weight-700 darken3--text">{{ title }}</h5>
+        <v-spacer />
+        <v-btn color="darken3" icon @click.native="cancel">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-divider class="darken1" />
+      <p class="px-5 pt-3">{{ message }}</p>
+      <Autocomplete
+        v-model="selection"
+        :mock="mock"
+        class="px-5 pt-3 pb-3"
+        list-label="Escriba al menos 3 caracteres para filtrar las entidades"
+        label="Seleccionar entidad"
+      />
 
-      <v-card-text v-show="!!message" class="font-roboto weight-400 line-height-30 font-20 darken3--text"> {{ message }} </v-card-text>
-
-      <v-card-actions>
-        <v-spacer />
-        <dx-button color="primary" outlined v-bind="$props" class="text-none" @click.native="cancel">
-          <span class="text-underline"> {{ options.cancelText }} </span>
+      <v-card-actions class="px-5 justify-center">
+        <dx-button color="primary" outlined @click.native="cancel">
+          <dx-icon left regular> mdi-close</dx-icon>
+          <span class="text-underline">
+            <span class="underline-text">{{ options.cancelText }}</span>
+          </span>
         </dx-button>
-        <dx-button color="primary" outlined v-bind="$props" class="text-none" @click.native="agree">
-          <span class="text-underline"> {{ options.agreeText }} </span>
+
+        <dx-button color="primary" @click.native="agree">
+          <dx-icon left regular> mdi-check</dx-icon>
+          <span class="text-underline">
+            <span class="underline-text">{{ options.agreeText }}</span>
+          </span>
         </dx-button>
       </v-card-actions>
     </v-card>
@@ -32,36 +46,43 @@
 </template>
 
 <script>
+import Autocomplete from '~/components/doc-digital/singleSelectionAutocomplete'
+
 export default {
   name: 'DxEntitySelectModal',
-  inheritAttrs: false,
+  components: {
+    Autocomplete,
+  },
   data: () => ({
     dialog: false,
     resolve: null,
     reject: null,
-    message: null,
-    title: null,
+    selection: null,
+    mock: false,
+    title: 'Seleccione la entidad',
+    message:
+      'Selecione una de sus entidades para completar su autenticación. Puede cancelar este proceso si desea permanecer en su entidad por defecto',
     options: {
-      agreeText: 'Aceptar',
+      agreeText: 'Ir a la entidad',
       cancelText: 'Cancelar',
-      width: 320,
+      width: 400,
       zIndex: 200,
     },
   }),
   methods: {
-    open(title, message, options) {
+    open(mock = false) {
       this.dialog = true
-      this.title = title
-      this.message = message
-      this.options = Object.assign(this.options, options)
+      this.mock = mock
       return new Promise((resolve, reject) => {
         this.resolve = resolve
         this.reject = reject
       })
     },
     agree() {
-      this.resolve(true)
-      this.dialog = false
+      if (this.selection) {
+        this.resolve(this.selection)
+        this.dialog = false
+      }
     },
     cancel() {
       this.resolve(false)

@@ -8,6 +8,7 @@ export const getErrorResponse = err => [get(err, `response.data`, null), Toast]
 export const getLocationURL = () => process.client && window?.location?.pathname
 
 export const requestOutsideLayout = () => {
+  if (!process.client) return false
   const match = getLocationURL().match(/^[\/(login|callback)].*/)
   return match && match.length > 0
 }

@@ -5,9 +5,6 @@ export default {
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  data: () => ({
-    dialog: false,
-  }),
   methods: {
     async openModal() {
       const value = await this.$refs.$confirm.open('Some title', 'Some text that is very large a descriptive for the users ?')

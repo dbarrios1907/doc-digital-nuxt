@@ -31,6 +31,7 @@ const routes = () => [
       {
         path: 'bandeja-devueltos',
         name: 'bandeja-devueltos',
+        hideTray: 'dashboard.pendientesDevueltos',
         meta: { title: 'Revisar Devueltos', icon: 'mdi-clipboard-arrow-down' },
       },
       {
@@ -157,7 +158,7 @@ export const getters = {
   roles: state => get(state, 'auth.user.authorities', []),
   userName: state => get(state, 'auth.user.ctx.nombre', ''),
   entityName: state => get(state, 'auth.user.ctx.entidadNombre', ''),
-  userId: state => get(state, 'auth.user.ctx.id', ''),
+  userId: state => get(state, 'auth.user.id', ''),
   dashboard: state => state.dashboard,
 }
 
@@ -166,8 +167,11 @@ export const mutations = {
     state.selectedEntity = entity
   },
 
-  updateDashboard({ state }, payload) {
-    Object.apply(state.dashboard, payload)
+  updateDashboard(state, payload) {
+    state.dashboard = {
+      ...state.dashboard,
+      ...payload,
+    }
   },
 }
 
@@ -179,7 +183,6 @@ export const actions = {
   updateUserAccess({ commit, state }, userData) {},
 
   async fetchUserDashboard({ commit, rootState, getters }) {
-    console.log(getters)
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchUserDashboard(getters.userId))
     const [valid] = isValidResponse(resp)
     if (valid) {

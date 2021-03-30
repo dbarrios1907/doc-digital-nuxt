@@ -10,7 +10,7 @@
           <v-list-item-title>{{ username }}</v-list-item-title>
         </NavListItem>
 
-        <DxEntitySelectionItem :entity-name="entityName" />
+        <DxEntitySelectionItem :entity-name="entityName" @onFocus="$emit('entitySelectionFocus')" />
 
         <div class="py-4" style="display: flex; justify-content: center">
           <create-doc-menu />
@@ -91,7 +91,7 @@ export default {
     onScroll(e) {
       e.preventDefault()
     },
-  }
+  },
 }
 </script>
 

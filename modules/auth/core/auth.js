@@ -126,6 +126,14 @@ export default class Auth {
     })
   }
 
+  loginWithEntity() {
+    if (!this.strategy.login) {
+      return Promise.resolve()
+    }
+
+    return this.wrapLogin(this.strategy.loginWithEntity(...arguments))
+  }
+
   fetchUser() {
     if (!this.strategy.fetchUser) {
       return Promise.resolve()

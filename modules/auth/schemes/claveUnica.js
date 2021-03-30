@@ -89,6 +89,7 @@ export default class ClaveUnicaScheme {
       })
     }
     await this.reset()
+    this.$auth.$storage.setUniversal('route.message', null)
     idle ? this.$auth.ctx.store.dispatch('session/expireSession') : this.$auth.ctx.store.dispatch('session/closeSession')
   }
 
@@ -233,9 +234,7 @@ export default class ClaveUnicaScheme {
       state: parsedQuery.state,
     }
 
-    let resp = null
-
-    resp = await this.$auth.request({
+    const resp = await this.$auth.request({
       method,
       url,
       headers: {
@@ -245,10 +244,18 @@ export default class ClaveUnicaScheme {
       data,
     })
     await this.validateAndPersistToken(resp, data)
-
+    this.$auth.$storage.setUniversal('pendingEntityLogin', true)
     // Redirect to home
     this.$auth.redirect('home', true)
     return true // True means a redirect happened
+  }
+
+  async loginWithEntity(userId) {
+    const resp = await this.$auth.requestWith(this.name, this.options.loginWithEntity(userId))
+    await this.validateAndPersistToken(resp)
+    this.$auth.$storage.setUniversal('pendingEntityLogin', false)
+    // Redirect to home
+    this.$auth.redirect('home', true)
   }
 
   async handleErrorResponse(resp, retry) {

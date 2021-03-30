@@ -90,7 +90,15 @@
             <div class="mb-5 font-small line-height-24 weight-400 darken2--text mt-2">
               Puede cargar múltiples archivos con un máximo de 50 MB y en formato libre.
             </div>
-            <Upload multiple v-bind="$props" class="d-inline-block mr-2" />
+            <Upload
+              multiple
+              v-bind="$props"
+              class="d-inline-block mr-2"
+              :manual-upload="true"
+              :limit="50000"
+              :on-error="onError"
+              action="/fileupload"
+            />
             o
             <LazyModalLoadUrl class="ml-2 d-inline-block" />
           </v-col>
@@ -102,6 +110,7 @@
 <script>
 import DxTextField from '~/components/style-guide/form/text-field'
 import { wizardStepMixin } from '~/shared/mixins/wizardStepMixin'
+import Message from '~/components/style-guide/alerts/ToastService'
 
 const defaultValues = {
   files: [],
@@ -150,6 +159,14 @@ export default {
     },
     blurfield(key, value) {
       this[key] = this[value]?.length > 0
+    },
+    upload() {
+      this.$refs.uploader.upload()
+    },
+    onError(res, file) {
+      Message.error({
+        message: 'Error Uploading',
+      })
     },
   },
 }

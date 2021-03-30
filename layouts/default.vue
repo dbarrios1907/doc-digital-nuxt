@@ -12,6 +12,7 @@
       app
       @onmouseover="onMouseOver"
       @mouseleave="onMouseLeave"
+      @entitySelectionFocus="onEntitySelectionFocus"
     />
 
     <dx-header :drawer="drawer" :clipped-left="clipped" fixed app elevation="0" :height="92" @onToggleMenu="toggleDrawer" />
@@ -24,6 +25,7 @@
     <dx-footer :absolute="!fixed" class="mt-8 px-0 py-0" app />
 
     <dx-session-closed-modal v-model="sessionClosed" />
+
     <keep-alive>
       <template v-if="sessionIdleExpire">
         <dx-session-expired-modal v-model="sessionExpired" @onClose="onExpirationModalClose" />
@@ -31,15 +33,19 @@
       </template>
     </keep-alive>
     <dx-confirm-modal ref="$confirm" />
+    <dx-entity-select-modal ref="$entitySelectModal" />
   </v-app>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import settings from '~/shared/settings'
+import DxEntitySelectModal from '~/components/style-guide/modal/entity-select-modal'
 
 export default {
   name: 'RootLayout',
+  components: { DxEntitySelectModal },
+  middleware: 'authenticated',
   data: vm => {
     return {
       clipped: true, // toggles nav full height
@@ -68,6 +74,12 @@ export default {
       return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md
     },
   },
+  mounted() {
+    this.$store.dispatch('fetchUserDashboard')
+    if (this.$auth.$storage.getUniversal('pendingEntityLogin')) {
+      this.onEntitySelectionFocus()
+    }
+  },
   methods: {
     ...mapActions({
       closeSession: 'session/closeSession',
@@ -90,6 +102,15 @@ export default {
 
     onExpirationModalClose() {
       this.$auth.redirect('unauthorized', true)
+    },
+
+    async onEntitySelectionFocus() {
+      // show entity selection
+      const selectedEntity = await this.$refs.$entitySelectModal.open()
+      console.log(selectedEntity)
+      if (selectedEntity) {
+        this.$auth.loginWithEntity(selectedEntity)
+      }
     },
   },
 }

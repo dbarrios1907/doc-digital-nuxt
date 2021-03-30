@@ -67,13 +67,12 @@ export const actions = {
   async insertEntity({ rootState }, params) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesCreate(params))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       Toast.success({
-          message: 'Entidad insertada',
+        message: 'Entidad insertada',
       })
       return resp.result
-    }
-    else{
+    } else {
       Toast.error({
         message: 'Ha ocurrido un error insertando la entidad',
       })
@@ -83,10 +82,9 @@ export const actions = {
   async getEntity({ rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesFetch(id))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       return resp.result
-    }
-    else{
+    } else {
       Toast.error({
         message: 'Ha ocurrido un error',
       })
@@ -97,21 +95,20 @@ export const actions = {
   async updateEntity({ rootState }, params) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesUpdate(params))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       Toast.success({
-          message: 'Entidad actualizada',
+        message: 'Entidad actualizada',
       })
       return resp.result
-    }
-    else{
+    } else {
       Toast.error({
         message: 'Ha ocurrido un error actualizando la entidad',
       })
       return false
-    }    
+    }
   },
 
-  async getRegions({ commit, rootState}) {
+  async getRegions({ commit, rootState }) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.regions)
     const [valid] = isValidResponse(resp)
     if (valid) {
@@ -143,16 +140,15 @@ export const actions = {
   async deleteEntity({ commit, rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.entitiesDelete(id))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       Toast.success({
         message: 'Entidad eliminada',
       })
       commit('deleteEntity', id)
-    }
-    else{
+    } else {
       Toast.error({
         message: 'Ha ocurrido un error eliminando la entidad',
       })
-    }  
+    }
   },
 }

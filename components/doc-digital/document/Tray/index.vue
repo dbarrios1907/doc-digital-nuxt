@@ -164,10 +164,10 @@
         :updated-start="picker3"
         :updated-end="picker4"
         :document-options="doctype"
+        :iscancel="iscancel"
         @onCancel="dialogCancel"
         @onFilter="dialogFilter"
         @onClose="dialog = false"
-        :iscancel="iscancel"
       />
     </slot>
   </div>
@@ -188,7 +188,7 @@ export default {
     documentos: {
       type: Array,
       default: () => [],
-    },    
+    },
     showselect: {
       type: Boolean,
       default: true,
