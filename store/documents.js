@@ -63,7 +63,6 @@ export const state = () => ({
   ...documentCreationState(),
   recibir: 0,
   enviar: 0,
-  firmar: 0,
 })
 
 export const getters = {
@@ -84,6 +83,11 @@ export const mutations = {
   },
   setDocumentsCount: (state, { inbox, count }) => {
     state[inbox] = count
+  },
+  
+  setDocumentsInbox: (state, [ inbox, documents, count ]) => {
+    state[inbox] = count
+    state.documents = documents
   },
   deleteDocument: (state, id) => {
     const documents = state.documents.filter(function (doc) {
@@ -133,7 +137,6 @@ export const actions = {
     })
     const [valid] = isValidResponse(resp)
     if (valid) {
-      console.log(resp.result)
     }
   },
   async getDocument({ commit, rootState }, id) {
@@ -349,7 +352,6 @@ export const actions = {
   async rejectDocumentTramite({ commit, rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchTasksRejected)
     const [valid] = isValidResponse(resp)
-    console.log(resp)
     if (valid) {
       return resp.result
     }
@@ -386,23 +388,22 @@ export const actions = {
       return true
     }
   },
-  async getDocumentsByInbox({ commit, rootState }, inbox) {
-    const endp = inbox == 'firmar' ? endpoints.fetchTasksSign : endpoints.fetchTasksOffice(inbox)
-    const resp = await this.$auth.requestWith(rootState.authStrategy, endp)
+  async getDocumentsByInbox({ commit, rootState }, [inbox, params]) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchTasksOffice(inbox, params))
     const [valid] = isValidResponse(resp)
     if (valid) {
       commit(
-        'setDocuments',
-        resp.result.map(({ documento }) => documento)
+        'setDocumentsInbox',
+        [ inbox, resp.result.map(({ documento }) => documento), resp.total_count ]
+        
       )
     }
   },
-  async getDocumentsByInboxCount({ commit, rootState }, inbox) {
-    const endp = inbox == 'firmar' ? endpoints.fetchTasksSign : endpoints.fetchTasksOffice(inbox)
-    const resp = await this.$auth.requestWith(rootState.authStrategy, endp)
+  async getDocumentsByInboxCount({ commit, rootState }, [inbox, params]) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchTasksOffice(inbox, params))
     const [valid] = isValidResponse(resp)
     if (valid) {
-      commit('setDocumentsCount', { inbox, count: resp.count })
+      commit('setDocumentsCount', { inbox, count: resp.total_count })
     }
   },
 }

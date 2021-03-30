@@ -1,10 +1,10 @@
 <template>
 <v-row no-gutters class="switch_subrrogancia pl-4 pr-2" >
     <v-col>
-        <div class="weight-400 font-16 subrogancia-label">Activar subrogancia</div>
+        <div class="weight-400 font-16 subrogancia-label">{{title}}</div>
     </v-col>
     <v-col class="align-right">
-        <v-switch class="d-inline-block mt-0 pt-0 success-switch" @change="switcht_input" style="width: 40px" :value="userIsMultiUser" v-model="isSubroganteActivado" inset :ripple="false" dense />
+        <v-switch class="d-inline-block mt-0 pt-0 success-switch" @change="switcht_input" style="width: 40px"  v-model="subrogancia" inset :ripple="false" dense />
     </v-col>
 </v-row>
 </template>
@@ -14,16 +14,20 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
     data() {
         return {
-            isSubroganteActivado: false
+            subrogancia: false
         }
     }, 
     methods:{
         async switcht_input(){
-            await this.$store.dispatch('usuarios/setSubrogancia', {id: this.userId, status: this.isSubroganteActivado})
+            await this.$store.dispatch('usuarios/setSubrogancia', {id: this.userId, status: this.subrogancia})
         }
     },
     computed:{
-        ...mapGetters(['userId', 'userIsMultiUser']),
+        ...mapGetters(['userId', 'isSubroganteActivado']),
+        title(){
+            this.subrogancia = this.isSubroganteActivado
+            return 'Activar subrogancia'
+        }
     }
 }
 </script>

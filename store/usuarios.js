@@ -8,31 +8,31 @@ export const state = () => ({
 })
 
 export const getters = {
-  getActivos(state) {
-    return state.users.filter(function (user) {
-      return !user.isBloqueado
-    })
-  },
-  getInctivos(state) {
-    return state.users.filter(function (user) {
-      return user.isBloqueado
-    })
-  },
+
+  getUsers: state =>  { return state.users },
+
   getUserById: state => id => {
     const userIndex = state.users.findIndex(obj => obj.id == id)
     return state.users[userIndex]
   },
+
   getByEntity: state => entityid => {
     return state.users.filter(user => {
       return user.entidad ? user.entidad.id === entityid : false
     })
   },
+
   getSelectedUser(state) {
     return state.selectedUser
   },
+
   getRoles(state) {
     return state.roles.filter(rol => rol.id != 'ROLE_USUARIO')
-  },
+  }, 
+
+  getUsersCount: state => { 
+    return state.count 
+  }
 }
 
 export const mutations = {
@@ -40,7 +40,7 @@ export const mutations = {
     const userIndex = state.users.findIndex(obj => obj.id == id)
     state.users[userIndex] = newuser
   },
-  setUserList: (state, listUsers, count) => {
+  setUserList: (state, [listUsers, count]) => {
     let users = []
     for (let i = 0; i < listUsers.length; i++) {
       let user = listUsers[i]
@@ -86,7 +86,7 @@ export const actions = {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetchAll(params))
     const [valid] = isValidResponse(resp)
     if (valid) {
-      commit('setUserList', resp.result, resp.count)
+      commit('setUserList', [resp.result, resp.total_count])
     }
   },
 
@@ -127,12 +127,13 @@ export const actions = {
       Toast.success({
         message: 'Usuario eliminado',
       })
-      commit('deleteUser', id)
+      return true
     }
     else{
       Toast.error({
         message: 'Ha ocurrido un error eliminando el usuario',
       })
+      return false
     }  
   },
 
@@ -160,12 +161,13 @@ export const actions = {
       Toast.success({
         message: status ? 'Usuario activado' : 'Usuario inactivado',
       })
-      commit('setUserStatus', { id, status })
+      return true
     }
     else{
       Toast.error({
         message: 'Ha ocurrido un error ' + status ? 'activando' : 'inactivando' + ' el usuario',
       })
+      return false
     }  
   },
 

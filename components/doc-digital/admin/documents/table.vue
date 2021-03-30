@@ -13,10 +13,10 @@
                 </dx-bodytitle>
             </v-col>
             <v-col cols="12" class="bg-grey1 px-md-9 pt-1 mb-10">
-                <div class="my-9 weight-400" v-if="computedDocuments.length">
+                <div class="my-9 weight-400" v-if="countDocuments > 0">
                     <span class="mr-2">Mostrando hasta</span>
-                    <dx-select v-model="itemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
-                    <span class="ml-md-3">resultados de un total de <b>{{ computedDocuments.length }} documentos {{documentType}}</b>.</span>
+                    <dx-select v-model="itemsPerPage" @change="setItemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
+                    <span class="ml-md-3">resultados de un total de <b>{{ countDocuments }} documentos {{documentType}}</b>.</span>
                 </div>
                 <dx-alert v-else class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0 px-4 py-2 text-center" absolute bottom right type="error" outlined :show-left-icon="false" :show-right-icon="false">
                     No se han encontrado coincidencias.
@@ -87,9 +87,9 @@
                             <dx-icon right regular class="text-right float-right"> mdi-filter </dx-icon>
                         </dx-button>
                     </div>
-                     <div class="col-md-9 text-underline float-right">
+                    <div class="col-md-9 text-underline float-right">
                         <div :class="['download-excel', {'movil-container': ismobil}]">
-                            <download-excel :class="[{'text-center': ismobil}, {'text-right': !ismobil}]" :data="documentos" type="csv" name="Listado de documentos.csv" :fields="fields">
+                            <download-excel :class="[{'text-center': ismobil}, {'text-right': !ismobil}]" :data="computedDocuments" type="csv" name="Listado de documentos.csv" :fields="fields">
                                 <CsvExport class="text-left float-left" />
                                 <div class="text-underline float-right">Descargar listado</div>
                             </download-excel>
@@ -97,7 +97,7 @@
                     </div>
                 </v-row>
                 <dx-tabs v-if="documentType==='recibidos'" :items="computedTabs" tabtype="primary" class="users-tab mt-7" @getActiveTab="get_tab" />
-                <DataTable color="primary" :headers="computedHeaders" :items="computedDocuments" :page.sync="page" :items-per-page="itemsPerPage" :class="['bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]" :mobile-breakpoint="0" hide-default-footer item-key="materia" :show-select="showselect" @page-count="pageCount = $event">
+                <DataTable color="primary" :headers="computedHeaders" :items="computedDocuments" @update:options="sortEvent" :page.sync="page" :items-per-page="itemsPerPage" :class="['bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]" :mobile-breakpoint="0" hide-default-footer item-key="materia" :show-select="showselect">
                     <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
                         <NuxtLink class="breaktext" :to="inboxurl + id">{{ materia }}</NuxtLink>
                     </template>
@@ -118,8 +118,8 @@
 
                     <template v-slot:[`item.actions`]="{ item: { id } }">
                         <div :class="[{'text-center': ismobil}]">
-                             <v-icon dense @click="openDetails(id)"> mdi-eye </v-icon>
-                             <v-icon dense class="ml-4" @click="deleteDocument(id)">mdi-delete-outline </v-icon>
+                            <v-icon dense @click="openDetails(id)"> mdi-eye </v-icon>
+                            <v-icon dense class="ml-4" @click="deleteDocument(id)">mdi-delete-outline </v-icon>
                         </div>
                     </template>
 
@@ -153,10 +153,6 @@ export default {
             type: String,
             default: '',
         },
-        documentos: {
-            type: Array,
-            default: () => [],
-        },
         showselect: {
             type: Boolean,
             default: true,
@@ -184,25 +180,20 @@ export default {
         search: '',
         isleft: true,
         page: 1,
-        pageCount: 0,
         itemsPerPage: 10,
         filtered: false,
         fields: {
             "Tema": "materia",
             "Tipo": "tipoDocumentoOficial.descripcion",
             "Folio": "folio",
-            "Creación" : "createAt",
-            "Actualización" : "updateAt"
-            // "Telephone 2": {
-            //     field: "phone.landline",
-            //     callback: (value) => {
-            //     return `Landline Phone - ${value}`;
-            //     },
-            // },
-            },
-        activeTab: 'Recibidos'
+            "Creación": "createAt",
+            "Actualización": "updateAt"
+        },
+        activeTab: 'Recibidos',
+        orderBy: 'materia',
+        orderType: 'DESC'
     }),
-    computed: {       
+    computed: {
         emptyfilter() {
             return this.picker1 || this.picker2 || this.picker3 || this.picker1 || this.tema || this.tipo || this.tema || this.folio
         },
@@ -252,38 +243,60 @@ export default {
                 },
             ]
         },
-        computedTabs(){
-            return  [
-                {
-                tab: 'Recibidos',
-                number: this.documentos.filter(doc => doc.isCompletada).length
+        computedTabs() {
+            return [{
+                    tab: 'Recibidos',
+                    number: 0
                 },
                 {
-                tab: 'Pendientes',
-                number: this.documentos.filter(doc => !doc.isCompletada).length
+                    tab: 'Pendientes',
+                    number: 0
                 },
             ]
         },
-        computedDocuments(){
-            if(this.documentType === 'recibidos'){
-                const documentos = this.documentos
-                if(this.activeTab ===  'Pendientes'){
-                    return documentos.filter(doc => !doc.isCompletada)
-                }
-                if(this.activeTab ===  'Recibidos'){
-                    return documentos.filter(doc => doc.isCompletada)
-                }
-            }
-            else
-                return this.documentos
+        countDocuments() {
+            const docCounts = this.$store.getters['documents/getDocumentsCount']
+            const inbox = this.documentType == 'enviados' ? 'enviar' : 'recibir'
+            return docCounts(inbox)
+        },
+        pageCount() {
+            return this.countDocuments ? Math.ceil(this.countDocuments / this.itemsPerPage) : 0
+        },
+        computedDocuments() {
+            return this.$store.getters['documents/getDocs']
         },
     },
     methods: {
-        get_tab(tab){
+        get_tab(tab) {
             this.page = 1
-            this.pageCount = 0
             this.itemsPerPage = 10
             this.activeTab = tab
+            this.orderBy_= "materia"
+            this.orderType = "DESC"
+            this.fetchDocuments()
+        },
+        setItemsPerPage(value) {
+            this.fetchDocuments()
+        },
+        sortEvent(value) {
+            const [field, obj] = value.sortBy
+            const [order, obj_] = value.sortDesc
+            this.orderBy = field
+            this.orderType = order ? 'DESC' : 'ASC'
+            this.fetchDocuments()
+        },
+        async fetchDocuments() {
+            const params = {
+                orderBy: this.orderBy_ ? this.orderBy_ : "materia",
+                orderType: this.orderType,
+                pageNumber: this.page - 1,
+                pageSize: this.itemsPerPage, 
+            }
+            if (this.documentType == 'recibidos') {
+                params['isCompletada'] = this.activeTab == "Recibidos"
+            }
+            const inbox = this.documentType == 'enviados' ? 'enviar' : 'recibir'
+            await this.$store.dispatch('documents/getDocumentsByInbox', [inbox, params])
         },
         formatdate(date) {
             return moment(date).format('DD-MM-YYYY hh:mm')
@@ -361,30 +374,41 @@ export default {
         actualizacionFilter(value) {
             return this.between(this.picker3, this.picker4, value)
         },
-        async deleteDocument(id){
+        async deleteDocument(id) {
             const resp = await this.$confirmInstance().open('Confirmación', '¿Realmente desea eliminar este documento?')
-           if(resp){
-               this.$store.dispatch('documents/deleteDocument', id)
-           }
+            if (resp) {
+                this.$store.dispatch('documents/deleteDocument', id)
+            }
         },
-        openDetails(id){
-            this.$router.replace('/administracion/documentos/details/'+id)
+        openDetails(id) {
+            this.$router.replace('/administracion/documentos/details/' + id)
+        },
+    },
+    watch: {
+        page: {
+            handler: function (newValue, before) {
+                this.fetchDocuments()
+            },
+            deep: true,
         },
     },
 }
 </script>
 
 <style lang="scss" scoped>
-.v-data-table.ismobile table > tbody >tr {
-            height: 37px !important;
-        }
+.v-data-table.ismobile table>tbody>tr {
+    height: 37px !important;
+}
+
 .mobile-container .dx-pagination {
-            margin: 0px auto !important;
-        }
+    margin: 0px auto !important;
+}
+
 .mobile-container {
     table>tbody>tr>td {
         padding: 6px 10px !important;
     }
+
     table>tbody>tr {
         height: 37px !important;
     }
@@ -398,21 +422,25 @@ export default {
         margin: 0px auto !important;
     }
 }
+
 @include theme(v-application) using ($material) {
-    .download-excel{
+    .download-excel {
         width: 158px;
         height: 48px;
         padding: 9px 0px;
-        color:#0F69C4;
+        color: #0F69C4;
         cursor: pointer;
     }
-    .download-excel:not(.movil-container){
-        float : right;
+
+    .download-excel:not(.movil-container) {
+        float: right;
     }
-    .download-excel.movil-container{
-        margin:0px auto
+
+    .download-excel.movil-container {
+        margin: 0px auto
     }
 }
+
 @include theme(v-select) using ($material) {
     width: rem-calc(104px) !important;
     height: rem-calc(48px) !important;
@@ -484,7 +512,8 @@ export default {
         }
     }
 }
-.dx-admindocuments a{
+
+.dx-admindocuments a {
     text-decoration: none !important;
 }
 </style>
