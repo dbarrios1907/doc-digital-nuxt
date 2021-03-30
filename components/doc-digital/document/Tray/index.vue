@@ -17,7 +17,7 @@
             <span class="mr-2">Mostrando hasta</span>
             <dx-select v-model="itemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
             <span class="ml-md-3"
-              >resultados de un total de <b>{{ documentos.length }} documentos pendientes</b>.</span
+              >resultados de un total de <b>{{ testing.length }} documentos pendientes</b>.</span
             >
           </div>
 
@@ -109,7 +109,7 @@
           <DataTable
             color="primary"
             :headers="computedHeaders"
-            :items="documentos"
+            :items="testing"
             :page.sync="page"
             :items-per-page="itemsPerPage"
             :class="['table-check', 'bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
@@ -117,6 +117,8 @@
             hide-default-footer
             item-key="materia"
             :show-select="showselect"
+            :search="search"
+            :custom-filter="filterCustom"
             @page-count="pageCount = $event"
           >
             <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
@@ -164,9 +166,9 @@
         :updated-start="picker3"
         :updated-end="picker4"
         :document-options="doctype"
-        @onCancel="dialogCancel"
-        @onFilter="dialogFilter"
         @onClose="dialog = false"
+        @onCancel="dialog = false"
+        @onFilter="dialogFilter"
         :iscancel="iscancel"
       />
     </slot>
@@ -188,7 +190,7 @@ export default {
     documentos: {
       type: Array,
       default: () => [],
-    },    
+    },
     showselect: {
       type: Boolean,
       default: true,
@@ -221,6 +223,13 @@ export default {
     filtered: false,
   }),
   computed: {
+    testing() {
+      var existingIds = {}
+      return this.documentos.filter(function (item) {
+        if (existingIds[item.id]) return false
+        return (existingIds[item.id] = true)
+      })
+    },
     emptyfilter() {
       return this.picker1 || this.picker2 || this.picker3 || this.picker1 || this.tema || this.tipo || this.tema || this.folio
     },
@@ -248,6 +257,9 @@ export default {
     },
   },
   methods: {
+    filterCustom(value, search, item) {
+      return item.materia.toLowerCase().includes(search.toLowerCase())
+    },
     formatdate(date) {
       return moment(date).format('DD-MM-YYYY hh:mm')
     },
@@ -255,9 +267,9 @@ export default {
       this[key] = data
     },
     dialogCancel() {
-      this.iscancel = true
       this.filtered = false
       this.dialog = false
+      this.iscancel = true
     },
     dialogFilter(filters) {
       const { tema, tipo, folio, createdStart, createdEnd, updatedStart, updatedEnd } = filters
@@ -273,22 +285,14 @@ export default {
       this.dialog = false
       this.filtered = true
     },
-    cancelar() {
-      this.picker1 = ''
-      this.picker2 = ''
-      this.picker3 = ''
-      this.picker4 = ''
-      this.tema = ''
-      this.tipo = ''
-      this.folio = ''
-      this.filtered = false
-    },
     temaFilter(value) {
       if (!this.tema || !this.filtered) {
         return true
       }
+
       return value.toLowerCase().includes(this.tema.toLowerCase())
     },
+
     tipoFilter(value) {
       if (!this.tipo || !this.filtered) {
         return true
@@ -302,11 +306,11 @@ export default {
       return value.includes(this.folio)
     },
     between(from, to, current) {
-      if (!from || !from || !this.filtered) {
+      if (!from || !to || !current || !this.filtered) {
         return true
       }
       const from_ = new Date(from)
-      const to_ = new Date(to)
+      const to_ = new Date(to).setDate(new Date(to).getDate() + 1)
       const current_ = new Date(current)
       return current_ >= from_ && current_ <= to_
     },

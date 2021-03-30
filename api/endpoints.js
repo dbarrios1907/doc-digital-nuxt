@@ -46,7 +46,7 @@ export default {
   documentDownload: (docId, fileId) => ({ url: `/documentos/${docId}/anexos/archivo/${fileId}`, method: 'GET' }),
 
   documentTrazaDownload: docId => ({ url: `/api/documentos/${docId}/archivo/comprobante`, method: 'GET' }),
-  documentDownloadMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'POST' }),
+  documentDownloadMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'GET' }),
   documentUploadMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'POST' }),
   documentDeleteMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'DELETE' }),
 
