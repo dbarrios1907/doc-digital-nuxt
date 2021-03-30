@@ -10,6 +10,7 @@
           :status="file.status"
           :remove-enabled="removeEnabled"
           :description-prop="descriptionProp"
+          :progress="file.progress"
           @onRemove="onRemove"
         />
       </slot>

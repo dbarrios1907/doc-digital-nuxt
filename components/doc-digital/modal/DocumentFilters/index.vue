@@ -47,7 +47,7 @@
               <v-col>
                 <div class="d-inline-block">Desde:</div>
                 <div class="d-inline-block px-0 datepicker col-12 col-md-4 px-md-3">
-                  <dx-date-picker v-model="d_createdStart" no-title color="primary" cleared />
+                  <dx-date-picker ref="picker1" v-model="d_createdStart" no-title color="primary" cleared />
                 </div>
               </v-col>
               <v-col>
@@ -97,15 +97,6 @@ import { closeableMixin } from '~/shared/mixins/closeableMixin'
 export default {
   name: 'ModalDocumentFilters',
   mixins: [responsiveMixin, closeableMixin],
-  inheritAttrs: false,
-  watch: {
-    iscancel: {
-      handler: function (after, before) {
-        this.cancel()
-      },
-      deep: true,
-    },
-  },
   props: {
     tema: String,
     tipo: String,
@@ -116,6 +107,15 @@ export default {
     updatedEnd: String,
     documentOptions: { type: Array, default: [] },
     iscancel: Boolean,
+
+    //watch
+    ctema: Boolean,
+    ctipo: Boolean,
+    cfolio: Boolean,
+    ccreatedStart: Boolean,
+    ccreatedEnd: Boolean,
+    cupdatedStart: Boolean,
+    cupdatedEnd: Boolean,
   },
   data() {
     return {
@@ -130,6 +130,9 @@ export default {
     }
   },
   methods: {
+    clean(item) {
+      this[item] = ''
+    },
     cancel() {
       this.$emit('onCancel')
       this.$refs.form.reset()
@@ -145,6 +148,60 @@ export default {
         updatedStart: d_updatedStart,
         updatedEnd: d_updatedEnd,
       })
+    },
+  },
+  watch: {
+    ctema: {
+      handler: function (after, before) {
+        this.clean('d_tema')
+      },
+      deep: true,
+    },
+    ctipo: {
+      handler: function (after, before) {
+        this.clean('d_tipo')
+      },
+      deep: true,
+    },
+    cfolio: {
+      handler: function (after, before) {
+        this.clean('d_folio')
+      },
+      deep: true,
+    },
+    ccreatedStart: {
+      handler: function (after, before) {
+        this.clean('d_createdStart')
+        this.$refs.form.inputs[3].reset()
+      },
+      deep: true,
+    },
+    ccreatedEnd: {
+      handler: function (after, before) {
+        this.clean('d_createdEnd')
+        this.$refs.form.inputs[4].reset()
+      },
+      deep: true,
+    },
+    cupdatedStart: {
+      handler: function (after, before) {
+        this.clean('d_updatedStart')
+        this.$refs.form.inputs[5].reset()
+      },
+      deep: true,
+    },
+    cupdatedEnd: {
+      handler: function (after, before) {
+        this.clean('d_updatedEnd')
+        this.$refs.form.inputs[6].reset()
+      },
+      deep: true,
+    },
+    iscancel: {
+      handler: function (after, before) {
+        this.$refs.form.reset()
+      },
+      deep: true,
     },
   },
 }

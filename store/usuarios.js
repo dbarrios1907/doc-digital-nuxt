@@ -1,10 +1,12 @@
 import { isValidResponse } from '~/shared/utils/request'
 import endpoints from '~/api/endpoints'
+
 export const state = () => ({
   selectedUser: null,
   count: 0,
   users: [],
   roles: [],
+  relatedUsers: [],
 })
 
 export const getters = {
@@ -43,13 +45,15 @@ export const mutations = {
   setUserList: (state, [listUsers, count]) => {
     let users = []
     for (let i = 0; i < listUsers.length; i++) {
-      let user = listUsers[i]
-      user.rut = listUsers[i].run + '-' + listUsers[i].dv,
-      user.nombres = listUsers[i].nombres + ' ' + listUsers[i].apellidos,
-      user.roles=  listUsers[i].roles ? listUsers[i].roles.filter(rol => {
+      const user = listUsers[i]
+      ;(user.rut = listUsers[i].run + '-' + listUsers[i].dv),
+        (user.nombres = listUsers[i].nombres + ' ' + listUsers[i].apellidos),
+        (user.roles = listUsers[i].roles
+          ? listUsers[i].roles.filter(rol => {
             return rol != 'ROLE_USUARIO'
-          }) : [],
-      users.push(user)
+          })
+          : []),
+        users.push(user)
     }
     state.users = users
     state.count = count
@@ -58,7 +62,7 @@ export const mutations = {
     state.selectedUser = user
   },
   deleteUser: (state, id) => {
-    const newUsers = state.users.filter(function (user) {
+    const newUsers = state.users.filter(function(user) {
       return user.id != id
     })
     state.users = newUsers
@@ -69,7 +73,8 @@ export const mutations = {
       const objIndex = newUsers.findIndex(obj => obj.id == id)
       newUsers[objIndex].isBloqueado = status
       state.users = newUsers
-    } catch (err) {}
+    } catch (err) {
+    }
   },
   setUserRoles: (state, roles) => {
     state.roles = roles.map(({ valor, descripcion }) => {
@@ -78,6 +83,9 @@ export const mutations = {
         name: descripcion,
       }
     })
+  },
+  setEntityUsers: (state, payload) => {
+    state.relatedUsers = payload || []
   },
 }
 
@@ -90,14 +98,34 @@ export const actions = {
     }
   },
 
+  async fetchRelatedUsers({ commit, state, rootState, rootGetters }, params = {}) {
+    if (state.relatedUsers.length > 0) return state.relatedUsers
+
+    const data = {
+      run: rootGetters.userRun,
+      ...params,
+    }
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetchAll(data))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      const resData = resp.result.map(v => ({
+        userId: v.id,
+        entityName: v?.entidad?.nombre,
+        entityId: v?.entidad?.id,
+      }))
+      commit('setEntityUsers', resData)
+      return resData
+    }
+    return []
+  },
+
   async getUser({ commit, rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetch(id))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       commit('setSelecterUser', resp.result)
       return resp.result
-    }
-    else{
+    } else {
       Toast.error({
         message: 'Ha ocurrido un error',
       })
@@ -108,12 +136,11 @@ export const actions = {
   async insertUser({ rootState }, user) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersCreate(user))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       Toast.success({
-          message: 'Usuario insertado',
+        message: 'Usuario insertado',
       })
-    }
-    else{
+    } else {
       Toast.error({
         message: 'Ha ocurrido un error insertando el usuario',
       })
@@ -123,7 +150,7 @@ export const actions = {
   async deleteUser({ commit, rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersDelete(id))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       Toast.success({
         message: 'Usuario eliminado',
       })
@@ -140,24 +167,23 @@ export const actions = {
   async updateUser({ rootState }, user) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersUpdate(user))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       Toast.success({
-          message: 'Usuario actualizado',
+        message: 'Usuario actualizado',
       })
       return resp.result
-    }
-    else{
+    } else {
       Toast.error({
         message: 'Ha ocurrido un error actualizando el usuario',
       })
       return false
-    }    
+    }
   },
 
   async setUserStatus({ commit, rootState }, { id, status }) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersStatus(id, status))
     const [valid, Toast] = isValidResponse(resp)
-    if (valid) { 
+    if (valid) {
       Toast.success({
         message: status ? 'Usuario activado' : 'Usuario inactivado',
       })
@@ -171,7 +197,7 @@ export const actions = {
     }  
   },
 
-  async getRoles({commit, rootState}) {
+  async getRoles({ commit, rootState }) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.roleOptions)
     const [valid] = isValidResponse(resp)
     if (valid) {
@@ -179,25 +205,24 @@ export const actions = {
     }
   },
 
-  async hasSubrogados({rootState}, id) {
+  async hasSubrogados({ rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersSubrogados(id))
     const [valid, Toast] = isValidResponse(resp)
     if (valid) {
-      if(resp.result.length > 0)
-      {
+      if (resp.result.length > 0) {
         Toast.warning({
-            message: `Al inactivar el usuario se desactivarán las funciones de Subrogancia y Seguimiento`,
+          message: `Al inactivar el usuario se desactivarán las funciones de Subrogancia y Seguimiento`,
         })
       }
     }
   },
-  async setSubrogancia({rootState}, {id, status}) {
+  async setSubrogancia({ rootState }, { id, status }) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersSetSubrogancia(id, status))
     const [valid, Toast] = isValidResponse(resp)
     if (valid) {
-        Toast.success({
-            message: `Subrogancia ${status ? 'activada' : 'inactivada'}`,
-        })
+      Toast.success({
+        message: `Subrogancia ${status ? 'activada' : 'inactivada'}`,
+      })
     }
   },
 }

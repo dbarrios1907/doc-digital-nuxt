@@ -1,11 +1,13 @@
 <template>
   <div class="b-upload font-large">
-    <dx-button color="primary" outlined class="btn-upload" @click="onSelectionClick">
-      <div class="btn-upload-content">
-        <dx-icon right regular> mdi-cloud-upload-outline </dx-icon>
-        <span class="text-underline">Cargar archivo</span>
-      </div>
-    </dx-button>
+    <slot name="activator">
+      <dx-button color="primary" outlined class="btn-upload" @click="onSelectionClick">
+        <div class="btn-upload-content">
+          <dx-icon right regular> mdi-cloud-upload-outline </dx-icon>
+          <span class="text-underline">Cargar archivo</span>
+        </div>
+      </dx-button>
+    </slot>
 
     <input
       :id="_id"

@@ -8,10 +8,16 @@ const Template = (args, { argTypes }) => ({
   data: () => ({
     dialog: false,
   }),
+  methods: {
+    async openModal() {
+      const value = await this.$refs.$entitySelectModal.open(true)
+      console.log(value)
+    },
+  },
   template: `
     <div>
-    <dx-button @click='dialog = !dialog'>toogle dialog</dx-button>
-    <dx-session-closed-modal v-model='dialog'></dx-session-closed-modal>
+    <dx-button @click='openModal'>show modal</dx-button>
+    <dx-entity-select-modal ref='$entitySelectModal'></dx-entity-select-modal>
     </div>
 
   `,

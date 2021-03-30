@@ -4,15 +4,7 @@ import Message from '~/components/style-guide/alerts/ToastService'
 export default {
   title: 'Style Guide/Upload',
   component: Upload,
-  argTypes: {
-    // color: { control: { type: 'select', options: ['primary', 'secondary', 'neutral'] } },
-    // disabled: { control: { type: 'boolean', default: false } },
-    // multiple: { control: { type: 'boolean', default: true } },
-    // manualUpload: { control: { type: 'boolean', default: false } },
-    // removeEnabled: { control: { type: 'boolean', default: true } },
-    // limit: { control: { type: 'number', default: 10000 } },
-    // accept: { control: { type: 'text', default: '*' } },
-  },
+  argTypes: {},
 }
 
 export const Demo = () => ({
@@ -25,7 +17,6 @@ export const Demo = () => ({
       console.log('Upload Handler')
     },
     onError(res, file) {
-      debugger
       console.log(file)
       Message.error({
         message: 'Error Uploading',
@@ -40,6 +31,7 @@ export const Demo = () => ({
             :manual-upload="true"
             :limit="20000"
                 :on-error='onError'
+                action='/fileupload'
         />
       </v-col>
     </v-row>

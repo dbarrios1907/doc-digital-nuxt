@@ -11,6 +11,7 @@ export default {
   comunas: id => ({ url: `/tipos/distgeografica/regiones/provincias/${id}/comunas`, method: 'GET' }),
 
   fetchTasks: params => ({ url: '/documentos/tareas', method: 'GET', params }),
+  fetchTasksByInbox: (inbox, params) => ({ url: `/documentos/tareas/${inbox}`, method: 'GET', params }),
   fetchTasksVisa: { url: '/documentos/tareas/visar', method: 'GET' },
   fetchTasksSign: { url: '/documentos/tareas/firmar', method: 'GET' },
   fetchTasksRejected: { url: '/documentos/tareas/creacion/rechazadas', method: 'GET' },

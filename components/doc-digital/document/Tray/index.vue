@@ -15,28 +15,34 @@
         <v-col cols="12" class="bg-grey1 px-md-9 pt-1 mb-10">
           <div class="my-9 weight-400">
             <span class="mr-2">Mostrando hasta</span>
-            <dx-select v-model="itemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
+            <dx-select
+              v-model="itemsPerPage"
+              @change="setItemsPerPage"
+              :items="options"
+              :label="itemsPerPage.toString()"
+              class="d-inline-flex min-content mb-md-3"
+            />
             <span class="ml-md-3"
-              >resultados de un total de <b>{{ testing.length }} documentos pendientes</b>.</span
+              >resultados de un total de <b>{{ countDocumentos }} documentos pendientes</b>.</span
             >
           </div>
 
-          <div v-if="emptyfilter && filtered">
+          <div v-if="emptyfilter">
             <v-row class="mb-2">
               <v-col cols="12">
                 <dx-badge v-if="tema" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Tema</div>
-                  <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tema', '')"> mdi-close </dx-icon>
+                  <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('tema')"> mdi-close </dx-icon>
                 </dx-badge>
 
                 <dx-badge v-if="tipo" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Tipo</div>
-                  <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tipo', '')"> mdi-close </dx-icon>
+                  <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('tipo')"> mdi-close </dx-icon>
                 </dx-badge>
 
                 <dx-badge v-if="folio" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                   <div class="darken3--text font-16 line-height-22 weight-400">Folio</div>
-                  <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('folio', '')"> mdi-close </dx-icon>
+                  <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('folio')"> mdi-close </dx-icon>
                 </dx-badge>
 
                 <dx-badge v-if="picker1 || picker2" type="tertiary" label outlined class="mx-0 my-0 mr-3">
@@ -45,8 +51,8 @@
                     left
                     class="darken3--text ml-2 mr-0"
                     @click.prevent="
-                      updatefield('picker1', '')
-                      updatefield('picker2', '')
+                      cleanitem('picker1')
+                      cleanitem('picker2')
                     "
                   >
                     mdi-close
@@ -59,8 +65,8 @@
                     left
                     class="darken3--text ml-2 mr-0"
                     @click.prevent="
-                      updatefield('picker3', '')
-                      updatefield('picker4', '')
+                      cleanitem('picker3')
+                      cleanitem('picker4')
                     "
                   >
                     mdi-close
@@ -96,7 +102,7 @@
                 outlined
                 append-icon="mdi-magnify"
                 placeholder="Escribe tu búsqueda"
-                @input="updatefield('search', $event)"
+                @input="searchByMateria"
               />
             </v-col>
             <v-col class="col-md-3">
@@ -109,20 +115,18 @@
           <DataTable
             color="primary"
             :headers="computedHeaders"
-            :items="testing"
+            :items="documentos"
             :page.sync="page"
             :items-per-page="itemsPerPage"
             :class="['table-check', 'bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]"
             :mobile-breakpoint="0"
             hide-default-footer
-            item-key="materia"
+            item-key="id"
             :show-select="showselect"
-            :search="search"
-            :custom-filter="filterCustom"
-            @page-count="pageCount = $event"
+            @page-count="pageCount"
           >
-            <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
-              <NuxtLink class="breaktext" :to="inboxurl + id">{{ materia }}</NuxtLink>
+            <template v-slot:[`item.documento.materia`]="{ item: { documento, id } }" class="column">
+              <NuxtLink class="breaktext" :to="inboxurl + id">{{ documento.materia }}</NuxtLink>
             </template>
 
             <template v-slot:[`item.createAt`]="{ item: { createAt } }" class="column">
@@ -147,7 +151,7 @@
 
             <template v-slot:footer>
               <div class="py-7 v-data-footer bg-grey1">
-                <dx-pagination v-model="page" :length="pageCount" />
+                <dx-pagination v-model="page" :length="pageCount()" />
               </div>
             </template>
             <template v-slot:no-data> {{ emptyResults }} </template>
@@ -167,9 +171,16 @@
         :updated-end="picker4"
         :document-options="doctype"
         @onClose="dialog = false"
-        @onCancel="dialog = false"
+        @onCancel="dialogCancel"
         @onFilter="dialogFilter"
         :iscancel="iscancel"
+        :ctema="ctema"
+        :ctipo="ctipo"
+        :cfolio="cfolio"
+        :ccreatedStart="cpicker1"
+        :ccreatedEnd="cpicker2"
+        :cupdatedStart="cpicker3"
+        :cupdatedEnd="cpicker4"
       />
     </slot>
   </div>
@@ -179,17 +190,20 @@
 import moment from 'moment'
 import ModalDocumentFilters from '../../modal/DocumentFilters'
 export default {
+  fetch() {
+    this._fetch()
+  },
   components: {
     ModalDocumentFilters,
   },
   props: {
-    inboxurl: {
+    inbox: {
       type: String,
       default: '',
     },
-    documentos: {
-      type: Array,
-      default: () => [],
+    inboxurl: {
+      type: String,
+      default: '',
     },
     showselect: {
       type: Boolean,
@@ -218,17 +232,31 @@ export default {
     search: '',
     isleft: true,
     page: 1,
-    pageCount: 0,
-    itemsPerPage: 10,
-    filtered: false,
+    itemsPerPage: 5,
+
+    //watch
+    _watch: Object,
+    ctema: false,
+    ctipo: false,
+    cfolio: false,
+    cpicker1: false,
+    cpicker2: false,
+    cpicker3: false,
+    cpicker4: false,
   }),
   computed: {
-    testing() {
+    /*documentsDuplicate() {
       var existingIds = {}
       return this.documentos.filter(function (item) {
         if (existingIds[item.id]) return false
         return (existingIds[item.id] = true)
       })
+    },*/
+    documentos() {
+      return this.$store.getters['documents/getDocs']
+    },
+    countDocumentos() {
+      return this.$store.getters['documents/getDocsLenth']
     },
     emptyfilter() {
       return this.picker1 || this.picker2 || this.picker3 || this.picker1 || this.tema || this.tipo || this.tema || this.folio
@@ -244,36 +272,90 @@ export default {
         {
           text: 'Tema',
           align: 'start',
-          value: 'materia',
+          value: 'documento.materia',
           sortable: true,
-          filter: this.temaFilter,
         },
-        { text: 'Tipo', value: 'tipoDocumentoOficial.descripcion', sortable: true, filter: this.tipoFilter },
-        { text: 'Folio', value: 'folio', sortable: true, filter: this.folioFilter },
-        { text: 'Creación', value: 'createAt', sortable: true, filter: this.creacionFilter },
-        { text: 'Actualización', value: 'updateAt', sortable: true, filter: this.actualizacionFilter },
+        { text: 'Tipo', value: 'documento.tipoDocumentoOficial.descripcion', sortable: true },
+        { text: 'Folio', value: 'documento.folio', sortable: true },
+        { text: 'Creación', value: 'createAt', sortable: true },
+        { text: 'Actualización', value: 'updateAt', sortable: true },
         { text: 'Acciones', align: this.ismobil ? 'center' : 'start', value: 'actions', sortable: false },
       ]
     },
   },
   methods: {
-    filterCustom(value, search, item) {
-      return item.materia.toLowerCase().includes(search.toLowerCase())
+    cleanInfo(item) {
+      this[item] = true
+    },
+    reverse(_date) {
+      return moment(_date).format('DD-MM-YYYY')
+    },
+    make(key, value) {
+      return key ? value : {}
+    },
+    pageCount() {
+      const pagescount = this.$store.getters['documents/getDocsLenth']
+      return parseInt(pagescount / this.itemsPerPage)
+    },
+    async _fetch(other) {
+      const params = {
+        ...other,
+        usuario: this.$store.getters['userId'],
+        orderBy: this.orderBy,
+        orderType: this.orderType,
+        pageNumber: this.page - 1,
+        pageSize: this.itemsPerPage,
+      }
+      await this.$store.dispatch('documents/getDocuments', { inbox: this.inbox, params })
+    },
+
+    setItemsPerPage(value) {
+      this._fetch({ pageSize: value })
+    },
+    searchByMateria(search) {
+      this._fetch({ materia: search })
     },
     formatdate(date) {
       return moment(date).format('DD-MM-YYYY hh:mm')
     },
-    updatefield(key, data) {
-      this[key] = data
+    cleanitem(key) {
+      this[key] = ''
+      this['c' + key] = true
+      this._fetch({
+        materia: this.tema,
+        tipoDocumento: this.tipo,
+        folio: this.folio,
+        ...this.make(this.picker1, { fechaCreacionDesde: this.reverse(this.picker1) }),
+        ...this.make(this.picker2, { fechaCreacionHasta: this.reverse(this.picker2) }),
+        ...this.make(this.picker3, { fechaActualizacionDesde: this.reverse(this.picker3) }),
+        ...this.make(this.picker4, { fechaActualizacionCreacionHasta: this.reverse(this.picker4) }),
+      })
     },
     dialogCancel() {
-      this.filtered = false
+      this.tema = ''
+      this.tipo = ''
+      this.folio = ''
+      this.picker1 = ''
+      this.picker2 = ''
+      this.picker3 = ''
+      this.picker4 = ''
       this.dialog = false
       this.iscancel = true
+      this._fetch()
     },
     dialogFilter(filters) {
       const { tema, tipo, folio, createdStart, createdEnd, updatedStart, updatedEnd } = filters
 
+      this._fetch({
+        materia: tema,
+        tipoDocumento: tipo,
+        folio: folio,
+        ...this.make(createdStart, { fechaCreacionDesde: this.reverse(createdStart) }),
+        ...this.make(createdEnd, { fechaCreacionHasta: this.reverse(createdEnd) }),
+        ...this.make(updatedStart, { fechaActualizacionDesde: this.reverse(updatedStart) }),
+        ...this.make(updatedEnd, { fechaActualizacionCreacionHasta: this.reverse(updatedEnd) }),
+      })
+      this.dialog = false
       this.tema = tema
       this.tipo = tipo
       this.folio = folio
@@ -281,44 +363,15 @@ export default {
       this.picker2 = createdEnd
       this.picker3 = updatedStart
       this.picker4 = updatedEnd
-
-      this.dialog = false
-      this.filtered = true
+      this.search = ''
     },
-    temaFilter(value) {
-      if (!this.tema || !this.filtered) {
-        return true
-      }
-
-      return value.toLowerCase().includes(this.tema.toLowerCase())
-    },
-
-    tipoFilter(value) {
-      if (!this.tipo || !this.filtered) {
-        return true
-      }
-      return value.includes(this.tipo)
-    },
-    folioFilter(value) {
-      if (!this.folio || !this.filtered) {
-        return true
-      }
-      return value.includes(this.folio)
-    },
-    between(from, to, current) {
-      if (!from || !to || !current || !this.filtered) {
-        return true
-      }
-      const from_ = new Date(from)
-      const to_ = new Date(to).setDate(new Date(to).getDate() + 1)
-      const current_ = new Date(current)
-      return current_ >= from_ && current_ <= to_
-    },
-    creacionFilter(value) {
-      return this.between(this.picker1, this.picker2, value)
-    },
-    actualizacionFilter(value) {
-      return this.between(this.picker3, this.picker4, value)
+  },
+  watch: {
+    page: {
+      handler: function (newValue, before) {
+        this._fetch()
+      },
+      deep: true,
     },
   },
 }

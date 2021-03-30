@@ -1,7 +1,7 @@
 <template>
   <div>
     <DocumentTray
-      :documentos="documentos"
+      inbox="creacion/borradores"
       title="Borradores de documentos"
       subtitle="Revisa tus borradores"
       empty-results="no tiene borradores de documentos"
@@ -31,14 +31,6 @@ export default {
       details: [],
       docid: '',
     }
-  },
-  fetch() {
-    this.$store.dispatch('documents/getDocuments', 'creacion/borradores')
-  },
-  computed: {
-    documentos() {
-      return this.$store.getters['documents/getDocs']
-    },
   },
   methods: {
     getid(name, id) {

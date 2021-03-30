@@ -4,6 +4,7 @@
     <dx-navigation
       v-model="drawer"
       :username="userName"
+      :multi-user="userIsMultiUser"
       :entity-name="entityName"
       :right="_rightDrawer"
       :routes="routes"
@@ -12,9 +13,10 @@
       app
       @onmouseover="onMouseOver"
       @mouseleave="onMouseLeave"
+      @entitySelectionFocus="onEntitySelectionFocus"
     >
       <template v-slot:switch>
-          <admin-user-switch />
+        <admin-user-switch />
       </template>
     </dx-navigation>
 
@@ -28,6 +30,7 @@
     <dx-footer :absolute="!fixed" class="mt-8 px-0 py-0" app />
 
     <dx-session-closed-modal v-model="sessionClosed" />
+
     <keep-alive>
       <template v-if="sessionIdleExpire">
         <dx-session-expired-modal v-model="sessionExpired" @onClose="onExpirationModalClose" />
@@ -35,15 +38,19 @@
       </template>
     </keep-alive>
     <dx-confirm-modal ref="$confirm" />
+    <dx-entity-select-modal ref="$entitySelectModal" />
   </v-app>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import settings from '~/shared/settings'
+import DxEntitySelectModal from '~/components/style-guide/modal/entity-select-modal'
 
 export default {
   name: 'RootLayout',
+  components: { DxEntitySelectModal },
+  middleware: 'authenticated',
   data: vm => {
     return {
       clipped: true, // toggles nav full height
@@ -58,7 +65,7 @@ export default {
 
   computed: {
     ...mapState(['routes']),
-    ...mapGetters(['userName', 'entityName']),
+    ...mapGetters(['userName', 'entityName', 'userIsMultiUser']),
     sessionExpired() {
       return this.$store.state.session.expired
     },
@@ -71,8 +78,11 @@ export default {
     _rightDrawer() {
       return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md
     },
-    userIdString(){
-      return this.userId.toString()
+  },
+  mounted() {
+    this.$store.dispatch('fetchUserDashboard')
+    if (this.$auth.$storage.getUniversal('pendingEntityLogin') && this.userIsMultiUser) {
+      this.onEntitySelectionFocus()
     }
   },
   methods: {
@@ -97,6 +107,16 @@ export default {
 
     onExpirationModalClose() {
       this.$auth.redirect('unauthorized', true)
+    },
+
+    async onEntitySelectionFocus() {
+      // show entity selection
+      const selectedEntity = await this.$refs.$entitySelectModal.open()
+      if (selectedEntity.userId) {
+        this.$auth.loginWithEntity(selectedEntity.userId)
+      } else {
+        this.$auth.$storage.setUniversal('pendingEntityLogin', false)
+      }
     },
   },
 }

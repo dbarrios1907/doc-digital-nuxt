@@ -1,6 +1,8 @@
 module.exports = {
   title: 'DocDigital',
 
+  pageSize: 20,
+
   /**
    * @type {string | array} 'production' | ['production', 'development']
    * @description Need show err logs component.

@@ -1,7 +1,6 @@
 <template>
   <div>
     <DocumentTray
-      :documentos="documentos"
       title="Historial de documentos"
       subtitle="Revisa tu historial de documentos"
       empty-results="no existen documentos archivados"
@@ -31,14 +30,6 @@ export default {
       details: [],
       docid: '',
     }
-  },
-  fetch() {
-    this.$store.dispatch('documents/getDocuments', '')
-  },
-  computed: {
-    documentos() {
-      return this.$store.getters['documents/getDocs']
-    },
   },
   methods: {
     getid(name, id) {
