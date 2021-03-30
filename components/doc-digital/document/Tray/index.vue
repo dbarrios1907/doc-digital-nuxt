@@ -179,17 +179,20 @@
 import moment from 'moment'
 import ModalDocumentFilters from '../../modal/DocumentFilters'
 export default {
+  fetch() {
+    this._fetch()
+  },
   components: {
     ModalDocumentFilters,
   },
   props: {
-    inboxurl: {
+    inbox: {
       type: String,
       default: '',
     },
-    documentos: {
-      type: Array,
-      default: () => [],
+    inboxurl: {
+      type: String,
+      default: '',
     },
     showselect: {
       type: Boolean,
@@ -225,7 +228,7 @@ export default {
   computed: {
     testing() {
       var existingIds = {}
-      return this.documentos.filter(function (item) {
+      return this.documentos().filter(function (item) {
         if (existingIds[item.id]) return false
         return (existingIds[item.id] = true)
       })
@@ -257,6 +260,12 @@ export default {
     },
   },
   methods: {
+    _fetch() {
+      this.$store.dispatch('documents/getDocuments', this.inbox)
+    },
+    documentos() {
+      return this.$store.getters['documents/getDocs']
+    },
     filterCustom(value, search, item) {
       return item.materia.toLowerCase().includes(search.toLowerCase())
     },
