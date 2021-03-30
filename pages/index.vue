@@ -32,7 +32,7 @@ export default {
     ...mapState(['pedientesVisar', 'pendientesOpRecibir', 'pendientesFirmar']),
   },
   async fetch() {
-    //await this.$store.dispatch('fetchUserDashboard')
+    await this.$store.dispatch('fetchUserDashboard')
   },
 }
 </script>

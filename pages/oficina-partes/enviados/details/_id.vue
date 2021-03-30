@@ -8,6 +8,7 @@
       :rejectedocs="rejectedocs"
       :docid="this.$route.params.id"
       :tramites="tramites"
+      :src="src"
     >
       <template v-slot:actionsPrimary>
         <dx-button color="darken3" class="white--text" href="/api/public/documentos/3/archivo?tempHash=olPcMhNYfL" download>
@@ -15,7 +16,7 @@
           <span class="ml-2 text-underline">Descargar trazabilidad</span>
         </dx-button>
 
-        <dx-button color="primary" outlined href="/api/public/documentos/1/archivo?tempHash=olPcMhNYfL" download>
+        <dx-button color="primary" outlined :href="src" download>
           <dx-icon right regular> mdi-download </dx-icon>
           <span class="ml-2 text-underline">Descargar documento</span>
         </dx-button>
@@ -42,6 +43,7 @@ export default {
     tramites: {},
     dialog1: false,
     dialog2: false,
+    src: '/api/public/documentos/1/archivo?tempHash=olPcMhNYfL',
   }),
   methods: {
     async fetch_(item, url) {

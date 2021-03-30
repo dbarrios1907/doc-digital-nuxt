@@ -20,13 +20,13 @@
         <div class="weight-700 font-regular line-height-20 mb-3 mt-6">Previsualizacion:</div>
         <v-row>
           <v-col class="col-12 col-md-4">
-            <PreviewThumbnail>
+            <PreviewThumbnail :src="src">
               <template v-slot:zoom>
                 <zoom-icon @click="dialog = true" />
               </template>
             </PreviewThumbnail>
 
-            <PreviewZoom v-model="dialog" @onClose="dialog = false" />
+            <PreviewZoom v-model="dialog" @onClose="dialog = false" :src="src" />
           </v-col>
           <v-col :class="['col col-12 col-md-8', { 'text-center': requesting }]">
             <DocumentTableItem :items="tableitems" v-if="!requesting" />
@@ -62,6 +62,7 @@ export default {
     requesting: { type: Boolean, default: true },
     rejectedocs: { type: Array, default: () => [] },
     tramites: { type: Object, default: () => {} },
+    src: { type: String, default: '' },
   },
   data: () => ({
     dialog: false,

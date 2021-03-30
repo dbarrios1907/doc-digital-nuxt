@@ -4,7 +4,7 @@
   <div :style="{maxWidth: maxWidth}" :class="['relative', {'mx-auto': center}]">
     <vue-pdf
       ref="pdf"
-      src="/api/public/documentos/1/archivo?tempHash=olPcMhNYfL"
+      :src="src"
       :page="page"
       @progress="loadedRatio = $event"
       @num-pages="numPages = $event"
@@ -34,6 +34,7 @@ export default {
   props:{
     maxWidth: {type: String, default: '247px'},
     center: {type: Boolean},
+    src: {type: String, default: ''},
   },
   data: () => ({
     loadedRatio: 0,
@@ -50,18 +51,6 @@ export default {
     back() {
       this.page -= 1
     },
-    printPdf (url) {
-      var iframe = document.createElement('iframe');
-      document.body.appendChild(iframe);
-      iframe.style.display = 'none';
-      iframe.onload = function() {
-        setTimeout(function() {
-          iframe.focus();
-          iframe.contentWindow.print();
-        }, 1);
-      };
-      iframe.src = url;
-    }
   },
 }
 </script>

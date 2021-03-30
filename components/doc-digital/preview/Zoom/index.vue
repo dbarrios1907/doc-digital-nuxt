@@ -12,7 +12,7 @@
 
       <v-card-text class="font-roboto weight-400 line-height-30 font-title darken3--text">
         <perfect-scrollbar :style="{ height: '500px' }">
-          <PreviewThumbnail maxWidth="850px" center />
+          <PreviewThumbnail maxWidth="850px" center :src="src"/>
         </perfect-scrollbar>
       </v-card-text>
 
@@ -33,7 +33,8 @@ export default {
     dialog: {
       type: Boolean,
       default: false,
-    }
+    },
+    src: {type:String, default: ''},
   },
   methods: {
     close() {
