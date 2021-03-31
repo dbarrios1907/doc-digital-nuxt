@@ -300,7 +300,7 @@ export default {
     async _fetch(other) {
       const params = {
         ...other,
-        usuario: 2, //this.$store.getters['userId'],
+        usuario: this.$store.getters['userId'],
         orderBy: this.orderBy,
         orderType: this.orderType,
         pageNumber: this.page - 1,
