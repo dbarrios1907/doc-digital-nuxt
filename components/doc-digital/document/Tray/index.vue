@@ -294,8 +294,8 @@ export default {
       return key ? value : {}
     },
     pageCount() {
-      const pagescount = this.$store.getters['documents/getDocsLenth']
-      return parseInt(pagescount / this.itemsPerPage)
+      const pagescount = parseInt(this.$store.getters['documents/getDocsLenth'] / this.itemsPerPage)
+      return pagescount > 0 ? pagescount : 1
     },
     async _fetch(other) {
       const params = {
