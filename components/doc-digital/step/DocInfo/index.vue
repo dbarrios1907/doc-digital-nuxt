@@ -1,6 +1,6 @@
 <template>
-  <validation-observer ref="observer" v-slot="{ invalid }">
-    <dx-step-body>
+  <dx-step-body>
+    <validation-observer ref="observer" v-slot="{ invalid }">
       <form @submit.prevent="submit">
         <dx-step-title title="Complete la información general del documento." help-hint="this is a help hint" />
         <v-row no-gutters>
@@ -68,44 +68,47 @@
             <div class="text-right darken3--text">{{ foliolength }}/{{ limitmaxCount }}</div>
           </v-col>
         </v-row>
-
-        <v-row no-gutters>
-          <v-col cols="12" sm="12" md="6" lg="6" class="py-0 pl-0 pr-4">
-            <div>Documento a distribuir *</div>
-            <div class="font-small line-height-24 weight-400 darken2--text mt-2 mb-5">
-              Cargue solo un archivo en formato PDF de máximo 20 MB<br >El sistema reconocerá si éste viene firmado.
-              <dx-icon left size="18" color="warning">mdi-help-circle</dx-icon>
-            </div>
-            <Upload multiple v-bind="$props" class="d-inline-block mr-2" />
-            o
-            <LazyModalLoadUrl
-              :dialog="dialogurl"
-              title="Agregar url como archivo principal"
-              button-text="Cargar Referencia URL"
-              class="ml-2 d-inline-block"
-            />
-          </v-col>
-          <v-col cols="12" sm="12" md="6" lg="6" class="py-0 pr-0">
-            <div>Anexos</div>
-            <div class="mb-5 font-small line-height-24 weight-400 darken2--text mt-2">
-              Puede cargar múltiples archivos con un máximo de 50 MB y en formato libre.
-            </div>
-            <Upload
-              multiple
-              v-bind="$props"
-              class="d-inline-block mr-2"
-              :manual-upload="true"
-              :limit="50000"
-              :on-error="onError"
-              action="/fileupload"
-            />
-            o
-            <LazyModalLoadUrl class="ml-2 d-inline-block" />
-          </v-col>
-        </v-row>
       </form>
-    </dx-step-body>
-  </validation-observer>
+    </validation-observer>
+    <v-row no-gutters>
+      <v-col cols="12" sm="12" md="6" lg="6" class="py-0 pl-0 pr-4">
+        <div>Documento a distribuir *</div>
+        <div class="font-small line-height-24 weight-400 darken2--text mt-2 mb-5">
+          Cargue solo un archivo en formato PDF de máximo 20 MB<br>El sistema reconocerá si éste viene firmado.
+          <dx-icon left size="18" color="warning">mdi-help-circle</dx-icon>
+        </div>
+        <Upload
+          ref="$mainDoc"
+          class="mr-2"
+          url-uploader-text="Cargar Referencia URL"
+          :saved-files="mainDoc"
+          :headers="$auth.getTokenHeader()"
+          :action="uploadMainDocAction"
+          :manual-upload="true"
+          @onSavedRemove="onMainRemove"
+          @onFilesAttached="uploadMainDoc"
+        />
+      </v-col>
+      <v-col cols="12" sm="12" md="6" lg="6" class="py-0 pr-0">
+        <div>Anexos</div>
+        <div class="mb-5 font-small line-height-24 weight-400 darken2--text mt-2">
+          Puede cargar múltiples archivos con un máximo de 50 MB y en formato libre.
+        </div>
+        <Upload
+          ref="$anexos"
+          multiple
+          class="mr-2"
+          :manual-upload="true"
+          :limit="50000"
+          :headers="$auth.getTokenHeader()"
+          :on-error="onError"
+          :action="uploadAnexosAction"
+          :saved-files="anexos"
+          @onSavedRemove="onAnexoRemove"
+        />
+      </v-col>
+    </v-row>
+  </dx-step-body>
 </template>
 <script>
 import DxTextField from '~/components/style-guide/form/text-field'
@@ -113,11 +116,12 @@ import { wizardStepMixin } from '~/shared/mixins/wizardStepMixin'
 import Message from '~/components/style-guide/alerts/ToastService'
 
 const defaultValues = {
-  files: [],
-  tipo: '',
-  materia: '',
-  description: '',
-  folio: '',
+  mainDoc: [],
+  anexos: [],
+  tipo: undefined,
+  materia: undefined,
+  description: undefined,
+  folio: undefined,
   reservado: false,
 }
 
@@ -134,11 +138,27 @@ export default {
       type: Array,
       default: () => [],
     },
+    document: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
+    const { archivoPrincipal, anexos, materia, descripcion, tipoDocumentoOficial, folio, isReservado } = this.document.info
+    const document = {
+      mainDoc: archivoPrincipal,
+      anexos,
+      id: this.document.id,
+      tipo: materia,
+      materia: descripcion,
+      description: tipoDocumentoOficial,
+      folio,
+      reservado: isReservado,
+    }
+
     return {
       defaultValues,
-      ...defaultValues,
+      ...document,
       hiddedesc: true,
       hiddefolio: true,
       limitmaxCount: 255,
@@ -152,6 +172,18 @@ export default {
     foliolength() {
       return this.folio ? this.folio.length : 0
     },
+
+    uploadMainDocAction() {
+      const id = this.id
+      return id ? `/api/documentos/${id}/archivo` : ''
+    },
+
+    uploadAnexosAction() {
+      const id = this.id
+      debugger
+      console.log(this.id)
+      return id ? `/api/documentos/${id}/anexos/archivo` : ''
+    },
   },
   methods: {
     updatefield(key, data) {
@@ -161,12 +193,28 @@ export default {
       this[key] = this[value]?.length > 0
     },
     upload() {
-      this.$refs.uploader.upload()
+      console.log(this.$refs)
+      this.$refs.$anexos.upload()
     },
     onError(res, file) {
       Message.error({
         message: 'Error Uploading',
       })
+    },
+    async uploadMainDoc() {
+      console.log(this.$refs)
+      this.$refs.$mainDoc.upload()
+    },
+    async onMainRemove(file) {
+      const removed = await this.onfileRemove(file)
+      if (removed) this.mainDoc = []
+    },
+    async onAnexoRemove(file) {
+      const removed = await this.onfileRemove(file)
+      if (removed) this.anexos = this.anexos.filter(v => v.id !== file.id)
+    },
+    onfileRemove(file) {
+      return this.$store.dispatch('documents/documentDeleteFile', file.id)
     },
   },
 }

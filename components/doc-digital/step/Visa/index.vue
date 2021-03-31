@@ -23,9 +23,9 @@
         </v-row>
       </form>
       <v-row no-gutters>
-        <v-col cols="12" sm="12" md="8" lg="6">
+        <v-col cols="12">
           <label>Visadores y orden de visación *</label>
-          <sign-list :mock="true" username-prop="name" entity-prop="symbol" />
+          <sign-list username-prop="name" entity-prop="entityName" item-value="id" list-type="visadores" />
         </v-col>
       </v-row>
     </dx-step-body>

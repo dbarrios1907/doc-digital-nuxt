@@ -1,55 +1,27 @@
 import { isValidResponse } from '~/shared/utils/request'
 import endpoints from '~/api/endpoints'
 
-export const documentCreationState = () => ({
-  documentInfoStep: {
-    // "anexos": [
-    //   {
-    //     "id": 0,
-    //     "infoCertificados": [
-    //       {
-    //         "certificado": "string",
-    //         "nombreFirmante": "string",
-    //         "runFirmante": "string"
-    //       }
-    //     ],
-    //     "link": "string",
-    //     "nombre": "string",
-    //     "tipoArchivo": "ANEXO"
-    //   }
-    // ],
-    // "archivoPrincipal": {
-    //   "id": 0,
-    //   "infoCertificados": [
-    //     {
-    //       "certificado": "string",
-    //       "nombreFirmante": "string",
-    //       "runFirmante": "string"
-    //     }
-    //   ],
-    //   "link": "string",
-    //   "nombre": "string",
-    //   "tipoArchivo": "ANEXO"
-    // },
-    descripcion: undefined,
-    folio: undefined,
-    // "id": 0,
-    isBorrador: true,
-    // "isDelete": true,
-    // "isFirmado": true,
-    isReservado: true,
-    materia: 'string',
-    tipoDocumentoOficial: {
-      createAt: '2021-03-26T04:05:44.029Z',
-      descripcion: 'string',
-      id: 0,
-      updateAt: '2021-03-26T04:05:44.029Z',
+export const documentState = () => ({
+  document: {
+    id: undefined,
+    info: {
+      anexos: [],
+      archivoPrincipal: undefined,
+      descripcion: undefined,
+      folio: undefined,
+      id: undefined,
+      isBorrador: undefined,
+      isDelete: undefined,
+      isFirmado: undefined,
+      isReservado: false,
+      materia: undefined,
+      tipoDocumentoOficial: undefined,
     },
+    visa: {},
+    firma: {},
+    folio: {},
+    destinatarios: {},
   },
-  documentVisaStep: {},
-  documentFirmaStep: {},
-  documentFolioStep: {},
-  documentDestinatariosStep: {},
 })
 
 export const state = () => ({
@@ -60,7 +32,7 @@ export const state = () => ({
   visaOptions: [],
   epochOptions: [],
   documentFileTypes: [],
-  ...documentCreationState(),
+  ...documentState(),
   recibir: 0,
   enviar: 0,
   firmar: 0,
@@ -76,6 +48,7 @@ export const getters = {
   getDocumentsCount: state => inbox => {
     return state[inbox]
   },
+  document: state => state.document,
 }
 
 export const mutations = {
@@ -91,9 +64,12 @@ export const mutations = {
     })
     state.documents = documents
   },
-
   saveStateProperty(state, payload) {
     state[payload.property] = payload.value
+  },
+  updateDocument: (state, { payload, key, id }) => {
+    Object.assign(state.document[key], payload)
+    state.document.id = id
   },
 }
 
@@ -237,6 +213,13 @@ export const actions = {
       Toast.success({
         message: resp?.message,
       })
+      commit('updateDocument', {
+        key: 'info',
+        id: resp.result,
+        payload: params,
+      })
+
+      return resp.result
     }
   },
 
@@ -403,5 +386,14 @@ export const actions = {
     if (valid) {
       commit('setDocumentsCount', { inbox, count: resp.count })
     }
+  },
+
+  async addUrlReference({ commit, rootState, state }, data) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.documentAddUrlReference(state.document.id, data))
+    const [valid, Toast] = isValidResponse(resp)
+    if (valid) {
+      return true
+    }
+    return false
   },
 }

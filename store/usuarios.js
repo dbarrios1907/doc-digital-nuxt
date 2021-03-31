@@ -1,5 +1,6 @@
 import { isValidResponse } from '~/shared/utils/request'
 import endpoints from '~/api/endpoints'
+import settings from '~/shared/settings'
 
 export const state = () => ({
   selectedUser: null,
@@ -7,16 +8,18 @@ export const state = () => ({
   users: [],
   roles: [],
   relatedUsers: [],
+  cachedUsers: [],
+  cachedUserQuery: '',
 })
 
 export const getters = {
   getActivos(state) {
-    return state.users.filter(function(user) {
+    return state.users.filter(function (user) {
       return !user.isBloqueado
     })
   },
   getInctivos(state) {
-    return state.users.filter(function(user) {
+    return state.users.filter(function (user) {
       return user.isBloqueado
     })
   },
@@ -50,8 +53,8 @@ export const mutations = {
         (user.nombres = listUsers[i].nombres + ' ' + listUsers[i].apellidos),
         (user.roles = listUsers[i].roles
           ? listUsers[i].roles.filter(rol => {
-            return rol != 'ROLE_USUARIO'
-          })
+              return rol != 'ROLE_USUARIO'
+            })
           : []),
         users.push(user)
     }
@@ -62,7 +65,7 @@ export const mutations = {
     state.selectedUser = user
   },
   deleteUser: (state, id) => {
-    const newUsers = state.users.filter(function(user) {
+    const newUsers = state.users.filter(function (user) {
       return user.id != id
     })
     state.users = newUsers
@@ -73,8 +76,8 @@ export const mutations = {
       const objIndex = newUsers.findIndex(obj => obj.id == id)
       newUsers[objIndex].isBloqueado = status
       state.users = newUsers
-    } catch (err) {
-    }
+      // eslint-disable-next-line no-empty
+    } catch (err) {}
   },
   setUserRoles: (state, roles) => {
     state.roles = roles.map(({ valor, descripcion }) => {
@@ -87,6 +90,19 @@ export const mutations = {
   setEntityUsers: (state, payload) => {
     state.relatedUsers = payload || []
   },
+
+  setCachedUsers: (state, payload) => {
+    state.cachedUsers = payload || []
+  },
+
+  setCachedUserQuery: (state, payload) => {
+    state.cachedUserQuery = payload || []
+  },
+
+  cleanCached(state) {
+    state.cachedUsers = []
+    state.cachedUserQuery = ''
+  },
 }
 
 export const actions = {
@@ -96,6 +112,32 @@ export const actions = {
     if (valid) {
       commit('setUserList', resp.result, resp.count)
     }
+  },
+
+  async fetchUsers({ commit, state, rootState, rootGetters }, params = {}) {
+    if (state.cachedUsers.length > 0 && params.name === state.cachedUserQuery) return state.cachedUsers
+    const data = {
+      pageSize: settings.pageSize,
+      ...params,
+    }
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetchAll(data))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      const resData = resp.result
+        .map(v => ({
+          id: v.id,
+          name: v.nombreCompleto,
+          position: v.cargo,
+          email: v.correoInstitucional,
+          entityName: v?.entidad?.nombre,
+          entityId: v?.entidad?.id,
+        }))
+        .filter(v => v.id !== rootGetters.userId)
+      commit('cachedUsers', resData)
+      commit('cachedUserQuery', params.nombre)
+      return resData
+    }
+    return []
   },
 
   async fetchRelatedUsers({ commit, state, rootState, rootGetters }, params = {}) {
@@ -220,5 +262,9 @@ export const actions = {
         message: `Subrogancia ${status ? 'activada' : 'inactivada'}`,
       })
     }
+  },
+
+  async cleanCached({ commit }) {
+    commit('cleanCached')
   },
 }

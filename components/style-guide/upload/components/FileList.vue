@@ -72,7 +72,12 @@ export default {
   },
   watch: {
     files(newFiles) {
-      this.initialize(newFiles)
+      const initFiles = []
+      newFiles.forEach(f => {
+        const localIndex = this.filesLocal.findIndex(v => v.id === f.id)
+        if (localIndex === -1) initFiles.push(f)
+      })
+      if (initFiles.length > 0) this.initialize(initFiles)
     },
   },
   beforeMount() {
@@ -200,7 +205,7 @@ export default {
       // by call bvEvt.preventDefault()
       const tabEvt = new BvEvent('onRemove', {
         cancelable: true,
-        vueTarget: this,
+        vueTarget: id,
       })
 
       this.$emit(tabEvt.type, tabEvt)

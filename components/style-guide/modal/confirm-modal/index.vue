@@ -18,7 +18,7 @@
       </v-card-title>
       <v-divider class="darken1" />
 
-      <v-card-text v-show="!!message" class="font-roboto weight-400 line-height-30 font-20 darken3--text"> {{ message }} </v-card-text>
+      <v-card-text v-show="!!message" class="font-roboto weight-400 line-height-30 font-20 darken3--text px-6 py-8"> {{ message }} </v-card-text>
 
       <v-card-actions class="px-5 justify-center">
         <dx-button color="primary" outlined @click.native="cancel">

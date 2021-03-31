@@ -13,11 +13,13 @@
         <dx-box add-class="px-3 pt-2">
           <UserAutocomplete
             v-model="group.input"
+            :mock="mock"
             :item-value="itemValue"
+            :item-subtitle="entityProp"
             @onRemoveItem="(item, valueKey) => removeSelection(groupIdx, item[valueKey])"
           />
           <dx-button height="48" small text color="primary" v-bind="$props" @click="addToList(group.input, groupIdx)">
-            <dx-icon left chevron regular> mdi-plus-circle-outline </dx-icon>
+            <dx-icon left chevron regular> mdi-plus-circle-outline</dx-icon>
             <span class="underline-text">Agregar {{ listType }}</span>
           </dx-button>
         </dx-box>
@@ -42,8 +44,8 @@
 
     <dx-box centered add-class="py-2" style="min-width: 100%">
       <dx-button height="48" small text color="primary" v-bind="$props" @click="addList">
-        <dx-icon left chevron regular> mdi-plus-circle-outline </dx-icon>
-        <span class="underline-text">Agregar lista de visación</span>
+        <dx-icon left chevron regular> mdi-plus-circle-outline</dx-icon>
+        <span class="underline-text">Agregar lista de {{ listType }}</span>
       </dx-button>
     </dx-box>
   </dx-box>
@@ -51,6 +53,7 @@
 
 <script>
 import UserAutocomplete from '~/components/doc-digital/userAutocomplete'
+
 export default {
   components: { UserAutocomplete },
   inheritAttrs: true,

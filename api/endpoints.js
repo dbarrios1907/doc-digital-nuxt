@@ -44,11 +44,12 @@ export default {
 
   documentUpload: docId => ({ url: `/documentos/${docId}/anexos/archivo`, method: 'POST' }),
   documentDownload: (docId, fileId) => ({ url: `/documentos/${docId}/anexos/archivo/${fileId}`, method: 'GET' }),
+  documentAddUrlReference: (docId, data) => ({ url: `/documentos/${docId}/anexos/url`, method: 'POST', data }),
 
   documentTrazaDownload: docId => ({ url: `/api/documentos/${docId}/archivo/comprobante`, method: 'GET' }),
   documentDownloadMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'GET' }),
   documentUploadMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'POST' }),
-  documentDeleteMain: docId => ({ url: `/documentos/${docId}/archivo`, method: 'DELETE' }),
+  documentDeleteFile: fileId => ({ url: `/documentos/${fileId}/archivo`, method: 'DELETE' }),
 
   documentFetchTramite: docId => ({ url: `/documentos/${docId}/tramitacion`, method: 'GET' }),
   documentCreateTramite: (docId, data) => ({ url: `/documentos/${docId}/tramitacion`, method: 'POST', data }),
@@ -74,5 +75,5 @@ export default {
   usersDelete: id => ({ url: `/usuarios/${id}`, method: 'DELETE' }),
   usersStatus: (id, status) => ({ url: `/usuarios/${id}/activar/${status}`, method: 'POST' }),
   usersSubrogados: id => ({ url: `/usuarios/${id}/subrogados`, method: 'GET' }),
-  usersSetSubrogancia: (id, status) => ({ url: `/usuarios/${id}/subrogante/activar/${status}`, method: 'POST' }),
+  usersSetSubrogancia: (id, status= false) => ({ url: `/usuarios/${id}/subrogante/activar/${status}`, method: 'POST' }),
 }

@@ -3,15 +3,10 @@
     <form @submit.prevent="">
       <dx-step-body>
         <dx-step-title title="Complete la información general del documento." help-hint="this is a help hint" />
-        <v-row no-gutters :style="colMaxWidthStyle">
-          <v-col cols="12" sm="11">
+        <v-row no-gutters>
+          <v-col cols="12">
             <label>Firmantes y orden de firma * </label>
-            <dx-box centered bordered elevation add-class="py-4">
-              <dx-button small outlined color="primary" v-bind="$props">
-                <dx-icon left chevron regular> mdi-plus-circle-outline </dx-icon>
-                <span class="underline-text">Agregar lista de firmantes</span>
-              </dx-button>
-            </dx-box>
+            <sign-list username-prop="name" entity-prop="entityName" item-value="id" list-type="firmantes" />
           </v-col>
         </v-row>
 
@@ -65,9 +60,10 @@
 <script>
 import DxTextField from '~/components/style-guide/form/text-field'
 import { wizardStepMixin } from '~/shared/mixins/wizardStepMixin'
+import SignList from '~/components/doc-digital/signList'
 export default {
   name: 'Signature',
-  components: { DxTextField },
+  components: { DxTextField, SignList },
   mixins: [wizardStepMixin],
   data() {
     return {

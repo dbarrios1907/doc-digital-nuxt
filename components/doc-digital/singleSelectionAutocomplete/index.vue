@@ -90,13 +90,12 @@ export default {
       else this.tab = null
     },
     search(val) {
-      // Items have already been loaded
-      if (this.items.length > 0) return
-
-      this.isLoading = true
-
-      // Lazily load input items
-      this.fetchData(val)
+      clearTimeout(this.timeout)
+      // Lazily load input item
+      this.timeout = setTimeout(() => {
+        this.isLoading = true
+        this.fetchData(val)
+      }, 250)
     },
   },
   mounted() {

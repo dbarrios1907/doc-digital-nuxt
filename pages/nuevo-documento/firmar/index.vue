@@ -7,7 +7,7 @@
         </template>
         <template v-slot:subtitle>
           <p class="weight-400 mt-3 font-regular line-height-24">
-            Complete los campos solicitados para ingresar un nuevo documento a distribuir. <br />
+            Complete los campos solicitados para ingresar un nuevo documento a distribuir. <br>
             (*) campos obligatorios.
           </p>
         </template>
@@ -128,8 +128,9 @@ export default {
       alert('Reached Final Step')
     },
     async next(stepComponent) {
-      const valid = await stepComponent?.$children[0]?.validate()
-      if (valid) this.activeStep += 1
+      // const valid = await stepComponent?.$children[0]?.validate()
+      // if (valid) this.activeStep += 1
+      this.activeStep += 1
     },
     back() {
       this.activeStep -= 1
@@ -137,15 +138,16 @@ export default {
     },
     async saveDocument() {
       if (this.activeStep === 1) {
+        this.saveDocInfo()
       } else {
       }
+    },
+    async saveDocInfo() {
       const docInfo = get(this, '$refs.docInfo.$children[0]', {})
       const valid = await docInfo.validate()
       if (!valid) return false
-
       const { files: anexos, tipo: tipoDocumentoOficial, materia, description, folio, reservado: isReservado } = docInfo
-      console.log({ tipoDocumentoOficial, materia, description, folio, isReservado })
-      this.$store.dispatch('documents/createDocument', {
+      const docId = await this.$store.dispatch('documents/createDocument', {
         tipoDocumentoOficial,
         materia,
         description,
@@ -153,6 +155,10 @@ export default {
         isReservado,
         isBorrador: true,
       })
+
+      if (docId) {
+        this.$refs.docInfo.$children[0].upload()
+      }
     },
     deleteDocument(docId) {
       this.$router.replace('/')

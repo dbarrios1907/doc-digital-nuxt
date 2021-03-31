@@ -337,6 +337,17 @@ export default class Auth {
     return this.request(_endpoint, false, withResponse)
   }
 
+  getTokenHeader() {
+    const token = this.strategy.getToken()
+    const tokenName = this.strategies[this.strategy.name].options.tokenName || 'Authorization'
+    if (token) {
+      return {
+        [tokenName]: token,
+      }
+    }
+    return {}
+  }
+
   wrapLogin(promise) {
     this.$storage.setState('busy', true)
     this.error = null
