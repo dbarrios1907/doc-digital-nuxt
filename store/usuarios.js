@@ -118,6 +118,23 @@ export const actions = {
     }
     return []
   },
+  
+  async fetchUsers({ rootState }, params = {}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetchAll(params))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      let users = []
+      for (let i = 0; i < resp.result; i++) {
+        const user = resp.result[i]
+        ;(user.rut = resp.result[i].run + '-' + resp.result[i].dv),
+          (user.nombres = resp.result[i].nombres + ' ' + resp.result[i].apellidos),
+          users.push(user)
+      }
+      console.log("resp.result "+resp.result)
+      return users
+    }
+    return null
+  },
 
   async getUser({ commit, rootState }, id) {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetch(id))

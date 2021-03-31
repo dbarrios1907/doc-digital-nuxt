@@ -22,29 +22,29 @@
                     No se han encontrado coincidencias.
                 </dx-alert>
 
-                <div v-if="emptyfilter && filtered">
+                <div v-if="emptyfilter">
                     <v-row class="mb-2">
                         <v-col cols="12">
                             <dx-badge v-if="tema" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Tema</div>
-                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tema', '')"> mdi-close </dx-icon>
+                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('tema')"> mdi-close </dx-icon>
                             </dx-badge>
 
                             <dx-badge v-if="tipo" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Tipo</div>
-                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tipo', '')"> mdi-close </dx-icon>
+                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('tipo')"> mdi-close </dx-icon>
                             </dx-badge>
 
                             <dx-badge v-if="folio" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Folio</div>
-                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('folio', '')"> mdi-close </dx-icon>
+                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('folio')"> mdi-close </dx-icon>
                             </dx-badge>
 
                             <dx-badge v-if="picker1 || picker2" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Creación</div>
                                 <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="
-                      updatefield('picker1', '')
-                      updatefield('picker2', '')
+                      cleanitem('picker1')
+                      cleanitem('picker2')
                     ">
                                     mdi-close
                                 </dx-icon>
@@ -53,8 +53,8 @@
                             <dx-badge v-if="picker3 || picker4" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Actualización</div>
                                 <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="
-                      updatefield('picker3', '')
-                      updatefield('picker4', '')
+                      cleanitem('picker3')
+                      cleanitem('picker4')
                     ">
                                     mdi-close
                                 </dx-icon>
@@ -134,7 +134,7 @@
         </perfect-scrollbar>
     </v-row>
     <slot name="filter-dialog">
-        <ModalDocumentFilters v-model="dialog" :tema="tema" :folio="folio" :tipo="tipo" :created-start="picker1" :created-end="picker2" :updated-start="picker3" :updated-end="picker4" :document-options="doctype" @onCancel="dialogCancel" @onFilter="dialogFilter" @onClose="dialog = false" :iscancel="iscancel" />
+        <ModalDocumentFilters v-model="dialog" :tema="tema" :folio="folio" :tipo="tipo" :created-start="picker1" :created-end="picker2" :updated-start="picker3" :updated-end="picker4" :document-options="doctype" @onClose="dialog = false" @onCancel="dialogCancel" @onFilter="dialogFilter" :iscancel="iscancel" :ctema="ctema" :ctipo="ctipo" :cfolio="cfolio" :ccreatedStart="cpicker1" :ccreatedEnd="cpicker2" :cupdatedStart="cpicker3" :cupdatedEnd="cpicker4" />
     </slot>
 </div>
 </template>
@@ -191,7 +191,15 @@ export default {
         },
         activeTab: 'Recibidos',
         orderBy: 'materia',
-        orderType: 'DESC'
+        orderType: 'DESC',
+        _watch: Object,
+        ctema: false,
+        ctipo: false,
+        cfolio: false,
+        cpicker1: false,
+        cpicker2: false,
+        cpicker3: false,
+        cpicker4: false,
     }),
     computed: {
         emptyfilter() {
@@ -259,11 +267,11 @@ export default {
             const inbox = this.documentType == 'enviados' ? 'enviar' : 'recibir'
             return docCounts(inbox)
         },
-        pageCount() {
-            return this.countDocuments ? Math.ceil(this.countDocuments / this.itemsPerPage) : 0
-        },
         computedDocuments() {
             return this.$store.getters['documents/getDocs']
+        },
+        pageCount() {
+            return this.countDocuments ? Math.ceil(this.countDocuments / this.itemsPerPage) : 0
         },
     },
     methods: {
@@ -271,43 +279,89 @@ export default {
             this.page = 1
             this.itemsPerPage = 10
             this.activeTab = tab
-            this.orderBy_= "materia"
+            this.orderBy_ = "materia"
             this.orderType = "DESC"
-            this.fetchDocuments()
-        },
-        setItemsPerPage(value) {
-            this.fetchDocuments()
+            this._fetch()
         },
         sortEvent(value) {
             const [field, obj] = value.sortBy
             const [order, obj_] = value.sortDesc
             this.orderBy = field
             this.orderType = order ? 'DESC' : 'ASC'
-            this.fetchDocuments()
+            this._fetch()
         },
-        async fetchDocuments() {
+        cleanInfo(item) {
+            this[item] = true
+        },
+        reverse(_date) {
+            return moment(_date).format('DD-MM-YYYY')
+        },
+        make(key, value) {
+            return key ? value : {}
+        },
+        async _fetch(other) {
             const params = {
-                orderBy: this.orderBy_ ? this.orderBy_ : "materia",
+                ...other,
+                // usuario: this.$store.getters['userId'],
+                orderBy: this.orderBy,
                 orderType: this.orderType,
                 pageNumber: this.page - 1,
-                pageSize: this.itemsPerPage, 
-            }
-            if (this.documentType == 'recibidos') {
-                params['isCompletada'] = this.activeTab == "Recibidos"
+                pageSize: this.itemsPerPage,
             }
             const inbox = this.documentType == 'enviados' ? 'enviar' : 'recibir'
-            await this.$store.dispatch('documents/getDocumentsByInbox', [inbox, params])
+            if(this.documentType == 'recibidos')
+                params['isCompletada'] = this.activeTab == "Recibidos"
+            await this.$store.dispatch('documents/getDocumentsByInbox', [
+                inbox,
+                params
+            ])
+        },
+
+        setItemsPerPage(value) {
+            this._fetch({
+                pageSize: value
+            })
+        },
+        searchByMateria(search) {
+            this._fetch({
+                materia: search
+            })
         },
         formatdate(date) {
             return moment(date).format('DD-MM-YYYY hh:mm')
         },
-        updatefield(key, data) {
-            this[key] = data
+        cleanitem(key) {
+            this[key] = ''
+            this['c' + key] = true
+            this._fetch({
+                materia: this.tema,
+                tipoDocumento: this.tipo,
+                folio: this.folio,
+                ...this.make(this.picker1, {
+                    fechaCreacionDesde: this.reverse(this.picker1)
+                }),
+                ...this.make(this.picker2, {
+                    fechaCreacionHasta: this.reverse(this.picker2)
+                }),
+                ...this.make(this.picker3, {
+                    fechaActualizacionDesde: this.reverse(this.picker3)
+                }),
+                ...this.make(this.picker4, {
+                    fechaActualizacionCreacionHasta: this.reverse(this.picker4)
+                }),
+            })
         },
         dialogCancel() {
-            this.iscancel = true
-            this.filtered = false
+            this.tema = ''
+            this.tipo = ''
+            this.folio = ''
+            this.picker1 = ''
+            this.picker2 = ''
+            this.picker3 = ''
+            this.picker4 = ''
             this.dialog = false
+            this.iscancel = true
+            this._fetch()
         },
         dialogFilter(filters) {
             const {
@@ -320,6 +374,24 @@ export default {
                 updatedEnd
             } = filters
 
+            this._fetch({
+                materia: tema,
+                tipoDocumento: tipo,
+                folio: folio,
+                ...this.make(createdStart, {
+                    fechaCreacionDesde: this.reverse(createdStart)
+                }),
+                ...this.make(createdEnd, {
+                    fechaCreacionHasta: this.reverse(createdEnd)
+                }),
+                ...this.make(updatedStart, {
+                    fechaActualizacionDesde: this.reverse(updatedStart)
+                }),
+                ...this.make(updatedEnd, {
+                    fechaActualizacionCreacionHasta: this.reverse(updatedEnd)
+                }),
+            })
+            this.dialog = false
             this.tema = tema
             this.tipo = tipo
             this.folio = folio
@@ -327,52 +399,7 @@ export default {
             this.picker2 = createdEnd
             this.picker3 = updatedStart
             this.picker4 = updatedEnd
-
-            this.dialog = false
-            this.filtered = true
-        },
-        cancelar() {
-            this.picker1 = ''
-            this.picker2 = ''
-            this.picker3 = ''
-            this.picker4 = ''
-            this.tema = ''
-            this.tipo = ''
-            this.folio = ''
-            this.filtered = false
-        },
-        temaFilter(value) {
-            if (!this.tema || !this.filtered) {
-                return true
-            }
-            return value.toLowerCase().includes(this.tema.toLowerCase())
-        },
-        tipoFilter(value) {
-            if (!this.tipo || !this.filtered) {
-                return true
-            }
-            return value.includes(this.tipo)
-        },
-        folioFilter(value) {
-            if (!this.folio || !this.filtered) {
-                return true
-            }
-            return value.includes(this.folio)
-        },
-        between(from, to, current) {
-            if (!from || !from || !this.filtered) {
-                return true
-            }
-            const from_ = new Date(from)
-            const to_ = new Date(to)
-            const current_ = new Date(current)
-            return current_ >= from_ && current_ <= to_
-        },
-        creacionFilter(value) {
-            return this.between(this.picker1, this.picker2, value)
-        },
-        actualizacionFilter(value) {
-            return this.between(this.picker3, this.picker4, value)
+            this.search = ''
         },
         async deleteDocument(id) {
             const resp = await this.$confirmInstance().open('Confirmación', '¿Realmente desea eliminar este documento?')
@@ -387,7 +414,7 @@ export default {
     watch: {
         page: {
             handler: function (newValue, before) {
-                this.fetchDocuments()
+                this._fetch()
             },
             deep: true,
         },

@@ -227,15 +227,19 @@ export default {
                 ""
         },
         nameFilter(value) {
+            this.page = 1
             this.fetchtUsers()
         },
         rutFilter(value) {
+           this.page = 1
            this.fetchtUsers()
         },        
         permisosFilter(value) {
+            this.page = 1
             this.fetchtUsers()
         },        
         setItemsPerPage(value) {
+            this.page = 1
             this.fetchtUsers()
         },
         activeSearch(header, value) {
