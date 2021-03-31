@@ -363,6 +363,7 @@ export default {
       this.picker2 = createdEnd
       this.picker3 = updatedStart
       this.picker4 = updatedEnd
+      this.search = ''
     },
   },
   watch: {
