@@ -2,7 +2,6 @@
 <div>
     <dx-breadcrumbs v-if="!ismobil" :items="breadcrums" class="mb-10" />
     <AdminDocumentsTable 
-        :documentos="documentos" 
         :showselect="false" 
         title="Documentos enviados" 
         subtitle="Aquí podrás revisar documentos que se han enviado a otras Instituciones." 
@@ -17,7 +16,11 @@
 export default {
     name: 'Documentos',
     fetch() {
-        this.$store.dispatch('documents/getDocumentsByInbox', 'enviar')
+        const params = {       
+            pageNumber: 0,
+            pageSize: 10
+        }
+        this.$store.dispatch('documents/getDocumentsByInbox', ['enviar', params])
     },
     data() {
         return {
@@ -45,9 +48,6 @@ export default {
     computed: {
         ismobil() {
             return this.$vuetify.breakpoint.xs
-        },
-        documentos() {
-            return this.$store.getters['documents/getDocs']
         },
     },
 }

@@ -10,31 +10,31 @@ export const state = () => ({
 })
 
 export const getters = {
-  getActivos(state) {
-    return state.users.filter(function(user) {
-      return !user.isBloqueado
-    })
-  },
-  getInctivos(state) {
-    return state.users.filter(function(user) {
-      return user.isBloqueado
-    })
-  },
+
+  getUsers: state =>  { return state.users },
+
   getUserById: state => id => {
     const userIndex = state.users.findIndex(obj => obj.id == id)
     return state.users[userIndex]
   },
+
   getByEntity: state => entityid => {
     return state.users.filter(user => {
       return user.entidad ? user.entidad.id === entityid : false
     })
   },
+
   getSelectedUser(state) {
     return state.selectedUser
   },
+
   getRoles(state) {
     return state.roles.filter(rol => rol.id != 'ROLE_USUARIO')
-  },
+  }, 
+
+  getUsersCount: state => { 
+    return state.count 
+  }
 }
 
 export const mutations = {
@@ -42,8 +42,8 @@ export const mutations = {
     const userIndex = state.users.findIndex(obj => obj.id == id)
     state.users[userIndex] = newuser
   },
-  setUserList: (state, listUsers, count) => {
-    const users = []
+  setUserList: (state, [listUsers, count]) => {
+    let users = []
     for (let i = 0; i < listUsers.length; i++) {
       const user = listUsers[i]
       ;(user.rut = listUsers[i].run + '-' + listUsers[i].dv),
@@ -94,7 +94,7 @@ export const actions = {
     const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetchAll(params))
     const [valid] = isValidResponse(resp)
     if (valid) {
-      commit('setUserList', resp.result, resp.count)
+      commit('setUserList', [resp.result, resp.total_count])
     }
   },
 
@@ -117,6 +117,23 @@ export const actions = {
       return resData
     }
     return []
+  },
+  
+  async fetchUsers({ rootState }, params = {}) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.usersFetchAll(params))
+    const [valid] = isValidResponse(resp)
+    if (valid) {
+      let users = []
+      for (let i = 0; i < resp.result; i++) {
+        const user = resp.result[i]
+        ;(user.rut = resp.result[i].run + '-' + resp.result[i].dv),
+          (user.nombres = resp.result[i].nombres + ' ' + resp.result[i].apellidos),
+          users.push(user)
+      }
+      console.log("resp.result "+resp.result)
+      return users
+    }
+    return null
   },
 
   async getUser({ commit, rootState }, id) {
@@ -154,12 +171,14 @@ export const actions = {
       Toast.success({
         message: 'Usuario eliminado',
       })
-      commit('deleteUser', id)
-    } else {
+      return true
+    }
+    else{
       Toast.error({
         message: 'Ha ocurrido un error eliminando el usuario',
       })
-    }
+      return false
+    }  
   },
 
   async updateUser({ rootState }, user) {
@@ -185,12 +204,14 @@ export const actions = {
       Toast.success({
         message: status ? 'Usuario activado' : 'Usuario inactivado',
       })
-      commit('setUserStatus', { id, status })
-    } else {
+      return true
+    }
+    else{
       Toast.error({
         message: 'Ha ocurrido un error ' + status ? 'activando' : 'inactivando' + ' el usuario',
       })
-    }
+      return false
+    }  
   },
 
   async getRoles({ commit, rootState }) {

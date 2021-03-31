@@ -13,38 +13,38 @@
                 </dx-bodytitle>
             </v-col>
             <v-col cols="12" class="bg-grey1 px-md-9 pt-1 mb-10">
-                <div class="my-9 weight-400" v-if="computedDocuments.length">
+                <div class="my-9 weight-400" v-if="countDocuments > 0">
                     <span class="mr-2">Mostrando hasta</span>
-                    <dx-select v-model="itemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
-                    <span class="ml-md-3">resultados de un total de <b>{{ computedDocuments.length }} documentos {{documentType}}</b>.</span>
+                    <dx-select v-model="itemsPerPage" @change="setItemsPerPage" class="d-inline-flex min-content mb-md-3" :items="options" :label="itemsPerPage.toString()" />
+                    <span class="ml-md-3">resultados de un total de <b>{{ countDocuments }} documentos {{documentType}}</b>.</span>
                 </div>
                 <dx-alert v-else class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0 px-4 py-2 text-center" absolute bottom right type="error" outlined :show-left-icon="false" :show-right-icon="false">
                     No se han encontrado coincidencias.
                 </dx-alert>
 
-                <div v-if="emptyfilter && filtered">
+                <div v-if="emptyfilter">
                     <v-row class="mb-2">
                         <v-col cols="12">
                             <dx-badge v-if="tema" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Tema</div>
-                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tema', '')"> mdi-close </dx-icon>
+                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('tema')"> mdi-close </dx-icon>
                             </dx-badge>
 
                             <dx-badge v-if="tipo" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Tipo</div>
-                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('tipo', '')"> mdi-close </dx-icon>
+                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('tipo')"> mdi-close </dx-icon>
                             </dx-badge>
 
                             <dx-badge v-if="folio" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Folio</div>
-                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="updatefield('folio', '')"> mdi-close </dx-icon>
+                                <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="cleanitem('folio')"> mdi-close </dx-icon>
                             </dx-badge>
 
                             <dx-badge v-if="picker1 || picker2" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Creación</div>
                                 <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="
-                      updatefield('picker1', '')
-                      updatefield('picker2', '')
+                      cleanitem('picker1')
+                      cleanitem('picker2')
                     ">
                                     mdi-close
                                 </dx-icon>
@@ -53,8 +53,8 @@
                             <dx-badge v-if="picker3 || picker4" type="tertiary" label outlined class="mx-0 my-0 mr-3">
                                 <div class="darken3--text font-16 line-height-22 weight-400">Actualización</div>
                                 <dx-icon left class="darken3--text ml-2 mr-0" @click.prevent="
-                      updatefield('picker3', '')
-                      updatefield('picker4', '')
+                      cleanitem('picker3')
+                      cleanitem('picker4')
                     ">
                                     mdi-close
                                 </dx-icon>
@@ -87,9 +87,9 @@
                             <dx-icon right regular class="text-right float-right"> mdi-filter </dx-icon>
                         </dx-button>
                     </div>
-                     <div class="col-md-9 text-underline float-right">
+                    <div class="col-md-9 text-underline float-right">
                         <div :class="['download-excel', {'movil-container': ismobil}]">
-                            <download-excel :class="[{'text-center': ismobil}, {'text-right': !ismobil}]" :data="documentos" type="csv" name="Listado de documentos.csv" :fields="fields">
+                            <download-excel :class="[{'text-center': ismobil}, {'text-right': !ismobil}]" :data="computedDocuments" type="csv" name="Listado de documentos.csv" :fields="fields">
                                 <CsvExport class="text-left float-left" />
                                 <div class="text-underline float-right">Descargar listado</div>
                             </download-excel>
@@ -97,7 +97,7 @@
                     </div>
                 </v-row>
                 <dx-tabs v-if="documentType==='recibidos'" :items="computedTabs" tabtype="primary" class="users-tab mt-7" @getActiveTab="get_tab" />
-                <DataTable color="primary" :headers="computedHeaders" :items="computedDocuments" :page.sync="page" :items-per-page="itemsPerPage" :class="['bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]" :mobile-breakpoint="0" hide-default-footer item-key="materia" :show-select="showselect" @page-count="pageCount = $event">
+                <DataTable color="primary" :headers="computedHeaders" :items="computedDocuments" @update:options="sortEvent" :page.sync="page" :items-per-page="itemsPerPage" :class="['bold', 'actions1', 'table-xl', { 'icon-sort-left': isleft }, { ismobile: ismobil }]" :mobile-breakpoint="0" hide-default-footer item-key="materia" :show-select="showselect">
                     <template v-slot:[`item.materia`]="{ item: { materia, id } }" class="column">
                         <NuxtLink class="breaktext" :to="inboxurl + id">{{ materia }}</NuxtLink>
                     </template>
@@ -118,8 +118,8 @@
 
                     <template v-slot:[`item.actions`]="{ item: { id } }">
                         <div :class="[{'text-center': ismobil}]">
-                             <v-icon dense @click="openDetails(id)"> mdi-eye </v-icon>
-                             <v-icon dense class="ml-4" @click="deleteDocument(id)">mdi-delete-outline </v-icon>
+                            <v-icon dense @click="openDetails(id)"> mdi-eye </v-icon>
+                            <v-icon dense class="ml-4" @click="deleteDocument(id)">mdi-delete-outline </v-icon>
                         </div>
                     </template>
 
@@ -134,7 +134,7 @@
         </perfect-scrollbar>
     </v-row>
     <slot name="filter-dialog">
-        <ModalDocumentFilters v-model="dialog" :tema="tema" :folio="folio" :tipo="tipo" :created-start="picker1" :created-end="picker2" :updated-start="picker3" :updated-end="picker4" :document-options="doctype" @onCancel="dialogCancel" @onFilter="dialogFilter" @onClose="dialog = false" :iscancel="iscancel" />
+        <ModalDocumentFilters v-model="dialog" :tema="tema" :folio="folio" :tipo="tipo" :created-start="picker1" :created-end="picker2" :updated-start="picker3" :updated-end="picker4" :document-options="doctype" @onClose="dialog = false" @onCancel="dialogCancel" @onFilter="dialogFilter" :iscancel="iscancel" :ctema="ctema" :ctipo="ctipo" :cfolio="cfolio" :ccreatedStart="cpicker1" :ccreatedEnd="cpicker2" :cupdatedStart="cpicker3" :cupdatedEnd="cpicker4" />
     </slot>
 </div>
 </template>
@@ -152,10 +152,6 @@ export default {
         inboxurl: {
             type: String,
             default: '',
-        },
-        documentos: {
-            type: Array,
-            default: () => [],
         },
         showselect: {
             type: Boolean,
@@ -184,25 +180,28 @@ export default {
         search: '',
         isleft: true,
         page: 1,
-        pageCount: 0,
         itemsPerPage: 10,
         filtered: false,
         fields: {
             "Tema": "materia",
             "Tipo": "tipoDocumentoOficial.descripcion",
             "Folio": "folio",
-            "Creación" : "createAt",
-            "Actualización" : "updateAt"
-            // "Telephone 2": {
-            //     field: "phone.landline",
-            //     callback: (value) => {
-            //     return `Landline Phone - ${value}`;
-            //     },
-            // },
-            },
-        activeTab: 'Recibidos'
+            "Creación": "createAt",
+            "Actualización": "updateAt"
+        },
+        activeTab: 'Recibidos',
+        orderBy: 'materia',
+        orderType: 'DESC',
+        _watch: Object,
+        ctema: false,
+        ctipo: false,
+        cfolio: false,
+        cpicker1: false,
+        cpicker2: false,
+        cpicker3: false,
+        cpicker4: false,
     }),
-    computed: {       
+    computed: {
         emptyfilter() {
             return this.picker1 || this.picker2 || this.picker3 || this.picker1 || this.tema || this.tipo || this.tema || this.folio
         },
@@ -252,49 +251,117 @@ export default {
                 },
             ]
         },
-        computedTabs(){
-            return  [
-                {
-                tab: 'Recibidos',
-                number: this.documentos.filter(doc => doc.isCompletada).length
+        computedTabs() {
+            return [{
+                    tab: 'Recibidos',
+                    number: 0
                 },
                 {
-                tab: 'Pendientes',
-                number: this.documentos.filter(doc => !doc.isCompletada).length
+                    tab: 'Pendientes',
+                    number: 0
                 },
             ]
         },
-        computedDocuments(){
-            if(this.documentType === 'recibidos'){
-                const documentos = this.documentos
-                if(this.activeTab ===  'Pendientes'){
-                    return documentos.filter(doc => !doc.isCompletada)
-                }
-                if(this.activeTab ===  'Recibidos'){
-                    return documentos.filter(doc => doc.isCompletada)
-                }
-            }
-            else
-                return this.documentos
+        countDocuments() {
+            const docCounts = this.$store.getters['documents/getDocumentsCount']
+            const inbox = this.documentType == 'enviados' ? 'enviar' : 'recibir'
+            return docCounts(inbox)
+        },
+        computedDocuments() {
+            return this.$store.getters['documents/getDocs']
+        },
+        pageCount() {
+            return this.countDocuments ? Math.ceil(this.countDocuments / this.itemsPerPage) : 0
         },
     },
     methods: {
-        get_tab(tab){
+        get_tab(tab) {
             this.page = 1
-            this.pageCount = 0
             this.itemsPerPage = 10
             this.activeTab = tab
+            this.orderBy_ = "materia"
+            this.orderType = "DESC"
+            this._fetch()
+        },
+        sortEvent(value) {
+            const [field, obj] = value.sortBy
+            const [order, obj_] = value.sortDesc
+            this.orderBy = field
+            this.orderType = order ? 'DESC' : 'ASC'
+            this._fetch()
+        },
+        cleanInfo(item) {
+            this[item] = true
+        },
+        reverse(_date) {
+            return moment(_date).format('DD-MM-YYYY')
+        },
+        make(key, value) {
+            return key ? value : {}
+        },
+        async _fetch(other) {
+            const params = {
+                ...other,
+                // usuario: this.$store.getters['userId'],
+                orderBy: this.orderBy,
+                orderType: this.orderType,
+                pageNumber: this.page - 1,
+                pageSize: this.itemsPerPage,
+            }
+            const inbox = this.documentType == 'enviados' ? 'enviar' : 'recibir'
+            if(this.documentType == 'recibidos')
+                params['isCompletada'] = this.activeTab == "Recibidos"
+            await this.$store.dispatch('documents/getDocumentsByInbox', [
+                inbox,
+                params
+            ])
+        },
+
+        setItemsPerPage(value) {
+            this._fetch({
+                pageSize: value
+            })
+        },
+        searchByMateria(search) {
+            this._fetch({
+                materia: search
+            })
         },
         formatdate(date) {
             return moment(date).format('DD-MM-YYYY hh:mm')
         },
-        updatefield(key, data) {
-            this[key] = data
+        cleanitem(key) {
+            this[key] = ''
+            this['c' + key] = true
+            this._fetch({
+                materia: this.tema,
+                tipoDocumento: this.tipo,
+                folio: this.folio,
+                ...this.make(this.picker1, {
+                    fechaCreacionDesde: this.reverse(this.picker1)
+                }),
+                ...this.make(this.picker2, {
+                    fechaCreacionHasta: this.reverse(this.picker2)
+                }),
+                ...this.make(this.picker3, {
+                    fechaActualizacionDesde: this.reverse(this.picker3)
+                }),
+                ...this.make(this.picker4, {
+                    fechaActualizacionCreacionHasta: this.reverse(this.picker4)
+                }),
+            })
         },
         dialogCancel() {
-            this.iscancel = true
-            this.filtered = false
+            this.tema = ''
+            this.tipo = ''
+            this.folio = ''
+            this.picker1 = ''
+            this.picker2 = ''
+            this.picker3 = ''
+            this.picker4 = ''
             this.dialog = false
+            this.iscancel = true
+            this._fetch()
         },
         dialogFilter(filters) {
             const {
@@ -307,6 +374,24 @@ export default {
                 updatedEnd
             } = filters
 
+            this._fetch({
+                materia: tema,
+                tipoDocumento: tipo,
+                folio: folio,
+                ...this.make(createdStart, {
+                    fechaCreacionDesde: this.reverse(createdStart)
+                }),
+                ...this.make(createdEnd, {
+                    fechaCreacionHasta: this.reverse(createdEnd)
+                }),
+                ...this.make(updatedStart, {
+                    fechaActualizacionDesde: this.reverse(updatedStart)
+                }),
+                ...this.make(updatedEnd, {
+                    fechaActualizacionCreacionHasta: this.reverse(updatedEnd)
+                }),
+            })
+            this.dialog = false
             this.tema = tema
             this.tipo = tipo
             this.folio = folio
@@ -314,77 +399,43 @@ export default {
             this.picker2 = createdEnd
             this.picker3 = updatedStart
             this.picker4 = updatedEnd
-
-            this.dialog = false
-            this.filtered = true
+            this.search = ''
         },
-        cancelar() {
-            this.picker1 = ''
-            this.picker2 = ''
-            this.picker3 = ''
-            this.picker4 = ''
-            this.tema = ''
-            this.tipo = ''
-            this.folio = ''
-            this.filtered = false
-        },
-        temaFilter(value) {
-            if (!this.tema || !this.filtered) {
-                return true
-            }
-            return value.toLowerCase().includes(this.tema.toLowerCase())
-        },
-        tipoFilter(value) {
-            if (!this.tipo || !this.filtered) {
-                return true
-            }
-            return value.includes(this.tipo)
-        },
-        folioFilter(value) {
-            if (!this.folio || !this.filtered) {
-                return true
-            }
-            return value.includes(this.folio)
-        },
-        between(from, to, current) {
-            if (!from || !from || !this.filtered) {
-                return true
-            }
-            const from_ = new Date(from)
-            const to_ = new Date(to)
-            const current_ = new Date(current)
-            return current_ >= from_ && current_ <= to_
-        },
-        creacionFilter(value) {
-            return this.between(this.picker1, this.picker2, value)
-        },
-        actualizacionFilter(value) {
-            return this.between(this.picker3, this.picker4, value)
-        },
-        async deleteDocument(id){
+        async deleteDocument(id) {
             const resp = await this.$confirmInstance().open('Confirmación', '¿Realmente desea eliminar este documento?')
-           if(resp){
-               this.$store.dispatch('documents/deleteDocument', id)
-           }
+            if (resp) {
+                this.$store.dispatch('documents/deleteDocument', id)
+            }
         },
-        openDetails(id){
-            this.$router.replace('/administracion/documentos/details/'+id)
+        openDetails(id) {
+            this.$router.replace('/administracion/documentos/details/' + id)
+        },
+    },
+    watch: {
+        page: {
+            handler: function (newValue, before) {
+                this._fetch()
+            },
+            deep: true,
         },
     },
 }
 </script>
 
 <style lang="scss" scoped>
-.v-data-table.ismobile table > tbody >tr {
-            height: 37px !important;
-        }
+.v-data-table.ismobile table>tbody>tr {
+    height: 37px !important;
+}
+
 .mobile-container .dx-pagination {
-            margin: 0px auto !important;
-        }
+    margin: 0px auto !important;
+}
+
 .mobile-container {
     table>tbody>tr>td {
         padding: 6px 10px !important;
     }
+
     table>tbody>tr {
         height: 37px !important;
     }
@@ -398,21 +449,25 @@ export default {
         margin: 0px auto !important;
     }
 }
+
 @include theme(v-application) using ($material) {
-    .download-excel{
+    .download-excel {
         width: 158px;
         height: 48px;
         padding: 9px 0px;
-        color:#0F69C4;
+        color: #0F69C4;
         cursor: pointer;
     }
-    .download-excel:not(.movil-container){
-        float : right;
+
+    .download-excel:not(.movil-container) {
+        float: right;
     }
-    .download-excel.movil-container{
-        margin:0px auto
+
+    .download-excel.movil-container {
+        margin: 0px auto
     }
 }
+
 @include theme(v-select) using ($material) {
     width: rem-calc(104px) !important;
     height: rem-calc(48px) !important;
@@ -484,7 +539,8 @@ export default {
         }
     }
 }
-.dx-admindocuments a{
+
+.dx-admindocuments a {
     text-decoration: none !important;
 }
 </style>

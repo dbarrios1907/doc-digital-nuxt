@@ -178,10 +178,10 @@ export default {
     async fetch() {
         await this.$store.dispatch('entidades/getEntities')
         await this.$store.dispatch('usuarios/getRoles')
-        await this.$store.dispatch('usuarios/getUsers', {})
+        await this.$store.dispatch('usuarios/getUsers', {isBloqueado:false})
     },
     mounted() {
-        const activos = this.$store.getters['usuarios/getActivos']
+        const activos = this.$store.getters['usuarios/getUsers']
         if (this.userid) {
             const user = this.$store.getters['usuarios/getSelectedUser']
             const roles = user.roles.filter(rol => rol != 'ROLE_USUARIO')
@@ -198,7 +198,6 @@ export default {
                 this.roles = roles
                 this.seguidor = user.seguidor
             }
-            console.log(this.roles)
         }
         this.seguidores = activos.map(({
             id,
