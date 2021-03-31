@@ -1,7 +1,7 @@
 <template>
   <div>
     <DocumentTray
-      :documentos="documentos"
+      inbox="creacion/rechazadas"
       title="Documentos Devueltos"
       subtitle="Revisa tus documentos devueltos."
       empty-results="no tiene documentos devueltos"
@@ -31,14 +31,6 @@ export default {
       details: [],
       docid: '',
     }
-  },
-  fetch() {
-    this.$store.dispatch('documents/getDocuments', 'creacion/rechazadas')
-  },
-  computed: {
-    documentos() {
-      return this.$store.getters['documents/getDocs']
-    },
   },
   methods: {
     getid(name, id) {
