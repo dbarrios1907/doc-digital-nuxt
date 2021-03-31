@@ -50,7 +50,7 @@
     </div>
 
     <div>
-      <div v-if="urlFiles.length > 0" class="my-2">Adjuntos salvados</div>
+      <div v-if="savedFiles.length > 0" class="my-2">Adjuntos salvados</div>
       <UrlFile
         v-for="(sf, index) in savedFiles"
         :key="index"
@@ -59,7 +59,7 @@
         :description-prop="savedDescription"
         :name-prop="savedName"
         :id-prop="savedId"
-        @onRemove="$store.deleteA"
+        @onRemove="$emit('onSavedRemove', sf)"
       />
     </div>
   </div>
