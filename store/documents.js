@@ -36,10 +36,12 @@ export const state = () => ({
   recibir: 0,
   enviar: 0,
   firmar: 0,
+  pageCount: 0,
 })
 
 export const getters = {
   getDocs: state => state.documents,
+  getDocsLenth: state => state.pageCount,
   documentTypeOptions: state => state.documentTypeOptions,
   documentSubjectOptions: state => state.documentSubjectOptions,
   visaOptions: state => state.visaOptions,
@@ -52,6 +54,10 @@ export const getters = {
 }
 
 export const mutations = {
+  setDocumentsList: (state, [docs, count]) => {
+    state.documents = docs
+    state.pageCount = count
+  },
   setDocuments: (state, docs) => {
     state.documents = docs
   },
@@ -74,17 +80,15 @@ export const mutations = {
 }
 
 export const actions = {
-  async getDocuments({ commit, rootState }, inbox) {
-    const resp = await this.$auth.requestWith(rootState.authStrategy, {
-      method: 'GET',
-      url: '/documentos/tareas/' + inbox,
-    })
+  async getDocuments({ commit, rootState }, { inbox, params }) {
+    const resp = await this.$auth.requestWith(rootState.authStrategy, endpoints.fetchTasksByInbox(inbox, params))
     const [valid] = isValidResponse(resp)
     if (valid) {
-      commit(
-        'setDocuments',
-        resp.result.map(({ documento }) => documento)
-      )
+      commit('setDocumentsList', [
+        //resp.result.map(({ documento, createAt, updateAt, id }) => ({ ...documento, createAt, updateAt, id })),
+        resp.result,
+        resp.total_count,
+      ])
     }
   },
   async fetchTramiteProgress({ commit, rootState }, id) {

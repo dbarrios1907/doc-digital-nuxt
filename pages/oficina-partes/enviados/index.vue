@@ -1,7 +1,7 @@
 <template>
   <div>
     <DocumentTray
-      :documentos="documentos"
+      inbox="op/enviar"
       title="Oficina de partes"
       subtitle="Revisa tus documentos."
       empty-results="no existen documentos archivados"
@@ -29,14 +29,6 @@ export default {
       details: [],
       docid: '',
     }
-  },
-  fetch() {
-    this.$store.dispatch('documents/getDocuments', 'op/enviar')
-  },
-  computed: {
-    documentos() {
-      return this.$store.getters['documents/getDocs']
-    },
   },
   methods: {
     getid(name, id) {

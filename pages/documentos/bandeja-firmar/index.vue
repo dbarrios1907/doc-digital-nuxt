@@ -1,7 +1,7 @@
 <template>
   <div>
     <DocumentTray
-      :documentos="documentos"
+      inbox="firmar"
       title="Firmar documentos"
       subtitle="Revisa tus documentos pendientes por firmar."
       empty-results="no tiene documentos pendientes para firmar"
@@ -36,9 +36,6 @@
 
 <script>
 export default {
-  fetch() {
-    this.$store.dispatch('documents/getDocuments', 'firmar')
-  },
   data() {
     return {
       dialog_d: false,
@@ -47,11 +44,6 @@ export default {
       dialog2: false,
       docid: '',
     }
-  },
-  computed: {
-    documentos() {
-      return this.$store.getters['documents/getDocs']
-    },
   },
   methods: {
     getid(name, id) {

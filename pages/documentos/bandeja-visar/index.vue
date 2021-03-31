@@ -1,7 +1,7 @@
 <template>
   <div>
     <DocumentTray
-      :documentos="documentos"
+      inbox="visar"
       title="Visar documentos"
       subtitle="Revisa tus documentos pendientes por visar."
       empty-results="no tiene documentos pendientes para visar"
@@ -39,18 +39,8 @@ export default {
       docid: '',
     }
   },
-  fetch() {
-    this.$store.dispatch('documents/getDocuments', 'visar')
-  },
-  computed: {
-    documentos() {
-      return this.$store.getters['documents/getDocs']
-    },
-  },
   methods: {
     getid(name, id) {
-      console.log('id', id)
-      console.log('name', name)
       this.docid = id.toString()
       this[name] = true
     },
