@@ -251,7 +251,6 @@ export default class ClaveUnicaScheme {
   }
 
   async loginWithEntity(userId) {
-    debugger
     const { url, method } = this.options.loginEntity
     const resp = await this.$auth.requestWith(this.name, {
       url: url + userId,
