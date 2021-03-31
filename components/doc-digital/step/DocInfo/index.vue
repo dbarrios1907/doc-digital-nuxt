@@ -82,11 +82,11 @@
           class="mr-2"
           url-uploader-text="Cargar Referencia URL"
           :saved-files="mainDoc"
+          :limit="20000"
           :headers="$auth.getTokenHeader()"
           :action="uploadMainDocAction"
-          :manual-upload="true"
+          :manual-upload="false"
           @onSavedRemove="onMainRemove"
-          @onFilesAttached="uploadMainDoc"
         />
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6" class="py-0 pr-0">
@@ -174,15 +174,13 @@ export default {
     },
 
     uploadMainDocAction() {
-      const id = this.id
-      return id ? `/api/documentos/${id}/archivo` : ''
+      const id = this.document.id
+      return id ? `/api/documentos/${id}/archivo` : null
     },
 
     uploadAnexosAction() {
-      const id = this.id
-      debugger
-      console.log(this.id)
-      return id ? `/api/documentos/${id}/anexos/archivo` : ''
+      const id = this.document.id
+      return id ? `/api/documentos/${id}/anexos/archivo` : null
     },
   },
   methods: {
@@ -198,12 +196,8 @@ export default {
     },
     onError(res, file) {
       Message.error({
-        message: 'Error Uploading',
+        message: 'Error al subir documento',
       })
-    },
-    async uploadMainDoc() {
-      console.log(this.$refs)
-      this.$refs.$mainDoc.upload()
     },
     async onMainRemove(file) {
       const removed = await this.onfileRemove(file)

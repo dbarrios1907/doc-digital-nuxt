@@ -38,6 +38,8 @@
         :upload-handler="uploadHandler"
         description-prop="name"
         :upload-threads="uploadThreads"
+        :action="action"
+        :auto-upload="!manualUpload"
         @onRemove="removeFile"
       />
     </div>
@@ -95,7 +97,7 @@ export default {
     },
     action: {
       type: String,
-      default: '/fileupload',
+      default: null,
     },
     uploadThreads: {
       type: Number,
