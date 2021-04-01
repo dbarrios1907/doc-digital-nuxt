@@ -154,7 +154,8 @@ export const getters = {
   userName: state => get(state, 'auth.user.ctx.nombre', ''),
   userRun: state => get(state, 'auth.user.ctx.run]', ''),
   entityName: state => get(state, 'auth.user.ctx.entidadNombre', ''),
-  userId: state => get(state, 'auth.user.id', ''),
+  userId: state => get(state, 'auth.user.ctx.key', ''),
+  isSubroganteActivado: state => get(state, 'auth.user.ctx.isSubroganteActivado', ''),
   userIsMultiUser: state => get(state, 'auth.user.ctx.isMultiUsuario', false),
   dashboard: state => state.dashboard,
 }

@@ -155,10 +155,13 @@ export const actions = {
         message: 'Entidad eliminada',
       })
       commit('deleteEntity', id)
-    } else {
+      return true
+    }
+    else{
       Toast.error({
         message: 'Ha ocurrido un error eliminando la entidad',
       })
-    }
+      return false
+    }  
   },
 }

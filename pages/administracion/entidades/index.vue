@@ -20,7 +20,7 @@
         </div>
     </v-row>
     <v-row class="mt-6" no-gutters>
-        <DataTable @update:options="sortEvent" :headers="computedHeaders" :items="getEntities" :page.sync="page" :items-per-page="getItemsPerPage" :class="['table-check', 'table-sm', ismobil]" :mobile-breakpoint="0" dense item-key="name" hide-default-footer calculate-widths @page-count="pageCount">
+        <DataTable @update:options="sortEvent" :headers="computedHeaders" :items="getEntities" :page.sync="page" :items-per-page="getItemsPerPage" :class="['table-check', 'table-sm', ismobil]" :mobile-breakpoint="0" dense item-key="name" hide-default-footer calculate-widths>
             <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
                 {{ h.text }}
                 <v-icon v-if="h.search" :key="h.value" :class="[{ iconsearch: h.search }, { focus: actived === h.value }]" @click="activeSearch(header, $event)">
@@ -145,9 +145,9 @@ export default {
             entity_id: '',
             details: [],
             selected_entidad: null,
-            valuess: [],
-            orderBy: String,
-            orderType: String
+            valuess: [],      
+            orderBy: 'id',
+            orderType: 'DESC'
         }
     },
     computed: {
@@ -197,7 +197,7 @@ export default {
         },
         pageCount() {
             const pagescount = this.$store.getters['entidades/getEntitiesLenth']
-            return parseInt(pagescount / this.itemsPerPage)
+            return pagescount ? Math.ceil(pagescount / this.itemsPerPage) : 0
         },
         getItemsPerPage() {
             return parseInt(this.itemsPerPage)
@@ -279,7 +279,9 @@ export default {
         },
         async deleteEntity() {
             const id = this.entity_id
-            await this.$store.dispatch('entidades/deleteEntity', id)
+            const resp = await this.$store.dispatch('entidades/deleteEntity', id)
+            if (resp)
+                this.fetchEntities()
             this.entity_id = ''
             this.dialog_confirmacion = false
         },

@@ -8,10 +8,9 @@
     </dx-bodytitle>
     <v-row no-gutters>
         <div class="col-sm-6 col-md-6">
-            <div v-if="!isListEmpty" class="mt-10 weight-400">
+            <div v-if="countUsuarios > 0" class="mt-10 weight-400">
                 <span class="mr-2">Mostrando hasta</span>
-                <v-select v-if="activeTab === 'Activos'" v-model="itemsPerPageUA" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="10" value="10" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
-                <v-select v-else v-model="itemsPerPageUI" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="10" value="10" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
+                <v-select v-model="itemsPerPage"  @change="setItemsPerPage" class="d-inline-flex min-content select" style="width: 104px" :items="options" label="10" value="10" solo flat outlined v-bind="$props" ripple="false" single-line :menu-props="{ bottom: true, offsetY: true, openOnClick: false }" :class="ismobil" />
                 <span :class="{ 'ml-3': !ismobil }">resultados de un total de <b>{{countUsuarios + (countUsuarios > 1 ?  ' usuarios' : ' usuario')}}</b></span>
             </div>
             <dx-alert v-else class="mb-9 mt-10 custom-alert font-14 line-height-18 elevation-0" :class="[{ 'px-4': ismobil }]" absolute bottom right type="error" outlined :show-left-icon="false" :show-right-icon="false">
@@ -23,106 +22,53 @@
         </div>
     </v-row>
     <v-row class="mt-4" no-gutters>
-        <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7" @getActiveTab="get_tab">
-            <template v-slot:tab-item>
-                <v-tab-item>
-                    <DataTable :headers="computedHeaders" :items="usuariosActivos" :page.sync="pageUA" :items-per-page="getItemsPerPages(itemsPerPageUA)" :class="['table-check', 'table-sm', ismobil]" :mobile-breakpoint="0" dense :item-key="'nombres' + Math.random().toString()" @page-count="pageCountUA = $event" hide-default-footer calculate-widths>
-                        <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
-                            {{ h.text }}
-                            <v-icon :class="[{ iconsearch: h.search }, { focus: actived === h.value }]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
-                        </template>
-                        <template slot="body.prepend" v-if="searchname || searchrut || searchpermisos || filtered">
-                            <tr class="body-prepend">
-                                <td>
-                                    <v-text-field type="text" @focus="actived = 'nombres'" hide-details solo flat outlined v-model="filterValue" label="Nombre" v-if="searchname" />
-                                </td>
-                                <td v-if="!ismobil">
-                                    <v-text-field type="text" @focus="actived = 'rut'" hide-details solo flat outlined v-model="filterRut" label="Rut" v-if="searchrut" />
-                                </td>
-                                <td v-if="!ismobil">
-                                    <dx-select v-model="filterPermisos" :items="rolesUser" @on-delete-item="removeItem" label="Permisos" item-text="name" item-value="id" multiple v-bind="$props" closableItems :ripple="false">
-                                    </dx-select>
-                                </td>
-                                <td v-if="!ismobil"></td>
-                            </tr>
-                        </template>
-                        <template v-slot:[`item.nombres`]="{ item: { nombres } }">
-                            <span class="breaktext">{{ nombres }}</span>
-                        </template>
+        <dx-tabs :items="tabs" tabtype="default" class="users-tab mt-7" @getActiveTab="get_tab" />
+            <DataTable :headers="computedHeaders" :items="users" @update:options="sortEvent" :page.sync="page" :items-per-page="itemsPerPage" :class="['table-check', 'table-sm', ismobil]" :mobile-breakpoint="0" dense :item-key="'nombres' + Math.random().toString()" hide-default-footer calculate-widths>
+                <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
+                    {{ h.text }}
+                    <v-icon :class="[{ iconsearch: h.search }, { focus: actived === h.value }]" :key="h.value" @click="activeSearch(header, $event)" v-if="h.search">mdi-magnify</v-icon>
+                </template>
+                <template slot="body.prepend" v-if="searchname || searchrut || searchpermisos || filtered">
+                    <tr class="body-prepend">
+                        <td>
+                            <v-text-field type="text" @input="nameFilter" @focus="actived = 'nombres'" hide-details solo flat outlined v-model="filterName" label="Nombre" v-if="searchname" />
+                        </td>
+                        <td v-if="!ismobil">
+                            <v-text-field type="text" @input="rutFilter"  @focus="actived = 'rut'" hide-details solo flat outlined v-model="filterRut" label="Rut" v-if="searchrut" />
+                        </td>
+                        <td v-if="!ismobil">
+                            <dx-select v-model="filterPermisos" @change="permisosFilter" :items="rolesUser" @on-delete-item="removeItem" label="Permisos" item-text="name" v-if="searchpermisos" item-value="id" multiple v-bind="$props" closableItems :ripple="false">
+                            </dx-select>
+                        </td>
+                        <td v-if="!ismobil"></td>
+                    </tr>
+                </template>
+                <template v-slot:[`item.nombres`]="{ item: { nombres } }">
+                    <span class="breaktext">{{ nombres }}</span>
+                </template>
 
-                        <template v-slot:[`item.rut`]="{ item: { rut } }">
-                            <span class="breaktext">{{ rut }}</span>
-                        </template>
+                <template v-slot:[`item.rut`]="{ item: { rut } }">
+                    <span class="breaktext">{{ rut }}</span>
+                </template>
 
-                        <template v-slot:[`item.roles`]="{ item: { roles } }">
-                            <v-chip v-for="v in roles" :key="v+Math.random()" class="ml-2 my-1" color="primary" small>
-                                {{ getUserRole(v) }}
-                            </v-chip>
-                        </template>
+                <template v-slot:[`item.roles`]="{ item: { roles } }">
+                    <v-chip v-for="v in roles" :key="v+Math.random()" class="ml-2 my-1" color="primary" small>
+                        {{ getUserRole(v) }}
+                    </v-chip>
+                </template>
 
-                        <template v-slot:[`item.actions`]="{ item: { id } }">
-                            <v-icon dense @click="get_user_details(id)" :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon>
-                            <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
-                            <v-icon dense @click="userid = id, isBloqueado = false, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
-                        </template>
+                <template v-slot:[`item.actions`]="{ item: { id } }">
+                    <v-icon dense @click="get_user_details(id)" :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon>
+                    <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
+                    <v-icon dense @click="userid = id, isBloqueado = false, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
+                </template>
 
-                        <template v-slot:footer>
-                            <div :class="['pt-4 v-data-footer', ismobil]">
-                                <dx-pagination v-model="pageUA" :length="pageCountUA" />
-                            </div>
-                        </template>
-                    </DataTable>
-                </v-tab-item>
-                <v-tab-item>
-                    <DataTable :headers="computedHeaders" :items="usuariosInactivos" :page.sync="pageUI" :items-per-page="getItemsPerPages(itemsPerPageUI)" :class="['table-check', 'table-sm', ismobil]" :mobile-breakpoint="0" dense :item-key="'nombres' + Math.random().toString()" hide-default-footer calculate-widths @page-count="pageCountUI = $event">
-                        <template v-for="h in computedHeaders" v-slot:[`header.${h.value}`]="{ header }" class="column">
-                            {{ h.text }}
-                            <v-icon v-if="h.search" :key="h.value" :class="[{ iconsearch: h.search }, { focus: actived === h.value }]" @click="activeSearch(header, $event)">
-                                mdi-magnify
-                            </v-icon>
-                        </template>
-                        <template v-if="searchname || searchrut || searchpermisos || filtered" slot="body.prepend">
-                            <tr class="body-prepend">
-                                <td>
-                                    <v-text-field v-model="filterValue" type="text" hide-details solo v-if="searchname" flat outlined label="Nombre" @focus="actived = 'nombres'" />
-                                </td>
-                                <td v-if="!ismobil">
-                                    <v-text-field v-model="filterRut" type="text" hide-details solo v-if="searchrut" flat outlined label="Rut" @focus="actived = 'rut'" />
-                                </td>
-                                <td v-if="!ismobil"></td>
-                                <td v-if="!ismobil"></td>
-                            </tr>
-                        </template>
-
-                        <template v-slot:[`item.nombres`]="{ item: { nombres } }">
-                            <span class="breaktext">{{ nombres }}</span>
-                        </template>
-
-                        <template v-slot:[`item.rut`]="{ item: { rut } }">
-                            <span class="breaktext">{{ rut }}</span>
-                        </template>
-
-                        <template v-slot:[`item.roles`]="{ item: { roles } }">
-                            <v-chip v-for="v in roles" :key="v+Math.random()" class="ml-2 my-1" color="primary" small>
-                                {{ getUserRole(v) }}
-                            </v-chip>
-                        </template>
-
-                        <template v-slot:[`item.actions`]="{ item: { id } }">
-                            <v-icon dense @click="get_user_details(id)" :class="[{ 'mr-3': !ismobil }, { 'mx-4': ismobil }]"> mdi-square-edit-outline </v-icon>
-                            <v-icon dense class="mr-3" @click="open_user_details(id)"> mdi-eye </v-icon>
-                            <v-icon dense @click="userid = id, isBloqueado = true, dialog_confirmacion = true"> mdi-minus-circle-outline </v-icon>
-                        </template>
-
-                        <template v-slot:footer>
-                            <div class="pt-2 v-data-footer">
-                                <dx-pagination v-model="pageUI" :length="pageCountUI" />
-                            </div>
-                        </template>
-                    </DataTable>
-                </v-tab-item>
-            </template>
-        </dx-tabs>
+                <template v-slot:footer>
+                    <div :class="['pt-4 v-data-footer', ismobil]">
+                        <dx-pagination v-model="page" :length="pageCount" />
+                    </div>
+                </template>
+            </DataTable>
     </v-row>
     <DialogDetail :dialog="details_dialog" :items="details" headTitle="Entidad">
         <template v-slot:actions>
@@ -158,8 +104,14 @@ import {
 export default {
     name: 'Usuarios',
     fetch() {
-        // console.log('FETCH ON USERS')
-        this.$store.dispatch('usuarios/getUsers', {})
+        const params = {            
+            orderBy: 'nombre',
+            orderType: 'ASC',
+            pageNumber: 0,
+            pageSize: 10, 
+            isBloqueado: false
+        }
+        this.$store.dispatch('usuarios/getUsers', params)
         this.$store.dispatch('usuarios/getRoles')
     },
     data() {
@@ -170,7 +122,7 @@ export default {
                 tab: 'Inactivos'
             }],
             activeTab: 'Activos',
-            options: ['10', '50', '100', '1000'],
+            options: [10, 50, 100, 1000],
             breadcrums: [{
                     text: 'Administración',
                     disabled: false,
@@ -182,7 +134,6 @@ export default {
                     href: 'breadcrumbs_link_2',
                 },
             ],
-            actionitems: ['Visar', 'Firmar', 'Asignar', 'Descartar'],
             drawer: true,
             right: null,
             open: [1, 2],
@@ -193,26 +144,22 @@ export default {
             searchrut: false,
             searchpermisos: false,
             filtered: false,
-            filterValue: '',
+            filterName: '',
             filterRut: '',
             filterPermisos: [],
             isleft: true,
-            pageUA: 1,
-            pageUI: 1,
-            pageCountUI: 0,
-            pageCountUA: 0,
-            itemsPerPageUI: ['10'],
-            itemsPerPageUA: ['10'],
-            permiso: [],
+            page: 1,
+            itemsPerPage: 10,
             details_dialog: false,
             dialog_confirmacion: false,
             selected_user: '',
-            permisosValues: ['Administrador', 'Jefe de servicio', 'Operador', 'Oficina de partes'],
             loading: false,
             selectedUser: null,
             userid: '',
             isBloqueado: false,
-            details: [],
+            details: [],            
+            orderBy_: "nombre",
+            orderType: 'DESC'
         }
     },
     computed: {
@@ -228,21 +175,18 @@ export default {
                     align: 'start',
                     sortable: true,
                     value: 'nombres',
-                    filter: this.nameFilter,
                     search: true,
                 },
                 {
                     text: 'Rut',
                     value: 'rut',
                     sortable: true,
-                    filter: this.rutFilter,
                     search: true
                 },
                 {
                     text: 'Permisos adicionales',
                     value: 'roles',
                     sortable: false,
-                    filter: this.permisosFilter,
                     search: true
                 },
                 {
@@ -252,63 +196,51 @@ export default {
                 },
             ]
         },
-        isListEmpty() {
-            const activos = this.$store.getters['usuarios/getActivos']
-            const inactivos = this.$store.getters['usuarios/getInctivos']
-            if (this.activeTab === 'Activos') return activos.length === 0
-            else return inactivos.length === 0
-        },
-        usuariosActivos() {
-            return this.$store.getters['usuarios/getActivos']
-        },
-        usuariosInactivos() {
-            return this.$store.getters['usuarios/getInctivos']
+        users(){
+            return this.$store.getters['usuarios/getUsers']        
         },
         countUsuarios() {
-            const activos = this.$store.getters['usuarios/getActivos']
-            const inactivos = this.$store.getters['usuarios/getInctivos']
-            if (this.activeTab === 'Activos') return activos.length
-            else return inactivos.length
+            return this.$store.getters['usuarios/getUsersCount']            
+        },        
+        pageCount() {
+            return this.countUsuarios ? Math.ceil(this.countUsuarios / this.itemsPerPage) : 0
         },
-        rolesUser(){
+        rolesUser() {
             return this.$store.getters['usuarios/getRoles']
         },
     },
-    methods: {       
+    methods: {
         getUserRole(role) {
             let userRoles = this.$store.getters['usuarios/getRoles']
-            if (userRoles.length > 0){
+            if (userRoles.length > 0) {
                 const role_ = userRoles.find(r => r.id === role);
                 return role_ ? role_.name : role
-            }
-            else
+            } else
                 return role
         },
-        userRoles(roles){
-            if(roles.length > 0)
-                return roles.filter(rol => rol != "ROLE_USUARIO").map((rol) => {return this.getUserRole(rol)}).join(', ')
+        userRoles(roles) {
+            if (roles.length > 0)
+                return roles.filter(rol => rol != "ROLE_USUARIO").map((rol) => {
+                    return this.getUserRole(rol)
+                }).join(', ')
             else
                 ""
         },
-        actionColor() {
-            const isDark = this.$vuetify.theme.dark
-            return isDark ? '' : 'deepblue'
-        },
-        openFilter(header, event) {
-            event.stopPropagation()
-            this.filtered = !this.filtered
-        },
         nameFilter(value) {
-            if (!this.filterValue) {
-                return true
-            }
-            return (value.toLowerCase().includes(this.filterValue.toLowerCase()))
+            this.page = 1
+            this.fetchtUsers()
         },
         rutFilter(value) {
-            if (!this.filterRut) {
-                return true
-            }
-            return value.includes(this.filterRut)
+           this.page = 1
+           this.fetchtUsers()
+        },        
+        permisosFilter(value) {
+            this.page = 1
+            this.fetchtUsers()
+        },        
+        setItemsPerPage(value) {
+            this.page = 1
+            this.fetchtUsers()
         },
         activeSearch(header, value) {
             event.stopPropagation()
@@ -321,10 +253,29 @@ export default {
                 return item !== val
             })
         },
-        permisosFilter(value) {
-            let flag = false
-            if (this.filterPermisos.length == 0) return true
-            return this.filterPermisos.every(element => value.includes(element))
+        sortEvent(value) {
+            const [field, obj] = value.sortBy
+            const [order, obj_] = value.sortDesc
+            this.orderBy_ = field
+            this.orderType = order ? 'DESC' : 'ASC'
+            this.fetchtUsers()
+        },
+        async fetchtUsers() {
+            let params = {
+                orderBy: this.orderBy_ ? this.orderBy_ : "nombre",
+                orderType: this.orderType,
+                pageNumber: this.page - 1,
+                pageSize: this.itemsPerPage,
+                isBloqueado: this.isBloqueado,
+            }
+            if(this.filterName)
+                params['nombre'] = this.filterName
+            if(this.filterRut)
+                params['run'] = this.filterRut
+            if(this.filterPermisos.length > 0)
+                params['roles'] = this.this.filterPermisos.join(",")
+
+            await this.$store.dispatch('usuarios/getUsers', params)   
         },
         async getUser(id) {
             this.selectedUser = null
@@ -379,10 +330,12 @@ export default {
                     {
                         label: 'Subrogante:',
                         value: u.subrogante ? u.subrogante.nombres : '-'
-                    },                    
+                    },
                     {
                         label: 'Seguidor:',
-                        value: u.seguidor ? u.seguidor.map((s) => {return s.nombres}).join(', ') : '-'
+                        value: u.seguidor ? u.seguidor.map((s) => {
+                            return s.nombres
+                        }).join(', ') : '-'
                     },
                 ]
                 this.selectedUser = resp.result
@@ -392,19 +345,38 @@ export default {
         },
         get_tab(activetab) {
             this.activeTab = activetab
+            this.isBloqueado = activetab === "Inactivos"
+            this.orderBy_= "nombre"
+            this.orderType = "DESC"
+            this.page = 1
+            this.itemsPerPage = 10
+            this.filterName= ""
+            this.filterRut = ""
+            this.filterPermisos = []
+            this.searchname = false
+            this.searchrut = false
+            this.searchpermisos = false
+            this.fetchtUsers()
         },
         async setUserStatus() {
-            await this.$store.dispatch('usuarios/setUserStatus', {
+            const resp = await this.$store.dispatch('usuarios/setUserStatus', {
                 id: this.userid,
                 status: !this.isBloqueado
             })
+            if(resp)
+                this.fetchtUsers()
+            
             this.userid = ''
             this.isBloqueado = false
             this.dialog_confirmacion = false
         },
-        getItemsPerPages(itemsperpage) {
-            let items = isArray(itemsperpage) ? itemsperpage[0] : itemsperpage
-            return parseInt(items)
+    },
+    watch: {
+        page: {
+            handler: function (newValue, before) {
+                this.fetchtUsers()
+            },
+            deep: true,
         },
     },
 }

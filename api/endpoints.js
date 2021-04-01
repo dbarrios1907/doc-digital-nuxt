@@ -20,7 +20,7 @@ export default {
   fetchTasksOfficeSent: { url: '/documentos/tareas/op/enviar', method: 'GET' },
   fetchTasksOfficeReceived: { url: '/documentos/tareas/op/recibir', method: 'GET' },
   documentFetchTasks: docId => ({ url: `/documentos/${docId}/tareas`, method: 'GET' }),
-  fetchTasksOffice: inbox => ({ url: `/documentos/tareas/op/${inbox}`, method: 'GET' }),
+  fetchTasksOffice: (inbox, params) => ({ url: `/documentos/tareas/op/${inbox}`, method: 'GET', params }),
 
   // document creation endpoints
   // models used same endpoint with different method to exec operations (delete, get, create, save)
